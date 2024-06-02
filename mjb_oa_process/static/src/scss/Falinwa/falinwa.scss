@@ -1,0 +1,439 @@
+
+/* V16 Fixes */
+td.btn-info {
+    color: #FFF!important;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    box-shadow: 0;
+}
+
+td.btn-success {
+    color: #FFF!important;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0;
+}
+
+td.btn-warning {
+    color: #FFF!important;
+    background-color: #ffc107;
+    border-color: #ffc107;
+    box-shadow: 0;
+}
+
+td.btn-danger {
+    color: #FFF!important;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    box-shadow: 0;
+}
+
+td.btn-primary {
+    color: #FFF!important;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    box-shadow: 0;
+}
+
+td.btn-dark {
+    color: #FFF!important;
+    background-color: #343a40;
+    border-color: #343a40;
+    box-shadow: 0;
+}
+
+/* Colors */
+.validationProcess_red {
+    color: #dc3545;
+}
+.oe_button_box.no_process {
+    overflow-y: inherit;
+}
+
+.validationProcess_disabled_v2 input , 
+.validationProcess_disabled_v2 .o_notebook_content,  
+.validationProcess_disabled_v2  .o-checkbox, 
+.o_cp_action_menus.validationProcess_disabled_v2 {
+    pointer-events: none;
+    opacity: 0.7!important;
+}
+
+.validationProcess_light_blue {
+    color: #e0f8ff;
+}
+
+.validationProcess_blue {
+    color: #007bff;
+}
+
+.validationProcess_orange {
+    color: #fd7e14;
+}
+
+.validationProcess_green {
+    color: #28a745;
+}
+
+.validationProcess_light_grey {
+    color: #eee;
+}
+
+.validationProcess_grey {
+    color: #6c757d;
+}
+
+.validationProcess_grey_dark {
+    color: #343a40;
+}
+
+.validationProcess_black {
+    color: black;
+}
+
+.validationProcess_red_bg {
+    background-color: #dc3545;
+}
+
+.validationProcess_light_blue_bg {
+    background-color: #e0f8ff;
+}
+
+.validationProcess_light_green_bg {
+    background-color: #20c997;
+}
+
+.validationProcess_light_red_bg {
+    background-color: #dc6965;
+}
+
+.validationProcess_blue_bg {
+    background-color: #007bff;
+}
+
+.validationProcess_orange_bg {
+    background-color: #fd7e14;
+}
+
+.validationProcess_green_bg {
+    background-color: #28a745;
+}
+
+.validationProcess_light_grey_bg {
+    background-color: #eee;
+}
+
+.validationProcess_grey_bg {
+    background-color: #6c757d;
+}
+
+.validationProcess_grey_dark_bg {
+    background-color: #343a40;
+}
+
+.validationProcess_black_bg {
+    background-color: black;
+}
+
+/* template */
+#validationProcess_template {
+    display: none;
+}
+
+/* Disable default status bar by default 
+.o_statusbar_buttons, .o_form_button_edit {
+    pointer-events: none!important;
+    opacity: 0.5!important;
+}
+*/
+.oe_button_box {
+    height: 44px;
+    overflow-y: hidden;
+}
+
+/* Renabled buttons or controls */
+.validationProcess_enabled,
+.o_statusbar_buttons.validationProcess_enabled,
+div.o_cp_buttons.validationProcess_enabled {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+
+.validationProcess_disabled,
+.o_statusbar_buttons.validationProcess_disabled,
+div.o_cp_buttons.validationProcess_disabled {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
+
+/* main bar 
+    width:60%;*/
+#validationProcess_processActionBar {
+    overflow-x: auto;
+    float: left;
+}
+/* 
+.o_form_editable #validationProcess_processActionBar {
+    display: none !important;
+} */
+
+/* History/Info bar */
+#validationProcess_processHistoryBar,
+#validationProcess_processInfoBar {
+    display: none;
+}
+
+.validationProcess_processInfoStepBar {
+    overflow: hidden !important;
+}
+
+.validationProcess_actionBtn {
+    float: left;
+    border-right-color: #ccc;
+    width: 120px !important;
+}
+
+.validationProcess_infoBtn {
+    float: left;
+    border-right-color: #ccc;
+    width: 19% !important;
+    padding-left: 10px !important;
+}
+
+.validationProcess_infoBtn:nth-child(1) {
+    width: 5% !important;
+}
+
+.validationProcess_historyBtn {
+    float: left;
+    border-right-color: #ccc;
+    width: 81% !important;
+    padding-left: 10px !important;
+}
+
+.validationProcess_historyBtn:nth-child(1) {
+    width: 19% !important;
+}
+
+
+/* When isLoaded */
+.validationProcess_isLoaded #validationProcess_loading {
+    display: none;
+}
+
+/* When isNotLoaded */
+.validationProcess_isNotLoaded #validationProcess_confirm,
+.validationProcess_isNotLoaded #validationProcess_cancel,
+.validationProcess_isNotLoaded #validationProcess_restart,
+.validationProcess_isNotLoaded #validationProcess_back,
+.validationProcess_isNotLoaded #validationProcess_pending,
+.validationProcess_isNotLoaded #validationProcess_approved,
+.validationProcess_isNotLoaded #validationProcess_cancelled,
+.validationProcess_isNotLoaded #validationProcess_info,
+.validationProcess_isNotLoaded #validationProcess_history {
+    display: none;
+}
+
+/* When isFinal */
+.validationProcess_isFinal #validationProcess_confirm,
+.validationProcess_isFinal #validationProcess_cancel,
+.validationProcess_isFinal #validationProcess_restart,
+.validationProcess_isFinal #validationProcess_back,
+.validationProcess_isFinal #validationProcess_pending,
+.validationProcess_isFinal #validationProcess_cancelled {
+    display: none;
+}
+
+/* When noActiveRules */
+.validationProcess_noActiveRules #validationProcess_confirm,
+.validationProcess_noActiveRules #validationProcess_cancel,
+.validationProcess_noActiveRules #validationProcess_restart,
+.validationProcess_noActiveRules #validationProcess_back {
+    display: none;
+}
+
+/* When isNotFinal */
+.validationProcess_isNotFinal #validationProcess_approved {
+    display: none;
+}
+
+/* When isCancelled */
+.validationProcess_isCancelled #validationProcess_confirm,
+.validationProcess_isCancelled #validationProcess_cancel,
+.validationProcess_isCancelled #validationProcess_restart,
+.validationProcess_isCancelled #validationProcess_back,
+.validationProcess_isCancelled #validationProcess_pending,
+.validationProcess_isCancelled #validationProcess_approved {
+    display: none;
+}
+
+/* When isNotCancelled */
+.validationProcess_isNotCancelled #validationProcess_cancelled {
+    display: none;
+}
+
+/* When have no prev step */
+.validationProcess_noPrevStep #validationProcess_back,
+.validationProcess_noPrevStep #validationProcess_restart {
+    display: none;
+}
+
+/* When have access rights */
+.validationProcess_haveAccessRights #validationProcess_pending {
+    display: none;
+}
+
+/* When noAccessRights */
+.validationProcess_noAccessRights #validationProcess_confirm,
+.validationProcess_noAccessRights #validationProcess_cancel,
+.validationProcess_noAccessRights #validationProcess_restart,
+.validationProcess_noAccessRights #validationProcess_back {
+    display: none;
+}
+
+.validationProcess_forbidBtnBack #validationProcess_back {
+    display: none;
+}
+
+.validationProcess_forbidBtnReset #validationProcess_restart {
+    display: none;
+}
+
+.validationProcess_isRestartAllowed #validationProcess_restart {
+    display: inline;
+}
+
+
+/* When noProcess */
+.validationProcess_noNeeded #validationProcess_loading,
+.validationProcess_noProcess #validationProcess_confirm,
+.validationProcess_noProcess #validationProcess_cancel,
+.validationProcess_noProcess #validationProcess_restart,
+.validationProcess_noProcess #validationProcess_back,
+.validationProcess_noProcess #validationProcess_pending,
+.validationProcess_noProcess #validationProcess_approved,
+.validationProcess_noProcess #validationProcess_cancelled,
+.validationProcess_noProcess #validationProcess_info,
+.validationProcess_noProcess #validationProcess_history {
+    display: none;
+}
+
+/* When noSteps */
+.validationProcess_noNeeded #validationProcess_loading,
+.validationProcess_noSteps #validationProcess_confirm,
+.validationProcess_noSteps #validationProcess_cancel,
+.validationProcess_noSteps #validationProcess_restart,
+.validationProcess_noSteps #validationProcess_back,
+.validationProcess_noSteps #validationProcess_pending,
+.validationProcess_noSteps #validationProcess_approved,
+.validationProcess_noSteps #validationProcess_cancelled,
+.validationProcess_noSteps #validationProcess_info,
+.validationProcess_noSteps #validationProcess_history {
+    display: none;
+}
+
+/* When noNeeded */
+.validationProcess_noNeeded #validationProcess_loading,
+.validationProcess_noNeeded #validationProcess_confirm,
+.validationProcess_noNeeded #validationProcess_cancel,
+.validationProcess_noNeeded #validationProcess_restart,
+.validationProcess_noNeeded #validationProcess_back,
+.validationProcess_noNeeded #validationProcess_pending,
+.validationProcess_noNeeded #validationProcess_approved,
+.validationProcess_noNeeded #validationProcess_cancelled,
+.validationProcess_noNeeded #validationProcess_info,
+.validationProcess_noNeeded #validationProcess_history {
+    display: none;
+}
+
+/* When isNotStarted */
+.validationProcess_isNotStarted #validationProcess_loading,
+.validationProcess_isNotStarted #validationProcess_confirm,
+.validationProcess_isNotStarted #validationProcess_cancel,
+.validationProcess_isNotStarted #validationProcess_restart,
+.validationProcess_isNotStarted #validationProcess_back,
+.validationProcess_isNotStarted #validationProcess_pending,
+.validationProcess_isNotStarted #validationProcess_approved,
+.validationProcess_isNotStarted #validationProcess_cancelled,
+.validationProcess_isNotStarted #validationProcess_info,
+.validationProcess_isNotStarted #validationProcess_history {
+    display: none;
+}
+
+
+.validationProcess_mustShowLoader #validationProcess_loading {
+    display: inline;
+}
+
+/* When mustShowError */
+#validationProcess_error {
+    display: none;
+}
+
+.validationProcess_mustShowError #validationProcess_error {
+    display: inline !important;
+}
+
+.validationProcess_mustShowError #validationProcess_loading,
+.validationProcess_mustShowError #validationProcess_pending {
+    display: none !important;
+}
+
+.validationProcess_withoutIcon {
+    max-width: 100% !important;
+}
+
+.o_stat_text i.fa {
+    margin-right: 3px;
+    margin-top: 2px;
+    color: green;
+}
+
+i.fa.fal-strikethrough {
+    color: red;
+}
+
+
+/* FOR MOBILE */
+
+@media (max-width: 600px) {
+
+    #validationProcess_processActionBar {
+        overflow-x: auto;
+        float: left;
+        width: 50%;
+    }
+
+    .validationProcess_actionBtn .o_stat_info,
+    .validationProcess_infoBtn:nth-child(1) {
+        display: none !important;
+    }
+
+    .validationProcess_actionBtn {
+        float: left;
+        border-right-color: #ccc;
+        width: 45px !important;
+    }
+
+    .validationProcess_actionBtn .o_button_icon {
+        width: 100% !important;
+        margin: 0px !important;
+    }
+
+    .validationProcess_infoBtn span.o_stat_text,
+    .validationProcess_historyBtn span.o_stat_text {
+        font-size: 10px !important;
+    }
+
+    .validationProcess_infoBtn {
+        width: 20% !important;
+    }
+
+    .validationProcess_historyBtn {
+        width: 70% !important;
+    }
+
+    .validationProcess_historyBtn:nth-child(1) {
+        width: 30% !important;
+    }
+
+}

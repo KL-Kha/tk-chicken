@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="fal_vprocess_step_form_view">
+        <field name="active" eval="True"/>
+<!--        <field name="field_parent" eval="False"/>-->
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" eval="False"/>
+        <field name="key" eval="False"/>
+        <field name="mode">primary</field>
+        <field name="name">fal_vprocess_step.form</field>
+        <field name="model">fal.vprocess.step</field>
+        <field name="priority">16</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form>
+            <sheet string="fal.vprocess.step">
+              <div class="oe_title">
+                <h1>
+                  <field name="name" required="1"/>
+                </h1>
+              </div>
+              <group name="main_group">
+                <group name="group_left">
+                  <field name="sequence"/>
+                  <field name="auto_confirm_no_conditions"/>
+                  <field name="allow_anyone_no_conditions"/>
+                  <field name="auto_confirm_no_active_rules"/>
+                  <field name="buttons_back"/>
+                  <field name="buttons_reset"/>
+                  <field name="enable_activity"/>
+                </group>
+                <group name="group_right">
+                  <field name="active"/>
+                  <field name="disable_edit"/>
+                  <field name="action_string_confirm"/>
+                  <field name="action_string_cancel"/>
+                  <field name="action_string_back"/>
+                  <field name="action_string_reset"/>
+                  <field name="field_string_confirm"/>
+                  <field name="field_string_cancel"/>
+                  <field name="field_string_back"/>
+                  <field name="field_string_reset"/>
+                </group>
+              </group>
+              <h4>Rules</h4>
+              <field name="rule_ids"/>
+            </sheet>
+            <div class="oe_chatter" name="chatter_div">
+              <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="message_ids" widget="mail_thread"/>
+            </div>
+          </form>
+        </field>
+    </record>
+
+
+    <record id="action_vprocess_step" model="ir.actions.act_window">
+        <field name="name">Steps</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">fal.vprocess.step</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_vprocess_step" name="Steps" parent="menu_validation_process" action="action_vprocess_step"/>
+</odoo>

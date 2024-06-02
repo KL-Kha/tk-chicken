@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"access_fal_vprocess","access_fal_vprocess","model_fal_vprocess","base.group_user",1,1,1,1
+"access_fal_vprocess_step","access_fal_vprocess_step","model_fal_vprocess_step","base.group_user",1,1,1,1
+"access_fal_vprocess_rule","access_fal_vprocess_rule","model_fal_vprocess_rule","base.group_user",1,1,1,1
+"access_fal_vprocess_execution","access_fal_vprocess_execution","model_fal_vprocess_execution","base.group_user",1,1,1,1

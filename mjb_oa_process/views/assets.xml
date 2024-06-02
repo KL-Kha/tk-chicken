@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<template id="assets_backend" name="Falinwa Validation Process" inherit_id="web.assets_backend">
+			<xpath expr=".">
+				<link rel="stylesheet" href="/mjb_oa_process/static/src/scss/Falinwa/falinwa.scss"/>
+				<script type="application/javascript" src="/mjb_oa_process/static/src/js/Falinwa/Falinwa.config.js"/>
+				<script type="application/javascript" src="/mjb_oa_process/static/src/js/Falinwa/Falinwa.helper.js"/>
+				<script type="application/javascript" src="/mjb_oa_process/static/src/js/Falinwa/Falinwa.queryEngine.js"/>
+				<script type="application/javascript" src="/mjb_oa_process/static/src/js/Falinwa/Falinwa.validationProcess.js"/>
+				<script type="application/javascript" src="/mjb_oa_process/static/src/js/Falinwa/Falinwa.js"/>
+			</xpath>
+		</template>
+    </data>
+</odoo>

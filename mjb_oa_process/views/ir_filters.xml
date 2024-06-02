@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_ir_filters" model="ir.actions.act_window">
+        <field name="name">Filters</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.filters</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_ir_filters" name="Filters" parent="menu_validation_process" action="action_ir_filters"/>
+</odoo>
