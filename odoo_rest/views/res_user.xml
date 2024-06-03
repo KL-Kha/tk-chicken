@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_user_token_view" model="ir.ui.view">
+        <field name="name">Res Users</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']" position="after">
+                <page string="User Authentication" class="text-wrap">
+                    <br/>
+                    <field name="api_ids"  invisible="1"/>
+                    <field name="is_api_available" invisible='1'/>
+                    <label for="api_id_try" invisible= "not is_api_available">Api ID</label>
+                    <field name="api_id_try" domain="[('id', 'not in', api_ids),('user_authenticate','=',True)]" invisible = "not is_api_available"/>
+                    <button name="generate_user_token" type="object" class="btn-primary" string="Generate Token" invisible ="not is_api_available"/>
+                    <br/>
+                    <label for="login_token_ids">Api ID</label>
+                    <field name="login_token_ids" readonly='1' >
+                        <tree>
+                            <field name="api_id"/>
+                            <field name="login_token_compute" styel="height:18px;"/>
+                            <button name="delete_user_token" class="fa fa-trash-o" type="object" />
+                        </tree>
+
+                    </field>
+                    <br/>
+                    
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+   
+
+</odoo>

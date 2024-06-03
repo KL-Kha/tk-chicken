@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mjb_view_users_form_simple_modif_inherit" model="ir.ui.view">
+        <field name="name">mjv_view_users_form_simple_modif_inherit</field>
+        <field name="model">res.users</field>
+        <field name="priority">17</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <div>
+                    <field name="dark_mode" invisible="1"/>
+                    <div class="mt-2 mb-4" style="width: max-content;"><span class="o_form_label text-900" style="font-weight: 500;">Dark Mode</span>
+                        <button name="button_dark_mode" type="object" class="fa fa-toggle-off mjb_dark_mode_btn" invisible="dark_mode"/>
+                        <button name="button_light_mode" type="object" class="fa fa-toggle-on mjb_dark_mode_btn text-primary" invisible="not dark_mode"/>
+                    </div>
+                    <div/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mjb_view_users_form_inherit" model="ir.ui.view">
+        <field name="name">mjv_view_users_form_inherit</field>
+        <field name="model">res.users</field>
+        <field name="priority">17</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='messaging']" position="before">
+                <div>
+                    <field name="dark_mode" invisible="1"/>
+                    <div class="mt-2 mb-4" style="width: max-content;"><span class="o_form_label text-900">Dark Mode</span>
+                        <button name="button_dark_mode" type="object" class="fa fa-toggle-off mjb_dark_mode_btn" invisible="dark_mode"/>
+                        <button name="button_light_mode" type="object" class="fa fa-toggle-on mjb_dark_mode_btn text-primary" invisible="not dark_mode"/>
+                    </div>
+                    <div/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

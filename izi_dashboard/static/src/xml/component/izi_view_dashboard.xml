@@ -1,0 +1,24 @@
+<template>
+    <div t-name="IZIViewDashboard" class="izi_view_dashboard">
+        <!-- Explore -->
+        <div class="izi_dialog" style="display:none;">
+            <div class="izi_view_dashboard_ask_bg"></div>
+            <div class="izi_view_dashboard_ask_header">
+                Ask Anything About Data Analytic
+                <span class="subtitle">This Feature Is Still Under Development</span>
+            </div>
+            <div class="izi_view_dashboard_ask">
+            </div>
+            <div class="izi_view_dashboard_ask_footer">
+                <textarea class="izi_view_dashboard_ask_input">
+
+                </textarea>
+                <div class="izi_view_dashboard_ask_btn">
+                    <span class="material-icons izi_btn_icon " t-esc="'magic_button'"/>
+                </div>
+            </div>
+        </div>
+        <div class="izi_view_dashboard_grid grid-stack">
+        </div>
+    </div>
+</template>

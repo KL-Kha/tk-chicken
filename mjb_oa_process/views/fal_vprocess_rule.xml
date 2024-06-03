@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="fal_vprocess_rule_form_view">
+        <field name="active" eval="True"/>
+<!--        <field name="field_parent" eval="False"/>-->
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" eval="False"/>
+        <field name="key" eval="False"/>
+        <field name="mode">primary</field>
+        <field name="name">fal_vprocess_rule.form</field>
+        <field name="model">fal.vprocess.rule</field>
+        <field name="priority">16</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form>
+            <sheet string="fal.vprocess.step">
+              <div class="oe_title">
+                <h1>
+                  <field name="name" required="1"/>
+                </h1>
+              </div>
+              <group name="main_group">
+                <group name="group_left">
+                  <field name="sequence"/>
+                  <field name="filter_id"/>
+                  <field name="user_filter_id"/>
+                  <field name="custom_user_domain"/>
+                </group>
+                <group name="group_right">
+                  <field name="active"/>
+                  <field name="domain"/>
+                  <field name="user_filter_domain"/>
+                </group>
+              </group>
+              <h4>Authorized users</h4>
+              <field name="user_ids"/>
+            </sheet>
+            <div class="oe_chatter" name="chatter_div">
+              <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="message_ids" widget="mail_thread"/>
+            </div>
+          </form>
+        </field>
+    </record>
+
+    <record id="action_vprocess_rule" model="ir.actions.act_window">
+        <field name="name">Rules</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">fal.vprocess.rule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_vprocess_rule" name="Rules" parent="menu_validation_process" action="action_vprocess_rule"/>
+</odoo>
