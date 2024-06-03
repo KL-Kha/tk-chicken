@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_listview_side_formview.SideFormControlPanel"
+       t-inherit="web.ControlPanel"
+       t-inherit-mode="primary"
+       owl="1"
+    >
+        <xpath expr="//div[contains(@class, 'o_control_panel_navigation')]" position="replace"/>
+
+        <xpath expr="//div[contains(@class, 'o_control_panel_main')]" position="inside">
+            <div class="o_control_panel_side_form order-1">
+                <t t-slot="control-panel-external-action"/>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
