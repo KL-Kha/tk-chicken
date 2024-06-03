@@ -1,0 +1,1500 @@
+/*================== Slider Button ========================*/
+.te_theme_button {
+    padding: 0.5rem 1rem;
+    @include media-breakpoint-down(sm) {
+        padding: 0.475rem 0.7rem;
+        font-size: 0.875rem;
+    }
+}
+
+/*================== Slider Style 1 ========================*/
+.editor_enable {
+    .te_slider_10_bg {
+        @include media-breakpoint-up(md) {
+            background-size: calc(100% - 250px);
+        }
+    }
+}
+.te_slider_10_bg {
+    background-size: 80%;
+    background-position: left !important;
+    @include media-breakpoint-down(lg) {
+        background-size: 100%;
+    }
+    .te_slider_text_content {
+        margin-left: auto;
+        background-color: nth($f_color, 5);
+        width: 40%;
+        @include box-shadow(0px 1px 20px 0 rgba(174, 174, 174, 0.2));
+        margin-right: 16px;
+        @include media-breakpoint-down(lg) {
+            margin: 0px;
+            width: 100%;
+            background-color: unset;
+            box-shadow: none;
+        }
+        .te_slider_heading {
+            @include style(7, 28);
+            @include media-breakpoint-down(sm) {
+                font-size: nth($f_sizes, 18);
+            }
+        }
+        .te_slider_main_heading {
+            font-size: nth($f_sizes, 15);
+            padding-bottom: 20px;
+            @media (max-width: 1366px) and (min-width: 992px) {
+                font-size: 1.510rem;
+            }
+            @include media-breakpoint-down(lg) {
+                font-size: nth($f_sizes, 12);
+            }
+            @include media-breakpoint-down(md) {
+                font-size: nth($f_sizes, 10);
+            }
+            @include media-breakpoint-down(sm) {
+                font-size: nth($f_sizes, 7);
+            }
+        }
+    }
+}
+
+/*================== Full Screen Slider Style 1 ========================*/
+.te_slider_right_content {
+    text-align: center;
+    .te_sub_title {
+        @include style(7, 28, inherit, 36px);
+        letter-spacing: 3px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .te_main_title {
+        @include style(13, 28);
+        margin-bottom: 30px;
+        font-weight: 600;
+        margin-top: 10px;
+        @include media-breakpoint-down(md) {
+            font-size: nth($f_sizes, 15);
+            margin-bottom: 5px;
+        }
+        @include media-breakpoint-down(sm) {
+            margin-top: 0px;
+            font-size: nth($f_sizes, 12);
+        }
+    }
+    .te_slider_9_btn {
+        margin-top: 16px;
+        @include media-breakpoint-down(sm) {
+            margin-top: 10px;
+        }
+    }
+}
+.te_slider_left_content {
+    img {
+        @include media-breakpoint-up(md) {
+            float: right;
+        }
+        max-height:500px;
+    }
+    @include media-breakpoint-down(md) {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+}
+/* Common Change For Indicators */
+.s_carousel.s_carousel_default .carousel-indicators li {
+    box-shadow: none;
+}
+
+/*======================= Full Screen Slider Style 2 =================*/
+.te_slider_10 {
+    @include position(absolute, 50%);
+    transform: translateY(-50%);
+    .te_slider_10_title {
+        z-index: 9;
+    }
+    .s_title {
+        display: inline-block;
+        overflow: hidden;
+        @include position(relative);
+    }
+    .te_slider_10_content {
+        display: inline-block;
+        @include position(relative);
+        p {
+            font-size: nth($f_sizes, 15);
+            line-height: unset;
+            z-index: 9;
+            @include media-breakpoint-down(sm) {
+                font-size: nth($f_sizes, 4);
+            }
+        }
+    }
+}
+.te_s_slider_10 {
+    .oe_custom_bg {
+        width: 100%;
+        min-height: 100vh !important;
+        vertical-align: middle;
+        background-position: 100%;
+    }
+}
+.s_carousel_default.te_s_slider_10 .carousel-indicators {
+    li {
+        border-radius: 50%;
+        width: 1rem;
+        height: 1rem;
+    }
+}
+/*======================= common css for slider background =================*/
+.te_ts_style_7_inner {
+    .oe_custom_bg {
+        height: 65vh !important;
+        width: 100%;
+        min-height: 100vh !important;
+        vertical-align: middle;
+        background-position: 100%;
+        @media (min-width:1600px) {
+            height: 100vh !important;
+        }
+        @include media-breakpoint-down(md) {
+            height: 50vh !important;
+        }
+        @include media-breakpoint-down(sm) {
+            height: 40vh !important;
+            background-position: center !important;
+        }
+        @include media-breakpoint-down(sm) {
+            height: 20vh !important;
+        }
+    }
+    .te_t_slider_sm_content {
+        position: absolute;
+        top: 25%;
+        transform: translateY(-50%);
+        @include media-breakpoint-down(sm) {
+            width: 90%;
+            margin: 0px auto;
+            top: 18%;
+        }
+        .s_btn {
+            @include media-breakpoint-down(md) {
+                padding-top: 0 !important;
+            }
+            @include media-breakpoint-down(sm) {
+                margin-top: 15px !important;
+            }
+        }
+    }
+}
+.te_ts_style_7_inner .oe_img_bg>* {
+    position: unset;
+}
+/*======================== 07. Full Screen Slider Style 3 ===================*/
+.te_slider13_img {
+    img {
+        max-height: 500px;
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .te_slider13_content {
+        text-align: center;
+    }
+}
+.te_slider_13_main .te_slider_13_sub {
+    width: 100%;
+    min-height: 100vh !important;
+    vertical-align: middle;
+    background-position: 100%;
+}
+
+.o_editable {
+    .banner_video {
+        pointer-events: none;
+    }
+}
+/*======================== Full Screen Slider Style 4 ====================*/
+.te_s14_img {
+    transform: scale(1.1);
+    img {
+        max-height: 800px;
+        margin-left: 9%;
+        @include media-breakpoint-down(md) {
+            max-height: 450px;
+            margin: 0px auto;
+        }
+        @include media-breakpoint-down(sm) {
+            max-height: 350px;
+        }
+    }
+}
+.slider_14_content {
+    @include media-breakpoint-down(md) {
+        margin: 0px auto;
+        .s_btn {
+            padding-bottom: 32px;
+        }
+    }
+    .te_s14_small_heading {
+        &:after {
+            width: 90px;
+            height: 2px;
+            background: nth($f_color, 19);
+            margin-left: 15px;
+            content: '';
+            display: inline-block;
+            vertical-align: middle;
+            @include media-breakpoint-down(sm) {
+                width: 60px;
+            }
+            @include media-breakpoint-down(sm) {
+                content: unset;
+            }
+        }
+    }
+    div {
+        font-size: 3rem;
+        text-shadow: 0px 3px 6px rgba(0, 0, 0, 0.68);
+        @include media-breakpoint-down(md) {
+            font-size: 2rem;
+        }
+        @include media-breakpoint-down(sm) {
+            font-size: 1.2rem;
+        }
+    }
+}
+.te_s14_banner_bg {
+    padding: 8% 0 5% 0;
+    @include media-breakpoint-down(lg) {
+        padding: 15% 0 7% 0;
+    }
+    @include media-breakpoint-down(md) {
+        padding: 20% 0 12% 0;
+    }
+    @include media-breakpoint-down(sm) {
+        padding: 25% 0 15% 0;
+    }
+    .container {
+        max-width: 1600px;
+    }
+}
+
+/*===================== Full Banner with slider =====================*/
+.te_banner_slider {
+    .te_banner_heading_small {
+        font-size: nth($f_sizes, 10);
+        font-weight: 600;
+        @include media-breakpoint-down(sm) {
+            font-size: nth($f_sizes, 7);
+        }
+    }
+
+    .te_banner_heading_big {
+        font-size: nth($f_sizes, 13);
+        @include media-breakpoint-down(sm) {
+            font-size: 2.5rem;
+        }
+        @media (min-width:500px) {
+            font-size: 1.44rem;
+        }
+    }
+    .te_banner_content {
+        font-size: nth($f_sizes, 7);
+        @include media-breakpoint-down(sm) {
+            font-size: nth($f_sizes, 2);
+            display: none;
+        }
+    }
+    .te_banner_slider_info {
+        text-align: center;
+    }
+    .te_banner_slider_content {
+        @include position(relative);
+        .owl-nav {
+            @include position(absolute, null, null, 0);
+            .owl-prev, .owl-next {
+                background: nth($f_color, 22);
+                color: nth($f_color, 5);
+                width: 30px;
+                .fa {
+                    font-size: nth($f_sizes, 15);
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
+
+/*========================== 2 Column Style 1 ======================*/
+.column_style_11_cards {
+    position: relative;
+}
+.te_3_s11_content {
+    @include position(absolute, 50%, 18%, null, 18%);
+    transform: translateY(-50%);
+    padding: 40px;
+    @include transition(all, 0.5s, ease);
+    @include media-breakpoint-down(md) {
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+        right: unset;
+    }
+    &:before, &:after {
+        @include position(absolute, 0, 0, 0, 0);
+        content: '';
+        transition: opacity 0.35s, transform 0.35s;
+        opacity: 0;
+        z-index: -1;
+    }
+    &:before {
+        border-top: 2px solid nth($f_color, 3);
+        border-bottom: 2px solid nth($f_color, 3);
+        @include transform(scale(0, 1));
+    }
+    &:after {
+        border-right: 2px solid nth($f_color, 3);
+        border-left: 2px solid nth($f_color, 3);
+        @include transform(scale(1, 0));
+    }
+    a {
+        border-bottom: 1px solid nth($f_color, 3);
+        padding-bottom: 5px;
+        color: nth($f_color, 3);
+    }
+}
+.te_3_s11_image {
+    &:before {
+        @include position(absolute, 0, 0, 0, 0);
+        content: '';
+        background: rgba(255, 255, 255, .7);
+        opacity: 0;
+    }
+    @include media-breakpoint-up(lg) {
+        &:hover {
+            .te_3_s11_content {
+                &:before, &:after {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            &:before {
+                opacity: 1;
+            }
+        }
+    }
+    img {
+        max-height: 290px;
+    }
+}
+.o_editable {
+    .te_3_s11_image:before {
+        content: unset;
+    }
+    .te_offer_s3_img .te_offer_s3_img_before {
+        z-index: 1;
+        left: -35px;
+    }
+    .te_offer_s2_img .te_offer_s2_img_before {
+        z-index: 0;
+        left: -100px;
+        top: -70px;
+    }
+}
+
+/*========================== 2 columns style 2 ==========================*/
+.te_2_col_style_4 {
+    >section:first-child {
+        @include media-breakpoint-down(sm) {
+            display: flex;
+            padding: 0;
+            margin-bottom: 20px;
+            align-items: center !important;
+            animation: unset;
+        }
+    }
+    .te_s_4_img {
+        img {
+            max-height: 515px;
+        }
+        @include media-breakpoint-down(sm) {
+            max-width: 50%;
+            flex: 0 0 50%;
+            padding: 0 15px;
+            img {
+                max-height: 211px;
+            }
+        }
+    }
+    .te_main_content {
+        @include position(absolute, 35%, auto, auto, 15%);
+        padding: 0 20px;
+        width: 250px;
+        @include media-breakpoint-down(sm) {
+            max-width: 50%;
+            flex: 0 0 50%;
+            padding: 0 15px;
+            @include position(relative, 0, auto, auto, 0);
+        }
+        .te_extra_btn, .te_extra_btn a, h4, p {
+            color: nth($f_color, 5);
+            @include media-breakpoint-down(sm) {
+                color: nth($f_color, 3);
+            }
+        }
+    }
+    .te_img_txt {
+        @include media-breakpoint-down(lg) {
+            margin-bottom: 20px;
+        }
+        img {
+            max-height: 242px;
+            @include media-breakpoint-down(lg) {
+                max-height: 220px;
+            }
+        }
+        @include media-breakpoint-down(sm) {
+            animation: unset !important;
+        }
+    }
+    p {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.5;
+    }
+    .te_extra_btn {
+        @include style(18, 6, inherit, null, uppercase);
+        i {
+            margin-right: 5px;
+            font-size: nth($f_sizes, 9);
+        }
+        a {
+            color: nth($f_color, 6);
+        }
+    }
+}
+/*=============== 2 Columns Style 3 =======================*/
+.te_menu_flip_box {
+    .te_icon_1 {
+        display: inline-block;
+        @include media-breakpoint-up(lg) {
+            vertical-align: middle;
+        }
+        @include media-breakpoint-down(lg) {
+            display: block;
+        }
+    }
+    .te_icon_1_before {
+        @include position(relative);
+        .te_dashed_border {
+            height: 70px;
+            width: 70px;
+            @include border(1px, 19, dashed);
+            @include border-radius(50%);
+            line-height: 70px;
+            @include transition(all, 0.5s, ease);
+            color: nth($f_color, 19);
+        }
+        &:before {
+            content: '';
+            height: 10px;
+            width: 10px;
+            background-color: nth($f_color, 19);
+            @include position(absolute, 0, 0, 0, 0);
+            margin: auto;
+            @include border-radius(50%);
+            opacity: 0;
+            @include transition(all, 0.5s, ease);
+            z-index: -1;
+        }
+    }
+    &:hover {
+        .te_dashed_border {
+            color: nth($f_color, 5);
+        }
+        .te_icon_1_before {
+            &:before {
+                opacity: 1;
+                height: 50px;
+                width: 50px;
+            }
+        }
+    }
+}
+.te_title_tex {
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 10px;
+    display: inline-block;
+    @include media-breakpoint-up(lg) {
+        width: 70%;
+        vertical-align: middle;
+    }
+    @include media-breakpoint-down(lg) {
+        display: block;
+        text-align: center;
+        padding-top: 15px;
+    }
+    .te_icon_title_1 {
+        font-size: nth($f_sizes, 5);
+        &:hover {
+            color: nth($f_color, 19);
+        }
+    }
+}
+/*================ 3 Columns Style 1 =======================*/
+.te_max_width_3_blocks {
+    @include width(100%, auto);
+    @include media-breakpoint-down(sm) {
+        .col-md-4 {
+            margin-bottom: 10px;
+        }
+    }
+    .te_three_blocks_icon {
+        @include position(absolute, 5px, auto, auto, 50%);
+    }
+    .te_icon_styling {
+        color: nth($f_color, 19);
+    }
+    .te_span_icon_block {
+        width: 80px;
+        height: 80px;
+        @include box-shadow(0 0 0 5px nth($f_color, 18));
+        line-height: 80px;
+        @include transform(translateX(-50%));
+    }
+}
+/*================ 3 Columns Style 2  =======================*/
+.te_three_columns_heading {
+    @include style(8, 28);
+    @include media-breakpoint-down(md) {
+        font-size: nth($f_sizes, 1);
+    }
+}
+
+.te_3_column_left_heading {
+    img {
+        max-height: 500px;
+    }
+}
+//(This Class is use style-1, style-2)
+.te_three_columns_para {
+    @include style(2, 28, inherit);
+}
+//(This Class is use 3 Columns all Style use )
+.te_feature_image {
+    @include container;
+    @include width(auto, 100%);
+}
+
+/*=================== 3 Columns Comman (Icon Style) ================*/
+.te_sub_text {
+    @include style(3, 28);
+}
+.s_three_columns {
+    .container {
+        @include media-breakpoint-up(md) {
+            width: 90% !important;
+        }
+    }
+}
+
+/*==================== 3 Columns Style 3 =====================*/
+.te_t3_col_bg_div {
+    &:hover .te_title_text {
+        bottom: 10px;
+    }
+    @include media-breakpoint-down(sm) {
+        margin-bottom: 10px;
+    }
+}
+.te_bgimage {
+    background-size: cover;
+    opacity: 0.9;
+    height: 100vh !important;
+    max-height: 500px;
+    background-position: center;
+    .te_title_text {
+        @include position(absolute, null, 4px, 0px, 4px);
+        background-color: rgba(234, 234, 234, 0.7);
+        @include transition(bottom, 0.5s, ease);
+    }
+}
+
+/*=============== 3 Columns Style 4 =======================*/
+.te_col_ind {
+    &:hover .te_image_overflow img {
+        @include transform(scale(1.1));
+    }
+    @include media-breakpoint-down(sm) {
+        margin-bottom: 16px;
+    }
+    .te_image_overflow {
+        img {
+            @include transition(all, .4s, ease-out)
+        }
+    }
+    .te_center_position {
+        @include position(relative, null, null, null, null);
+        padding-top: 0px;
+        min-height: 65px;
+    }
+    img {
+        max-height: 424px;
+    }
+    .te_button_position {
+        @include position(absolute, null, null, -0, 5%);
+        background-color: nth($f_color, 19);
+        width: 90%;
+        h6 {
+            .te_fix_content_h3 {
+                font-weight: bold;
+                color: nth($f_color, 5);
+            }
+        }
+        span {
+            @include style(3, 5);
+            display: block;
+            padding: 0.5rem 0;
+        }
+    }
+}
+/*========================== 4 columns style 1 ==========================*/
+.four_columns_style_5{
+    .container {
+        @include media-breakpoint-down(lg) {
+            width: 90% !important;
+        }
+    }
+}
+.te_col_5_title {
+    margin-bottom: 0;
+    letter-spacing: 1px;
+    padding-left: 1.75rem;
+    @include media-breakpoint-down(sm) {
+        padding-left: 0px;
+        margin-bottom: 0.5rem;
+    }
+}
+.te_col_5_sub_title {
+    line-height: 1;
+    letter-spacing: 1px;
+}
+.te_col_5_main {
+    padding: 0 20px;
+    img {
+        max-height: 500px;
+    }
+    .te_4_col_content {
+        background: nth($f_color, 5);
+        width: 85%;
+        padding: 10px;
+        margin: -30px auto 0;
+        @include transition(all, 0.3s);
+        top: 0;
+        .te_s_5_img {
+            @include transition(transform, 0.6s);
+            transform-style: preserve-3d;
+            img {
+                max-height: 40px;
+            }
+        }
+        p {
+            line-height: 1.5;
+            margin: 5px 0;
+            @include line-clamp(2, 45px);
+        }
+        .te_extra_btn {
+            @include style(9, 23, inherit, unset, uppercase);
+            i {
+                margin-right: 5px;
+            }
+            a {
+                color: nth($f_color, 23);
+            }
+        }
+    }
+    &:hover {
+        .te_s_5_img {
+            transform: rotateY(180deg);
+        }
+        .te_4_col_content {
+            top: -4%;
+        }
+    }
+}
+/*========================== Title ==========================*/
+.te_title_2 {
+    .te_title_sub_div {
+        padding-left: 70px;
+        &:before,
+        &:after {
+            content: '';
+            background: nth($f_color, 19);
+            position: absolute;
+            top: 15px;
+            height: 2px;
+            left: 0;
+        }
+        &:before {
+            width: 30px;
+            margin-top: 6px;
+            left: 20px;
+        }
+        &:after {
+            width: 50px;
+        }
+    }
+    .te_title_style2 {
+        padding-bottom: 10px;
+        padding-right: 70px;
+        &:before,
+        &:after {
+            content: '';
+            background: nth($f_color, 19);
+            position: absolute;
+            top: 15px;
+            height: 2px;
+            right: 0;
+        }
+        &:before {
+            width: 30px;
+            margin-top: 6px;
+            right: 20px;
+        }
+        &:after {
+            width: 50px;
+        }
+    }
+}
+
+/*================== Offer Style 1 =====================*/
+@include media-breakpoint-down(sm) {
+    .te_set_res {
+        .te_offerleft_h {
+            min-height: auto;
+            max-height: 100%;
+            img {
+                max-height: 490px;
+            }
+        }
+        .te_offer_3_text_left {
+            margin-top: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+            .te_btn_r_space {
+                margin-top: 16px;
+            }
+        }
+        .te_top_space img {
+            max-height: 139px;
+        }
+    }
+}
+
+.te_offer_3_text_left {
+    & p {
+        font-size: nth($f_sizes, 3);
+        span {
+            @include style(7, 19);
+        }
+    }
+    .te_btn_r_space {
+        margin-top: 32px;
+    }
+}
+
+.te_offerright_h {
+    min-height: 234px;
+    max-height: 234px;
+    img {
+        max-height: 139px;
+    }
+    .te_offerright_txt {
+        margin-top: 16px;
+        & h4 {
+            margin: 0;
+        }
+        & p {
+            font-size: nth($f_sizes, 18);
+        }
+    }
+}
+@include media-breakpoint-down(md) {
+    .te_top_box_space {
+        margin-top: 32px;
+    }
+}
+
+/*========================== Offer Style 2 ======================*/
+.offer_style_6{
+    .te_offer_s6_img_big img {
+        max-height: 700px;
+    }
+    .te_offer_s6_img_small img {
+        max-height: 451px;
+    }
+    .te_offer_main_content {
+        @include position(absolute, null, null, 0);
+        background: nth($f_color, 5);
+        padding: 40px 30px;
+        a {
+            border-bottom: 1px solid nth($f_color, 3);
+            color: nth($f_color, 3);
+        }
+    }
+}
+.te_offer_right_content {
+    p {
+        font-size: nth($f_sizes, 19);
+        line-height: 1.5;
+        padding: 5px 0 10px 0;
+    }
+    a {
+        border-bottom: 1px solid nth($f_color, 3);
+        padding-bottom: 5px;
+        color: nth($f_color, 3);
+    }
+}
+/*========================== Offer Style 3 ======================*/
+.te_offer_big_img_content, .te_offer_big_img2_content {
+    @include position(absolute, 0);
+    padding: 30px;
+    width: 60%;
+}
+.te_offer_small_img_content {
+    @include position(absolute, 0);
+    padding: 20px;
+}
+.te_offer_s7_right, .te_offer_s7_left {
+    padding-bottom: 30px;
+    @include media-breakpoint-down(sm) {
+        padding-bottom: 15px;
+        >div {
+            &:first-child {
+                padding-bottom: 15px;
+            }
+        }
+    }
+}
+.te_offer_s7_img_big img {
+    max-height: 700px;
+}
+.te_offer_s7_img_small img {
+    max-height: 451px;
+}
+/*==================== 76. Offer Timer Style 3 ====================*/
+.te_offer_s3_section {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+    .te_offer_s3_heading {
+        font-size: nth($f_sizes, 15);
+        @include media-breakpoint-down(sm) {
+            font-size: nth($f_sizes, 12);
+        }
+        &:after {
+            content: "";
+            @include position(absolute, unset, 0, 0, 0);
+            border: 1px solid $border-color;
+            width: 15%;
+            text-align: center;
+            margin: 0px auto;
+            @include media-breakpoint-down(sm) {
+                bottom: 15px;
+            }
+        }
+    }
+    .te_offer_s3_text {
+        font-size: nth($f_sizes, 19);
+    }
+    .te_offer_s3_discount {
+        @include style(7, 4);
+    }
+    @include media-breakpoint-down(md) {
+        margin-top: 25px;
+    }
+}
+.te_offer_s3_img {
+    .te_offer_s3_img_before {
+        background: rgba(nth($f_color, 19), 0.2);
+        @include position(absolute, 12%, null, 12%, 70px);
+        width: 60%;
+        z-index: -1;
+        @include media-breakpoint-down(md) {
+            left: 0px;
+        }
+        @include media-breakpoint-down(sm) {
+            content: unset;
+        }
+    }
+    img {
+        max-height: 500px;
+        margin-left: auto;
+        @include media-breakpoint-up(lg) {
+            margin: 0 auto;
+        }
+        @include media-breakpoint-down(md) {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        @include media-breakpoint-up(sm) {
+            margin: 0 auto;
+        }
+    }
+    .te_vertical_line {
+        transform: rotate(180deg);
+        writing-mode: vertical-rl;
+        @include position(absolute, 0);
+        font-size: nth($f_sizes, 19);
+        left: 110px !important;
+        @include media-breakpoint-down(sm) {
+            display: none;
+        }
+    }
+}
+/*====== Service Plan Style 1 ========*/
+.te_3_col_price {
+    border: 1px solid $border-color;
+    background-color: nth($f_color, 5);
+    .te_big_price {
+        @include border-radius(50%);
+        width: 130px;
+        height: 130px;
+        background-color: nth($f_color, 5);
+        color: nth($f_color, 3);
+        margin: 0px auto;
+        @include box-shadow(0 0 4px 5px #ededed);
+        @include transition(all, 0.4s, ease);
+        .te_price_fsize {
+            font-size: 2.5rem;
+            .te_3_col_price_currency {
+                @include position(absolute, 0, 0);
+                font-size: 18px;
+                width: 36px;
+                height: 36px;
+                line-height: 36px;
+                @include border-radius(50%);
+                color: nth($f_color, 5);
+                z-index: 1;
+                @include transition(all, 0.3s, ease);
+                background-color: nth($f_color, 19);
+            }
+        }
+        .te_days {
+            font-size: nth($f_sizes, 7);
+        }
+    }
+    ul li {
+        .fa {
+            padding-right: 10px;
+        }
+        .fa-check {
+            color: #5bd13c;
+        }
+        .fa-times {
+            color: red;
+        }
+    }
+    &:hover {
+        .te_big_price {
+            background-color: nth($f_color, 19);
+            color: nth($f_color, 5);
+
+            .te_price_fsize .te_3_col_price_currency {
+                color: nth($f_color, 3);
+                background-color: nth($f_color, 5);
+            }
+        }
+    }
+}
+/*====== Service Plan Style 2 ========*/
+.te_heading_price {
+    @include style(11, 3, null, null);
+}
+.te_price_currency {
+    @include style(10, 3, null);
+    @include position(relative, unset, 0, 30px, 10px);
+}
+.li_text {
+    @include style(1, 28, inherit);
+    @include border(0 0 1px 0, 17, dotted);
+}
+.te_common_border_bottom {
+    @include border(0 0 1px 0, 18, solid);
+}
+.te_four_column_title {
+    color: nth($f_color, 21);
+    @include spacing(0px, null);
+}
+.te_pricing_box {
+    @include border-radius(5px);
+    @include box-shadow(0 10px 30px rgba(0, 0, 0, 0.03));
+    @include transition(all, 0.3s);
+    @include media-breakpoint-down(sm) {
+        margin-bottom: 15px;
+    }
+    &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 3px 12px #ccc;
+        @include media-breakpoint-down(sm) {
+            transform: unset;
+        }
+    }
+    .list-group{
+        border-bottom: none;
+    }
+}
+.te_feature_image{
+  @include container;
+  @include width(auto,100%);
+}
+
+/*====== Service Plan Style 3 ========*/
+.te_price_main {
+    @include transition(all, 0.3s);
+    overflow: visible !important;
+    @include media-breakpoint-down(sm) {
+        margin-bottom: 10px;
+    }
+    &:hover {
+        @include border(1px, 19, solid);
+        transform: scale(1.03);
+        box-shadow: 0 3px 12px #ccc;
+        @include media-breakpoint-down(sm) {
+            transform: unset;
+        }
+    }
+    ul {
+        >li {
+            >.fa {
+                margin-left: 8px;
+            }
+        }
+    }
+    .te_price_head {
+        background: nth($f_color, 19);
+        color: nth($f_color, 5);
+        h3{
+            font-size: 28px;
+        }
+    }
+    .te_price_btn {
+        a {
+            @include position(absolute, auto, -8px, -12px);
+            @include border-radius(3px);
+            font-size: 15px;
+            line-height: 15px;
+            &:after {
+                content: "";
+                display: block;
+                @include position(absolute, auto, 0, -6px);
+                width: 0;
+                height: 0;
+                border-bottom: 8px solid nth($f_color, 27);
+                border-left: 8px solid nth($f_color, 19);
+            }
+        }
+    }
+    .te_only_price {
+        border-bottom: 4px double #ededed;
+        .te_sign {
+            font-size: nth($f_sizes, 7);
+        }
+        .te_price {
+            font-size: nth($f_sizes, 15);
+        }
+    }
+}
+/*================= 17. Team 1 ======================*/
+.te_social_icon {
+    a {
+        @include style(18, 2);
+        @include border-radius(50%) margin: 10px 2px;
+        padding: 5px 5px 1px 5px;
+        @include border(1px, 17, solid) width: 30px;
+        height: 30px;
+        @include transition(all, 0.6s, ease) display: block;
+        &:hover {
+            background-color: nth($f_color, 19);
+            border-color: nth($f_color, 19);
+            color: nth($f_color, 5);
+        }
+    }
+}
+.te_designation_border {
+    width: 10%;
+    @include border(1px, 24, solid);
+    margin: 10px auto 6px auto;
+}
+/*================ 18. Team 2 =====================*/
+.main_container_team2{
+    width: 90%;
+    max-width: 1400px;
+    .te_team_2_design {
+        @include position(absolute, null, 25px, -56px, 25px);
+        padding: 4px 2px 4px 2px;
+        @include border-radius(10px);
+        background-color: nth($f_color, 5);
+        @include border(1px, 8, solid);
+        .te_social_2_icon {
+            a {
+                @include style(18, 2);
+                @include border-radius(50%);
+                margin: 10px 2px;
+                padding: 6px 5px 1px 5px;
+                width: 30px;
+                height: 30px;
+                background-color: nth($f_color, 8);
+                @include transition(all, 0.6s, ease);
+                &:hover {
+                    background-color: nth($f_color, 19);
+                    border-color: nth($f_color, 19);
+                    text-decoration: none;
+                    color: nth($f_color, 5);
+                }
+            }
+        }
+    }
+}
+/*================= Team 3 ==================*/
+.te_team_6_bg {
+    background-color: rgb(244, 246, 247);
+    .te_team_6_img img {
+        @include border(2px, 11, solid);
+        max-height: 144px;
+    }
+}
+.te_team_6_col {
+    @include transition(all, 0.4s, ease);
+    &:hover {
+        background: nth($f_color, 5);
+        box-shadow: 0 3px 12px#ccc;
+        .te_team_6_img img {
+            filter: brightness(0.7);
+            @include transition(all, 0.4s, ease);
+        }
+    }
+}
+
+/*================= Team 4 ==================*/
+.team_style_4{
+    width: 90%;
+    max-width: 1400px;
+    .te_team_7_section {
+        &:hover {
+            .te_team_7_social_icon {
+                opacity: 1;
+            }
+            .te_team_7_content {
+                border-bottom: 10px solid nth($f_color, 19);
+            }
+        }
+    }
+    .te_team_7_img {
+        img {
+            max-height: 424px;
+        }
+        .te_team_7_social_icon {
+            @include position(absolute, 0);
+            width: 30px;
+            background: rgba(44, 62, 80, 0.75);
+            opacity: 0;
+            @include transition(all, 0.4s, ease);
+            .fa {
+                color: nth($f_color, 5);
+            }
+            a {
+                padding: 5px 5px 1px 5px;
+            }
+            @include media-breakpoint-down(md) {
+                @include position(relative, null, null, 0);
+                width: 100%;
+                opacity: 1;
+                section {
+                    display: inline-block !important;
+                    padding: 10px !important;
+                }
+            }
+        }
+    }
+    .te_team_7_content {
+        border: 1px solid $border-color;
+        border-bottom: 10px solid #ccc;
+    }
+}
+/*========================== Customer Style 1 ======================*/
+.customers_style_1{
+    width: 90%;
+    max-width: 1400px;
+    .te_quote_section {
+        padding: 35px;
+        background-color: #f6f7f8;
+        border-radius: 5%;
+        transform: perspective(1px) translateZ(0);
+        @include transition(all, 0.4s, ease);
+        .te_quote_text {
+            font-size: 1rem;
+            color: inherit;
+            z-index: 99;
+            .fa {
+                opacity: 0.1;
+                @include position(absolute, -43px);
+                z-index: -1;
+            }
+        }
+        .te_employee_img {
+            color: nth($f_color, 19);
+        }
+        &:before {
+            content: "";
+            @include position(absolute, 0, 0, 0, 0);
+            z-index: -1;
+            background: rgba(nth($f_color, 3), 0.3);
+            transform: scaleY(0);
+            transform-origin: center bottom;
+            @include transition(transform, 0.3s, ease-out);
+            border-radius: 5%;
+        }
+        &:hover {
+            .te_employee_img {
+                color: nth($f_color, 5);
+            }
+            &:before {
+                transform-origin: center top;
+                transform: scaleY(1);
+            }
+            .te_quote_text {
+                color: nth($f_color, 5);
+            }
+        }
+    }
+}
+/*========================== Customer Style 2 ===================*/
+.te_customer_testimonial_s5 {
+    background: #ededed;
+    .container{
+        width: 90%;
+        max-width: 1400px;
+    }
+    .te_customer_testimonial {
+        font-size: nth($f_sizes, 12);
+        color: nth($f_color, 19);
+        @include media-breakpoint-down(sm) {
+            font-size: nth($f_sizes, 21);
+        }
+    }
+    .te_what_customer_saying_s5 {
+        font-size: nth($f_sizes, 15);
+        color: nth($f_color, 3);
+        @include media-breakpoint-down(sm) {
+            font-size: nth($f_sizes, 12);
+        }
+    }
+    .te_customer_caption_s5 {
+        font-size: nth($f_sizes, 1);
+        color: nth($f_color, 4);
+    }
+    .te_customer_testimonial_item {
+        padding-bottom: 30px;
+        .te_cutomer_item_bg {
+            background: nth($f_color, 5);
+            padding: 20px;
+            @include media-breakpoint-down(sm) {
+                padding: 20px 20px 60px 20px;
+                .col-lg-3 {
+                    vertical-align: top;
+                }
+            }
+            img {
+                max-height: 130px;
+            }
+            p {
+                @include line-clamp(3, 75px);
+                line-height: 165%;
+                color: nth($f_color, 14);
+                @include media-breakpoint-down(sm) {
+                    height: 68px;
+                }
+            }
+            .te_customer_name_s5 {
+                margin-bottom: 3px;
+            }
+            .te_customer_position_s5 {
+                color: nth($f_color, 19);
+            }
+        }
+    }
+}
+/*================= 14. Header Offer Text =======================*/
+.te_s_header_offer_text {
+    & ul {
+        list-style-type: none;
+        width: auto;
+        >li {
+            font-size: nth($f_sizes, 3);
+            color: map-get($theme-colors, 'secondary');
+        }
+    }
+}
+
+/*============================ Banner Style 2========================================*/
+.te_banner_heading {
+    font-family: inherit;
+    font{
+	  	$f_size: 1.125rem;
+	    font-size:$f_size;
+		@include media-breakpoint-down(sm){
+			@if $f_size == 1.125rem {
+	            @include style(4,10);
+	            line-height: 180%;
+			}
+		}
+    }
+}
+.te_banner_subheading {
+  font-size:nth($f_sizes,2);
+}
+.te_banner_s2{
+    .jumbotron{
+        @include media-breakpoint-up(sm){
+            padding: 4rem 2rem;
+        }
+    }
+    .s_title_banner, .s_text_banner, .s_btn{
+        padding: 0px 15px;
+    }
+    .te_img_hover_overflow {
+        @include media-breakpoint-down(sm){
+            width:100%;
+        }
+        img{
+            max-height:366px;
+        }
+    }
+    .te_img_height{
+        max-width: 500px;
+        @include media-breakpoint-down(sm){
+            max-width: 100%;
+        }
+    }
+}
+.te_jumbotron_bg{
+	box-shadow: 0 3px 9px #ccc;
+	background-color:rgba(255, 255, 255, 0.9);
+}
+/*==================== Banner Style 3 ==================*/
+.te_banner_s3{
+    .container{
+        @include media-breakpoint-down(lg){
+            width: 90%;
+        }
+    }
+    .oe_img_bg.o_bg_img_center {
+        background-position: right !important;
+    }
+    .te_banner_s3_content{
+        margin: 10rem 0 12rem 0;
+        @include media-breakpoint-down(sm){
+            margin: 0rem 0 0rem 0;
+        }
+        .te_banner_sub_heading{
+            font-size: 5rem;
+            margin-bottom: 5px;
+            @include media-breakpoint-down(lg){
+                font-size: 4rem;
+            }
+            @include media-breakpoint-down(md){
+                font-size: 1.4rem;
+            }
+        }
+        .te_banner_main_heading{
+            font-size: 5rem;
+            margin-bottom: 15px;
+            @include media-breakpoint-down(lg){
+                font-size: 4rem;
+            }
+            @include media-breakpoint-down(md){
+                font-size: 1.4rem;
+            }
+        }
+        p{
+            font-size: 1.2875rem;
+            @include media-breakpoint-down(sm){
+                font-size: 1.1875rem;
+            }
+            @include media-breakpoint-down(sm){
+                font-size: 0.875rem;
+            }
+        }
+        .s_btn{
+            .shop_now_btn{
+                @include media-breakpoint-down(sm){
+                    font-size: 14px;
+                    padding: 0.475rem 0.7rem;
+                }
+            }
+        }
+    }
+    .te_category_banner_block{
+        margin-top:-4.5%;
+        margin-bottom: 32px;
+        @include media-breakpoint-down(lg){
+            margin-top:5%;
+        }
+        .te_banner_categ_block{
+            background:#ededed;
+            border-radius: 20px;
+            @include transition(all,0.2s,ease);
+            @include media-breakpoint-down(lg){
+                margin-bottom: 30px;
+            }
+            @include media-breakpoint-down(sm){
+                margin-bottom: 20px;
+            }
+            .te_categ_content{
+                background-position: 100%;
+                border-radius: 20px;
+                a{
+                    padding: 35px 3px;
+                    display:flex;
+                    font-size: inherit;
+                    color:nth($f_color,3);
+                    @include media-breakpoint-down(lg){
+                        padding: 50px 30px;
+                    }
+                    @include media-breakpoint-down(sm){
+                        padding: 15px 30px;
+                    }
+                    .te_banner_categ_name{
+                        max-width: 195px;
+                        @include media-breakpoint-down(sm){
+                            line-height: 32px;
+                        }
+                    }
+                }
+            }
+            img{
+                max-height:60px;
+                margin-right: 12px;
+                @include media-breakpoint-down(sm){
+                    vertical-align: middle;
+                }
+            }
+            &:hover{
+                background:nth($f_color,5);
+                box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+                @include media-breakpoint-down(lg){
+                    transform:unset;
+                }
+            }
+        }
+    }
+    .container{
+        padding:0;
+        @include media-breakpoint-down(sm){
+            width:90%;
+        }
+    }
+}

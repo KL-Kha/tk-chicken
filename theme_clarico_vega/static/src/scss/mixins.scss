@@ -1,0 +1,202 @@
+/********************************************************************************
+      01. Scss Mixins
+      02. Mixin for Text Styling
+      03. Common style for p tag
+      04. Mixin for effect and align
+      05. Mixin for Animation
+      06. Mixin for Transition
+      07. Header Icons
+      08. Common style for (container, Button, Image Zoom Effect)
+**********************************************************************************/
+
+/*=================== 01. Scss Mixins =======================*/
+@mixin o-wsale-scrollbar-subdles($-vertical: true) {
+    scrollbar#{if($-vertical, -width, -height)}: 3px;
+    cursor: grab;
+
+    &::-webkit-scrollbar {
+        #{if($-vertical, width, height)}: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: $btn-border-radius-sm;
+        background: currentColor;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $light;
+    }
+}
+
+@mixin width($width,$max-width){
+  width:$width;
+  max-width:$max-width;
+}
+@mixin container{
+  display:block;
+  margin:0px auto;
+}
+@mixin text-ellipsis {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	display: inline-block;
+}
+/*======================= 02. Mixin for Text Styling =========================*/
+@mixin style($size,$color,$family:null,$height:null,$transform:null){
+  font-size:nth($f_sizes,$size);
+  color:nth($f_color,$color);
+  font-family:$family;
+  line-height:$height;
+  text-transform:$transform;
+}
+@mixin spacing($l-spacing:null,$w-spacing:null){
+  letter-spacing:$l-spacing;
+  word-spacing:$w-spacing;
+}
+@mixin border($border-width,$border-color,$border-style){
+  border-width:$border-width;
+  border-color:nth($f_color,$border-color);
+  border-style:$border-style;
+}
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius;
+     -o-border-radius: $radius;
+     border-radius: $radius;
+}
+@mixin position($position,$top:null,$right:null,$bottom:null,$left:null) {
+  position:$position;
+  top:$top;
+  right:$right;
+  bottom:$bottom;
+  left:$left;
+}
+@mixin line-clamp($number,$height:null) {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: $number;
+    -webkit-box-orient: vertical;
+    height: $height;
+}
+/*==================== 03. Common style for p tag =========================*/
+p {
+  @include container;
+  @include style(1,28,inherit,180%);
+}
+@media (max-width:767.98px){
+	p{
+		font-size:nth($f_sizes,3)
+	}
+}
+
+/*============================ 04. Mixin for effect and align ======================*/
+/*------- box-shadow -------------*/
+@mixin box-shadow($top){
+  -webkit-box-shadow: $top;
+  -moz-box-shadow: $top;
+  -ms-box-shadow: $top;
+  -o-box-shadow: $top;
+   box-shadow: $top;
+}
+/*---------- transform ----------*/
+@mixin transform($x,$y:null){
+  -webkit-transform: $x,$y;
+  -moz-transform: $x,$y;
+  -ms-transform: $x,$y;
+  -o-transform: $x,$y;
+  transform: $x,$y;
+}
+
+/*------BUTTON FADE-IN------*/
+@keyframes fadeIn{from{opacity: 0; transform: translate3d(0, -30%, 0);}to{opacity: 1; transform: translate3d(0, 0, 0);}}
+
+/*========================== 05. Mixin for Animation ======================*/
+
+@mixin animation($delay, $duration, $animation, $timing_function:null, $iteration:null,$fill_mode:null) {
+  /* For Safari*/
+    -webkit-animation-delay: $delay;
+    -webkit-animation-duration: $duration;
+    -webkit-animation-name: $animation;
+    -webkit-animation-timing-function: $timing_function;
+    -webkit-animation-iteration-count: $iteration;
+    -webkit-animation-fill-mode:$fill_mode;
+
+  /*For Firefox*/
+    -moz-animation-delay: $delay;
+    -moz-animation-duration: $duration;
+    -moz-animation-name: $animation;
+    -moz-animation-timing-function: $timing_function;
+    -moz-animation-iteration-count: $iteration;
+    -moz-animation-fill-mode:$fill_mode;
+
+  /*Internet Explorer*/
+  -ms-animation-delay: $delay;
+    -ms-animation-duration: $duration;
+    -ms-animation-name: $animation;
+    -ms-animation-timing-function: $timing_function;
+    -ms-animation-iteration-count: $iteration;
+    -ms-animation-fill-mode:$fill_mode;
+
+    /*For Opera*/
+    -o-animation-delay: $delay;
+    -o-animation-duration: $duration;
+    -o-animation-name: $animation;
+    -o-animation-timing-function: $timing_function;
+    -o-animation-iteration-count: $iteration;
+    -o-animation-fill-mode:$fill_mode;
+
+  /* Standard syntax */
+    animation-delay: $delay;
+    animation-duration: $duration;
+    animation-name: $animation;
+    animation-timing-function:$timing_function;
+    animation-iteration-count: $iteration;
+    animation-fill-mode:$fill_mode;
+}
+/*========================== 06. Mixin for Transition ======================*/
+
+@mixin transition($t_property,$t_duration,$t_timing-function:null,$t_delay:null){
+  /* For Safari*/
+  -webkit-transition-property:$t_property;
+  -webkit-transition-duration:$t_duration;
+    -webkit-transition-timing-function:$t_timing-function;
+    -webkit-transition-delay:$t_delay;
+
+  /*For Firefox*/
+  -moz-transition-property:$t_property;
+  -moz-transition-duration:$t_duration;
+    -moz-transition-timing-function:$t_timing-function;
+    -moz-transition-delay:$t_delay;
+
+  /*Internet Explorer*/
+  -ms-transition-property:$t_property;
+  -ms-transition-duration:$t_duration;
+    -ms-transition-timing-function:$t_timing-function;
+    -ms-transition-delay:$t_delay;
+
+  /*For Opera*/
+  -o-transition-property:$t_property;
+  -o-transition-duration:$t_duration;
+    -o-transition-timing-function:$t_timing-function;
+    -o-transition-delay:$t_delay;
+
+  /* Standard syntax */
+  transition-property:$t_property;
+  transition-duration:$t_duration;
+    transition-timing-function:$t_timing-function;
+    transition-delay:$t_delay;
+}
+
+/*========================== 07. Header Icons ======================*/
+@mixin cart_icon{
+    background: url('/theme_clarico_vega/static/src/img/header_icons/cart.svg') 100% 100% no-repeat;
+}
+@mixin wishlist_icon{
+    background: url('/theme_clarico_vega/static/src/img/header_icons/wishlist.svg') 100% 100% no-repeat;
+}
+@mixin user_icon{
+    background: url('/theme_clarico_vega/static/src/img/header_icons/user.svg') 100% no-repeat;
+}
