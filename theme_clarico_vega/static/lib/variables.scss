@@ -1,0 +1,22 @@
+$theme-colors: map-merge(
+   (
+      "primary":    $primary,
+     "secondary":  $secondary,
+     "button_gradient_1": transparent,
+     "button_gradient_2": transparent,
+     "animation_text_color": transparent,
+     "animation_hover_color":transparent,
+   ),
+   $theme-colors
+);
+
+/*============================== Basic Variables with Font Size And Font Colour ========================*/
+$animation-text-color: o-color("animation_text_color") !default;
+$animation-hover-color: o-color("animation_hover_color") !default;
+$btn-gradient-1: o-color("button_gradient_1") !default;
+$btn-gradient-2: o-color("button_gradient_2") !default;
+
+
+$f_color :           		 #898383,#717171,#000000,#888888,#ffffff,#575757,#707070,#eaeaea,#969696,#222,#cccccc,
+							 #7b7f83,#4c5462,#8b93a1,#777,#999,#e0e0e0,#f5f5f5,o-color('primary'),#333333,#444,#555,
+							 #9c9c9c,#bcb6b6,#545353,#4e4e4e,transparent,inherit,  !default;

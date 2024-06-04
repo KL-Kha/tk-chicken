@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="website_sale.addToCartNotification" t-inherit-mode="extension">
+        <xpath expr="//a[@role='button']" position="replace"/>
+        <xpath expr="//span[@t-out='getProductSummary(line)']" position="attributes">
+            <attribute name="class" add="w-100 text-truncate product_name" separator=" "/>
+        </xpath>
+        <xpath expr="//span[@t-out='getProductSummary(line)']" position="after">
+            <span class="pt-1"><i class="fa fa-check-circle" style="color:green;"/>  Added to cart</span>
+            <div class="action_btn_toast d-flex pt-2">
+                <a role="button" class="d-inline-block text-decoration-none" href="/shop/cart">View cart</a>
+                <a role="button" class="d-inline-block ms-3 text-decoration-none" href="/shop/checkout?express=1">Checkout</a>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]" position="after">
+            <div class="progress active position-absolute bottom-0 w-100"></div>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]" position="attributes">
+            <attribute name="class" remove="mb-2" separator=" "/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,159 @@
+/*----------- Header Search box ----------*/
+.o_dropdown_menu.w-100 {
+    overflow: hidden;
+    box-shadow: 0 0 4rem rgba(0, 0, 0, 0.18) !important;
+    border-radius: 0;
+    // For Chrome & Safari
+    &::-webkit-scrollbar {
+        width: 2px;
+        height: 5px;
+        display: block !important;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #000000;
+    }
+    &::-webkit-scrollbar-track {
+        background: #b3b2b2;
+    }
+    // for firefox
+    scrollbar-color: #000000 #b3b2b2;
+    max-height: calc(100vh - 360px);
+    overflow-y: auto;
+    position: absolute;
+    scrollbar-width: thin;
+    @include media-breakpoint-down(md) {
+        max-height: calc(100vh - 280px);
+    }
+}
+form.o_searchbar_form {
+    .search_btn_close_ept{
+        position: absolute;
+        right:55px;
+        top: 50%;
+        transform: translateY(-50%);
+        &:after{
+            content: '\00d7';
+            font-size: 22px;
+        }
+    }
+    .o_dropdown_menu.show .media:hover {
+        background-color: whitesmoke !important;
+    }
+    .media span {
+        font-size: 14px;
+    }
+    .text-danger {
+        color: #969696 !important;
+    }
+    b {
+        color: nth($f_color, 19);
+        font-weight: 500;
+    }
+    .media-body {
+        .btn {
+            font-size: 13px;
+            padding-left: 0;
+        }
+    }
+    .o_search_result_item_detail {
+        button:nth-child(3) {
+            padding: 0 0 0 4px !important;
+            border-radius: 4px;
+            color: #888888 !important;
+            text-decoration: underline !important;
+        }
+    }
+    .o_dropdown_menu {
+        .te_ce {
+            font-size: 13px;
+        }
+        .categ_search {
+            padding: 0 10px 5px;
+            border-bottom: 1px solid #ededed;
+            a.dropdown-item {
+                background: unset !important;
+                padding: 4px 5px !important;
+            }
+            .media {
+                &:hover {
+                    background: unset !important;
+                }
+            }
+            .o_search_result_item {
+                border: 1px solid #ededed;
+                margin: 6px 0;
+                &:hover {
+                    border: 1px solid map-get($theme-colors, "primary");
+                }
+            }
+        }
+        a {
+            &:hover {
+                background-color: #f5f5f5;
+                color: #777 !important;
+            }
+            &:active {
+                color: #777 !important;
+            }
+        }
+        button.dropdown-item {
+            padding: 0.25rem 0.75rem;
+        }
+        .search-all {
+            &:focus,
+            &:hover {
+                background-color: #f5f5f5 !important;
+            }
+            &:active {
+                color: #777 !important;
+            }
+        }
+        .media {
+            .h6 {
+                font-size: 14px;
+                color: #777 !important;
+                &:active,
+                &:focus {
+                    color: #777 !important;
+                }
+            }
+            .te_prod span {
+                font-size: 12px;
+            }
+        }
+        .o_search_result_item {
+            padding: 0.25rem;
+            display: flex;
+            &[data-class="d-inline-block"] {
+                padding: 0;
+            }
+            .o_image_40_cover{
+                height: unset;
+            }
+        }
+        a.dropdown-item, .search-all{
+            padding: 4px 10px !important;
+            position: unset;
+            &:focus .media {
+                background-color: #f2f2f2;
+            }
+            &:focus-visible{
+                outline: unset !important;
+            }
+        }
+        .search-all:focus-visible{
+            outline: 0 !important;
+        }
+    }
+    > .o_dropdown_menu {
+        padding: 0px 0px;
+        @include media-breakpoint-down(md) {
+            border: none;
+            border-radius: 0;
+            background: #fff;
+            padding: 0 10px;
+            box-shadow: 0 15px 70px 0 rgba(0, 0, 0, 0.5);
+            margin: 0;
+        }
+    }
+}

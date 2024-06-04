@@ -1,0 +1,118 @@
+/*================ Footer Style 1 ==================*/
+@if o-website-value('footer-template') == 'option_footer_01' {
+    footer.o_footer {
+        ul {
+            li {
+                padding: 4px 0;
+            }
+        }
+        .te_footer_info_ept section {
+            li {
+                i {
+                    font-size: inherit;
+                    @include position(relative, 0);
+                    opacity: 0;
+                    @include transition(all, .5s);
+                    margin-right: -15px;
+                }
+                &:hover {
+                    i {
+                        opacity: 1;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+        .te_block_title {
+            font-size: inherit;
+        }
+        .te_footer_info_text {
+            >li {
+                padding: 10px 0;
+            }
+            .te_ftr_text_style {
+                width: calc(100% - 24px);
+            }
+        }
+        .te_newsletter_title h5 {
+           margin-bottom: 12px;
+           font-size: $o-font-size-base;
+        }
+        .js_language_selector {
+            margin-top: 0px;
+            button {
+                box-shadow: none !important;
+                color: map-get($theme-colors, 'primary') !important;
+                &:hover{
+                    background-color: transparent !important;
+                }
+            }
+            &.dropup {
+                .dropdown-menu.show a{
+                    &.active {
+                        background-color: map-get($theme-colors, 'primary');
+                    }
+                    &:hover{
+                        color: map-get($theme-colors, 'primary') !important;
+                    }
+                }
+            }
+        }
+        .te_newsletter_content {
+            @include media-breakpoint-down(sm){
+                padding-bottom: 5px;
+            }
+        }
+        .te_copyright_add_language {
+            text-align: right;
+            @include media-breakpoint-down(sm) {
+                text-align: left;
+                margin-top: 16px;
+            }
+        }
+        .te_informations_s {
+            @include media-breakpoint-down(sm){
+                padding-bottom: 1.5rem !important;
+            }
+        }
+    }
+    .te_footer_detail {
+        .te_footer_logo_title_socialicon {
+            .te_footer_logo_img {
+                img {
+                    max-width: 100px;
+                }
+            }
+            @include media-breakpoint-down(sm) {
+                width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        span.te_footer_add_tel_email_text_ept {
+            width: 15px;
+            span {
+                font-size: $o-font-size-base;
+            }
+        }
+    }
+    .te_newsletter_main .js_language_selector .dropdown-menu{
+        @include media-breakpoint-down(sm){
+            transform: translate3d(65px, -73px, 0px) !important;
+        }
+    }
+    section.te_payment_list img {
+        max-height: 30px;
+    }
+    .s_newsletter_subscribe_form {
+        .js_subscribe_value,
+        .js_subscribe_btn,
+        .btn-success {
+            font-size: $o-font-size-base;
+            padding:0.2rem 0.5rem;
+            height: 38px;
+            line-height: 30px;
+            border-radius: 0px;
+        }
+    }
+}
