@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_brand_pos_manager,product.brand.manager,model_product_brand,sales_team.group_sale_manager,1,1,1,1
+access_product_brand_public,product.brand.public,model_product_brand,,1,0,0,0
+access_product_brand_config_manager,product.brand.config.manager,model_product_brand_config,sales_team.group_sale_manager,1,1,1,1
+access_product_brand_config_public,product.brand.config.public,model_product_brand_config,,1,0,0,0
+access_product_document_config_manager,product.document.config.manager,model_product_document_config,sales_team.group_sale_manager,1,1,1,1
+access_product_document_config_public,product.document.config.public,model_product_document_config,,1,0,0,0
+access_product_tab_line,product.tab.line,model_product_tab_line,,1,0,0,0
+access_product_tabs,product.tab.line,model_product_tab_line,base.group_system,1,1,1,1
+access_synonym_group,access.synonym.group,model_synonym_group,,1,1,1,1
+access_search_keyword_report,access.search.keyword.report,model_search_keyword_report,,1,1,1,1
+access_menu_label,menu.label,model_menu_label,,1,1,1,1
+access_product_label_config_manager,product.label.config.manager,model_product_label_config,sales_team.group_sale_manager,1,1,1,1
+access_product_label_config_public,product.label.config.public,model_product_label_config,,1,0,0,0

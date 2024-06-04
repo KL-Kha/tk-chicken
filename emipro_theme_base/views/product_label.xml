@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_emipro_theme_base_product_ribbon_form_ept" model="ir.ui.view">
+        <field name="name">emipro_theme_base.product.ribbon.form.ept</field>
+        <field name="model">product.ribbon</field>
+        <field name="inherit_id" ref="website_sale.product_ribbon_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet//group//group" position="inside">
+                <field name="ribbon_style" required="1"/>
+                <field name="ribbon_position" required="1"/>
+            </xpath>
+            <xpath expr="//sheet//group//field[@name='html_class']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <form string="Product Ribbon Style Images">
+                    <p>
+                        <img invisible="not (ribbon_style == 'o_ribbon_')" alt="Slanted" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl1.png"/>
+                        <img invisible="not (ribbon_style == 'o_tag_')" alt="Tag" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl2.png"/>
+                        <img invisible="not (ribbon_style == 'o_product_label_style_1_')" alt="Vega Tag" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl3.png"/>
+                        <img invisible="not (ribbon_style == 'o_product_label_style_2_')" alt="Vega Square Shadow" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl4.png"/>
+                        <img invisible="not (ribbon_style == 'o_product_label_style_3_')" alt="Vega Edge 1" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl5.png"/>
+                        <img invisible="not (ribbon_style == 'o_product_label_style_4_')" alt="Vega Edge 2" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl6.png"/>
+                        <img invisible="not (ribbon_style == 'o_product_label_style_5_')" alt="Vega Round" class="mw-100"
+                             src="/emipro_theme_base/static/src/img/product_label_style/pl7.png"/>
+                    </p>
+                </form>
+                <notebook>
+                    <page string="Products">
+                        <button name="set_label_wizard" class="oe_highlight" type="object"
+                                string="Configure Products"/>
+                        <field name="product_ids">
+                            <tree delete="false" create="false">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

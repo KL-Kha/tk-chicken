@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-inherit="website.s_searchbar.autocomplete" t-inherit-mode="extension">
+        <xpath expr="//t[@t-elif='!results.length']" position="attributes">
+            <attribute name="t-elif">!results.length and !categories.length</attribute>
+        </xpath>
+
+        <xpath expr="//a[@t-foreach='results']/div[hasclass('d-flex')]" position="attributes">
+            <attribute name="t-attf-data-class">#{result['image_url'] ? '' : 'd-inline-block'}</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_search_result_item_detail')]//button[hasclass('extra_link')]" position="replace">
+            <button t-if="extra_link" class="btn btn-link btn-sm p-0" disabled="disabled"
+                    t-att-data-target="result['extra_link_url']" t-out="extra_link['extra_link_title']"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_search_result_item')]//div[hasclass('px-3')]//div[@t-attf-class]"
+               position="replace">
+            <div t-attf-class="h6 font-weight-bold #{description ? '' : 'mb-1'}" t-out="result['name']"/>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_search_result_item')]//img[hasclass('o_image_64_contain')]"
+               position="attributes">
+            <attribute name="class">flex-shrink-0 o_image_40_cover</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_search_result_item')]//div[hasclass('flex-shrink-0')]//span[hasclass('text-danger')]"
+               position="attributes">
+            <attribute name="class">text-danger text-nowrap te_prod</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_search_result_item')]" position="attributes">
+            <attribute name="class">media d-flex align-items-center o_search_result_item</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_search_result_item_detail')]" position="attributes">
+            <attribute name="class">media-body o_search_result_item_detail px-3</attribute>
+        </xpath>
+
+        <xpath expr="//a[@t-foreach='results']" position="before">
+            <div t-if="categories and categories.length" class="categ_search mb-1">
+                <span class="d-block pb-0 ps-2 pt-2 te_ce text-muted">Categories</span>
+                <t t-foreach="categories" t-as="category" t-key="result_index">
+                    <a t-att-href="category['website_url']" class="dropdown-item p-2 text-wrap d-inline">
+                        <div class="media align-items-center o_search_result_item p-0 d-inline-block">
+                            <div class="media-body px-1">
+                                <div t-attf-class="h6 font-weight-bold #{description ? '' : 'mb-0'}"
+                                     t-esc="category['name']"/>
+                            </div>
+                        </div>
+                    </a>
+                </t>
+            </div>
+        </xpath>
+
+        <xpath expr="//t[@t-if='hasMoreResults']" position="replace">
+            <t t-if="quickLink and quickLink['status'] and quickLink['navigate_type'] == 'attr_value'">
+                <a t-att-href="quickLink['url']" type="submit"
+                   class="dropdown-item  text-primary search-all"><i class="fa fa-search ml-2 mr-2"/>View all products
+                    with
+                    <b class="mx-1" t-esc="quickLink['name']"/>
+                    <span t-esc="quickLink['attribute_name']"/></a>
+            </t>
+            <t t-elif="quickLink and quickLink['status'] and quickLink['navigate_type'] == 'brand'">
+                <a t-att-href="quickLink['url']" type="submit"
+                   class="dropdown-item text-primary search-all"><i class="fa fa-search ml-2 mr-2"/>View all products
+                    with<b class="mx-1" t-esc="quickLink['name']"/>Brand</a>
+            </t>
+            <t t-elif="hasMoreResults">
+                <button type="submit" class="dropdown-item text-primary search-all"><i class="fa fa-search ml-2 mr-2"/>
+                    View all products</button>
+            </t>
+        </xpath>
+    </t>
+</templates>
+

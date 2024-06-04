@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="action_product_ribbon">
+        <field name="name">Product Ribbon</field>
+        <field name="res_model">product.ribbon</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Product Ribbon"
+              id="submenu_product_ribbon"
+              action="action_product_ribbon"
+              parent="website_sale.menu_catalog"/>
+
+</odoo>

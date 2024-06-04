@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Dynamic eCommerce Category Slider -->
+
+    <record id="dynamic_snippet_category_ext" model="ir.filters">
+        <field name="name">All Category</field>
+        <field name="model_id">product.public.category</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[]</field>
+        <field name="sort">['sequence asc']</field>
+    </record>
+
+    <record id="dynamic_filter_category" model="website.snippet.filter">
+        <field name="filter_id" ref="emipro_theme_base.dynamic_snippet_category_ext"/>
+        <field name="field_names">name,product_tmpl_ids,image_512</field>
+        <field name="limit" eval="16"/>
+        <field name="name">All Category</field>
+    </record>
+
+    <!-- Dynamic Brand Slider -->
+
+    <record id="dynamic_snippet_brand_ext" model="ir.filters">
+        <field name="name">All Product Brands</field>
+        <field name="model_id">product.brand</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[]</field>
+        <field name="sort">['sequence asc']</field>
+    </record>
+
+    <record id="dynamic_filter_brand" model="website.snippet.filter">
+        <field name="filter_id" ref="emipro_theme_base.dynamic_snippet_brand_ext"/>
+        <field name="field_names">name</field>
+        <field name="limit" eval="16"/>
+        <field name="name">All Product Brands</field>
+    </record>
+
+    <!-- Dynamic Product Slider -->
+
+    <record id="dynamic_snippet_product_template_ext" model="ir.filters">
+        <field name="name">All Products</field>
+        <field name="model_id">product.template</field>
+        <field name="domain">[]</field>
+        <field name="sort">['sequence asc']</field>
+    </record>
+
+    <record id="dynamic_filter_product_template" model="website.snippet.filter">
+        <field name="filter_id" ref="emipro_theme_base.dynamic_snippet_product_template_ext"/>
+        <field name="field_names">name</field>
+        <field name="limit" eval="16"/>
+        <field name="name">All Products</field>
+    </record>
+
+    <record id="emipro_theme_base.s_dynamic_snippet_product_template_000_js" model="ir.asset">
+        <field name="name">Dynamic snippet Product Template 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">emipro_theme_base/static/src/snippets/s_dynamic_snippet_product_template/000.js</field>
+    </record>
+
+    <record id="emipro_theme_base.s_dynamic_snippet_carousel_000_xml" model="ir.asset">
+        <field name="name">Dynamic snippet owl carousel 000 XML</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">emipro_theme_base/static/src/snippets/dynamic_carousel.xml</field>
+    </record>
+
+    <record id="emipro_theme_base.s_dynamic_snippet_brand_000_js" model="ir.asset">
+        <field name="name">Dynamic snippet brand 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">emipro_theme_base/static/src/snippets/s_dynamic_snippet_brand/000.js</field>
+    </record>
+
+    <record id="emipro_theme_base.s_dynamic_snippet_category_000_js" model="ir.asset">
+        <field name="name">Dynamic snippet Category 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">emipro_theme_base/static/src/snippets/s_dynamic_snippet_category/000.js</field>
+    </record>
+
+    <record id="emipro_theme_base.s_searchbar_000_xml" model="ir.asset">
+        <field name="name">Searchbar Extended 000 XML</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">emipro_theme_base/static/src/snippets/s_searchbar/000.xml</field>
+    </record>
+
+    <record id="emipro_theme_base.s_searchbar_000_js" model="ir.asset">
+        <field name="name">Searchbar Extended 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">emipro_theme_base/static/src/snippets/s_searchbar/000.js</field>
+    </record>
+
+    <record id="dynamic_snippet_discount_products_template_action" model="ir.actions.server">
+        <field name="name">Discount Products Templates</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+model.env.context['product_template_snippet'] = True
+response = DynamicFilter._get_products('discount_products', model.env.context)
+        </field>
+    </record>
+
+    <record id="dynamic_filter_discount_products_template" model="website.snippet.filter">
+        <field name="action_server_id" ref="emipro_theme_base.dynamic_snippet_discount_products_template_action"/>
+        <field name="field_names">name</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Discount Products</field>
+    </record>
+
+    <record id="dynamic_snippet_newest_products_template_filter" model="ir.filters">
+        <field name="name">Newest Products</field>
+        <field name="model_id">product.template</field>
+        <field name="user_id" eval="False"/>
+        <field name="domain">[('website_published', '=', True)]</field>
+        <field name="context">{'display_default_code': False, 'add2cart_rerender': False}</field>
+        <field name="sort">['create_date desc']</field>
+        <field name="action_id" ref="website.action_website"/>
+    </record>
+
+    <record id="dynamic_filter_newest_product_template" model="website.snippet.filter">
+        <field name="filter_id" ref="emipro_theme_base.dynamic_snippet_newest_products_template_filter"/>
+        <field name="field_names">name</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Newest Products</field>
+    </record>
+
+    <record id="dynamic_snippet_latest_sold_products_template_action" model="ir.actions.server">
+        <field name="name">Best Seller Products</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._get_products('latest_sold_product_template', model.env.context)
+        </field>
+    </record>
+
+    <record id="dynamic_filter_latest_sold_products_template" model="website.snippet.filter">
+        <field name="action_server_id" ref="emipro_theme_base.dynamic_snippet_latest_sold_products_template_action"/>
+        <field name="field_names">name</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Best Seller Products</field>
+    </record>
+
+    <record id="dynamic_snippet_latest_viewed_products_template_action" model="ir.actions.server">
+        <field name="name">Recently Viewed Products</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+DynamicFilter = model.env['website.snippet.filter']
+response = DynamicFilter._get_products('latest_viewed_product_template', model.env.context)
+        </field>
+    </record>
+
+    <record id="dynamic_filter_latest_viewed_products_template" model="website.snippet.filter">
+        <field name="action_server_id" ref="emipro_theme_base.dynamic_snippet_latest_viewed_products_template_action"/>
+        <field name="field_names">name</field>
+        <field name="limit" eval="16"/>
+        <field name="name">Recently Viewed Products</field>
+    </record>
+
+
+</odoo>

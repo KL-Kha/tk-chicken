@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_label_config_form_view" model="ir.ui.view">
+        <field name="name">product_label_config_from_view</field>
+        <field name="model">product.label.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet string="Products">
+                    <group>
+                        <field name="label_id" readonly="1" string="Label"/>
+                        <field name="product_ids" widget="many2many_tags" string="Products"
+                               domain="[('sale_ok', '=', True),('website_published', '=', True)]"
+                               options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open': True}"/>
+                    </group>
+                    <small class="text-danger fw-bold">If any other label set on select product list will replace on save.</small>
+                </sheet>
+                <footer>
+                    <button type="object" name="config_label_product" class="oe_highlight" string="Configure"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+
+

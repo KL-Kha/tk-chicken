@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--==================== Brand Page ========================-->
+    <template id="brand_listing_template" name="Brand Listing">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Brands</t>
+            <div id="wrap"/>
+        </t>
+    </template>
+</odoo>

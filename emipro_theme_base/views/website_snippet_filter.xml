@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    website.snippet.filter
+
+        <!--  Tree View for Synonym Group -->
+    <record id="website_snippet_filter_tree" model="ir.ui.view">
+        <field name="name">website.snippet.filter.tree</field>
+        <field name="model">website.snippet.filter</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--  Form View for Synonym Group -->
+    <record id="website_snippet_filter_view_form" model="ir.ui.view">
+        <field name="name">website.snippet.filter.view.form</field>
+        <field name="model">website.snippet.filter</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="filter_id" required="1"/>
+                        <field name="field_names" invisible="1"/>
+                        <field name="model_name" readonly="1"/>
+                        <field name="limit"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--  Action for Synonym Group -->
+    <record id="action_website_snippet_filter" model="ir.actions.act_window">
+        <field name="name">Dynamic Snippet Filters</field>
+        <field name="res_model">website.snippet.filter</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--  Menu for Search Synonyms -->
+    <menuitem id="menu_website_snippet_filter"
+              name="Dynamic Snippet Filters"
+              parent="website_sale.menu_ecommerce"
+              sequence="5">
+
+        <menuitem id="submenu_website_snippet_filter" name="Snippet Filters" action="action_website_snippet_filter"
+                  sequence="1"/>
+
+    </menuitem>
+
+
+
+</odoo>

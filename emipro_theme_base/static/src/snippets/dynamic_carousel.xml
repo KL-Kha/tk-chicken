@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="website.s_dynamic_snippet.carousel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('carousel')]" position="attributes">
+            <attribute name="t-if">rowPerSlide &gt; 1</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('carousel')]" position="after">
+            <t t-set="rowSize" t-value="chunkSize" />
+            <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
+            <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"/>
+            <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/slideSize)).keys())"/>
+            <t t-set="rowIndexGenerator" t-value="Array.from(Array(rowPerSlide).keys())"/>
+            <t t-set="colIndexGenerator" t-value="Array.from(Array(rowSize).keys())"/>
+            <div t-if="rowPerSlide &lt; 2" t-att-id="uniqueId" class="owl-carousel dynamic-owl-carousel w-100 mx-auto" t-att-data-slide-size="slideSize" t-att-data-rows="rowPerSlide">
+                <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex">
+                    <t t-set="slideOffset" t-value="slideIndex * slideSize"/>
+                    <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex">
+                        <t t-set="rowOffset" t-value="slideOffset + (rowIndex * rowSize)"/>
+                        <t t-if="rowOffset &lt; data.length">
+                            <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex">
+                                <t t-set="itemIndex" t-value="rowOffset + colIndex"/>
+                                <t t-if="itemIndex &lt; data.length">
+                                    <t t-out="data[itemIndex]"/>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                </t>
+            </div>
+            <div t-if="rowPerSlide &gt; 2" t-att-id="uniqueId" class="w-100 mx-auto" t-att-data-slide-size="slideSize" t-att-data-rows="rowPerSlide">
+                <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex">
+                    <t t-set="slideOffset" t-value="slideIndex * slideSize"/>
+                    <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex">
+                        <t t-set="rowOffset" t-value="slideOffset + (rowIndex * rowSize)"/>
+                        <t t-if="rowOffset &gt; data.length">
+                            <div class="row">
+                                <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex">
+                                    <t t-set="itemIndex" t-value="rowOffset + colIndex"/>
+                                    <t t-if="itemIndex &gt; data.length">
+                                        <div t-attf-class="#{colClass}">
+                                            <t t-out="data[itemIndex]"/>
+                                        </div>
+                                    </t>
+                                </t>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
