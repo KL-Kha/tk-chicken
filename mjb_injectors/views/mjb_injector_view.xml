@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <record id="mjb_injector_form_view" model="ir.ui.view">
+          <field name="name">mjb.injector.form</field>
+          <field name="model">mjb.injector</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <form>
+                    <sheet string="MJB Injector JS/XML/CSS">
+                        <div class="oe_title">
+                                    <h1>
+                                        <field name="name" required="1"/>
+                                    </h1>
+                                </div>
+                        <group name="group_content">
+                            <group name="group_content_left">
+                                <field name="description"/>
+                                <field name="link"/>
+                            </group>
+                            <group name="group_content_right">
+                                <field name="active"/>
+                                <field name="groups" widget="many2many_tags"/>
+                            </group>
+                        </group>
+
+                        <notebook name="notebook_code">
+
+                            <page name="page_js" string="JS">
+                                <field name="js" widget="ace" options="{'mode': 'js'}"/>
+                            </page>
+                            <page name="page_css" string="CSS">
+                                <field name="css" widget="ace" options="{'mode': 'scss'}"/>
+                            </page>
+                            <page name="page_xml" string="XML">
+                                <field name="xml" widget="ace" options="{'mode': 'xml'}"/>
+                            </page>
+                            <page name="page_tutorial" string="Tutorial">
+                                <h4>How to use</h4>
+                                <ul>
+                                    <li>Give a name to your script, and a group of user it will apply to.</li>
+                                    <li>Set the script to be active if you want it to be effective</li>
+                                    <li>JS code: will be executed "as-is" at page-load. You can use "odoo.require(...)" to register a module, similar to static JS files of traditional modules. You can use jQuery with "$".</li>
+                                    <li>CSS Code: will be applied on top of Odoo CSS, so you can override it.</li>
+                                    <li>XML Code: will be registered as a XML static resource which you can call from your JS code for example to render it.</li>
+                                </ul>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+          </field>
+      </record>
+
+      <!--mjb_injector list view-->
+      <record id="mjb_injector_tree_view" model="ir.ui.view">
+          <field name="name">mjb.injector.list</field>
+          <field name="model">mjb.injector</field>
+          <field name="arch" type="xml">
+              <tree string="MJB Injector JS/XML/CSS">
+                  <field name="name"/>
+                  <field name="groups"/>
+              </tree>
+          </field>
+      </record>
+
+      <record id="action_mjb_injector" model="ir.actions.act_window">
+        <field name="name">MJB Injector JS/XML/CSS</field>
+        <field name="res_model">mjb.injector</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" eval="False"/>
+        <field name="context">{}</field>
+        <field name="help">customize the group here</field>
+      </record>
+
+      <menuitem name="Injector" id="base.mjb_injector" parent="base.menu_administration" sequence="6" />
+      <menuitem action="action_mjb_injector" id="menu_action_mjb_injector" parent="base.mjb_injector" sequence="20" />
+   
+ </data>
+</odoo>

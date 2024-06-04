@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="mjb_base_theme" model="mjb.injector">
+            <field name="name">MJB Base Theme</field>
+            <field name="active">1</field>
+            <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="js">
+class customTheme{
+    constructor({
+        version = "0.1",
+        $ = false,
+        libs = false
+    }) {
+        const self = this;
+        self._name = 'customTheme'
+        self._version = version
+        self._excludedLogLevels = [
+            'verbose'
+        ]
+        self.$ = $;
+        self.libs = libs;
+        self.odoo = odoo || false;
+    }
+    
+    log(m, level='debug', source=''){
+        const self = this;
+        if(!self._excludedLogLevels.includes(level))
+            console.log(`[${self._name}@${self._version}] ${level.toUpperCase().padEnd(7)} | ${source} `, m)
+    }
+    
+    start() {
+        const self = this;
+        self.log('start', 'verbose')
+    }
+    
+}
+
+odoo.define('mjb_custom_theme', [], function (require) {
+    "use strict";
+    var libs = {}
+    $(function () {
+        let instance = new customTheme({
+            version: "17.0.1",
+            debug: true,
+            $: $,
+            libs: libs
+        });
+        instance.start();
+        return instance;
+    });
+});
+            </field>
+            <field name="css">
+nav.o_main_navbar {
+    border-bottom: 2px solid blue;
+}
+            </field>
+            <field name="xml"></field>
+        </record>
+    </data>
+</openerp>
