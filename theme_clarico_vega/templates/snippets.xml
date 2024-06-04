@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--=====================  Snippets =====================-->
+    <template id="snippets" inherit_id="website.snippets" name="Dynamic Snippets">
+        <xpath expr="//div[@id='snippet_structure']" position="before">
+            <div id="theme_vega_editor" class="o_panel">
+                <div class="o_panel_header">Dynamic Snippets</div>
+                <div class="o_panel_body">
+                    <t t-snippet="theme_clarico_vega.dynamic_multi_columns_category" string="Product Builder with Category" t-thumbnail="/theme_clarico_vega/static/src/img/product-with-category.png">
+                        <keywords>dynamic, columns</keywords>
+                    </t>
+                    <t t-snippet="theme_clarico_vega.dynamic_multi_columns_brand" string="Product Builder with Brand" t-thumbnail="/theme_clarico_vega/static/src/img/product-with-brand.png">
+                        <keywords>dynamic, columns</keywords>
+                    </t>
+                    <t t-snippet="theme_clarico_vega.s_dynamic_snippet_category" string="E-commerce Categories" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/category_carousel.jpg">
+                        <keywords>dynamic, e-commerce category, category, ecommerce category</keywords>
+                    </t>
+                    <t t-snippet="theme_clarico_vega.s_dynamic_snippet_brand" string="Product Brands" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/brand_carousel.jpg">
+                        <keywords>dynamic, product brand, brand</keywords>
+                    </t>
+                    <t t-snippet="theme_clarico_vega.s_dynamic_snippet_product_template" string="Product" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/product_carousel.jpg">
+                        <keywords>dynamic, product , dynamic product, product template</keywords>
+                    </t>
+
+                    <!-- Banner With Product brands -->
+                    <t t-snippet="theme_clarico_vega.product_brand_style_3"
+                       t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/exclusive_brand.jpg">
+                        <keywords>Brand Builder with Banner</keywords>
+                    </t>
+                    <!-- Banner With Product Carousel -->
+                    <t t-snippet="theme_clarico_vega.product_builder_banner"
+                       t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/banner_carousel.jpg">
+                        <keywords>Banner With Product Carousel</keywords>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!--=====================  Dynamic two column snippet =====================-->
+    <template id="dynamic_multi_columns_category" name="Dynamic multi columns">
+        <section class="dynamic_multi_columns dynamic_columns_snippet o_cc o_cc2 pt32 pb32 o_colored_level">
+            <div class="container dynmic_snippet">
+                <div class="row d-flex">
+                    <div class="col-lg-4 s_col_no_bgcolor h-100">
+                            <section data-snippet="s_dynamic_snippet_category"
+                                class="oe_unmovable oe_unremovable s_dynamic_snippet_category s_dynamic pb32 o_colored_level s_product_public_category_style_1"
+                                data-name="Categories Configuration" style="background-image: none;" t-att-data-filter-id="request.env['website'].get_all_product_public_category_template_filter()"
+                                data-template-key="theme_clarico_vega.dynamic_filter_template_product_public_category_style_1" data-number-of-elements="2"
+                                data-number-of-elements-small-devices="1" data-number-of-records="4" data-carousel-interval="5000" data-bs-original-title="" title="">
+                                <div class="container o_not_editable">
+                                    <div class="css_non_editable_mode_hidden">
+                                        <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none o_default_snippet_text">
+                                            Your Dynamic Snippet will be displayed here...
+                                            This message is displayed because you did not provide both a filter and a template to use.
+                                        </div>
+                                    </div>
+                                    <div class="dynamic_snippet_template"></div>
+                                </div>
+                            </section>
+                        <section>
+                            <img class="img_hotspot_setting w-100" src="/theme_clarico_vega/static/src/img/427_194.png"/>
+                        </section>
+                    </div>
+                    <div class="col-lg-8 s_col_no_bgcolor h-100">
+                        <section data-snippet="s_dynamic_snippet_product_template"
+                            class="oe_unmovable oe_unremovable s_dynamic_snippet_product_template s_dynamic pb32 o_colored_level s_product_template_style_1"
+                            data-name="Product" style="background-image: none;" t-att-data-filter-id="request.env['website'].get_all_product_template_filter()"
+                            data-template-key="theme_clarico_vega.dynamic_filter_template_product_template_style_1" data-product-category-id="all" data-product-brand-id="all" data-number-of-elements="3"
+                            data-number-of-elements-small-devices="1" data-number-of-records="6" data-carousel-interval="5000" data-bs-original-title="" title="">
+                            <div class="container o_not_editable">
+                                <div class="css_non_editable_mode_hidden">
+                                    <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none o_default_snippet_text">
+                                        Your Dynamic Snippet will be displayed here...
+                                        This message is displayed because you did not provide both a filter and a template to use.
+                                    </div>
+                                </div>
+                                <div class="dynamic_snippet_template"></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="dynamic_multi_columns_brand" name="Dynamic multi columns">
+        <section class="dynamic_multi_columns dynamic_columns_snippet o_cc o_cc2 pt32 pb32 o_colored_level">
+            <div class="container dynmic_snippet">
+                <div class="row d-flex">
+                    <div class="col-lg-8 s_col_no_bgcolor pb16 h-100">
+                        <section data-snippet="s_dynamic_snippet_product_template"
+                            class="oe_unmovable oe_unremovable s_dynamic_snippet_product_template s_dynamic pb32 o_colored_level s_product_template_style_1"
+                            data-name="Product" style="background-image: none;" t-att-data-filter-id="request.env['website'].get_all_product_template_filter()"
+                            data-template-key="theme_clarico_vega.dynamic_filter_template_product_template_style_1" data-product-category-id="all" data-product-brand-id="all" data-number-of-elements="3"
+                            data-number-of-elements-small-devices="1" data-number-of-records="6" data-carousel-interval="5000" data-bs-original-title="" title="">
+                            <div class="container o_not_editable">
+                                <div class="css_non_editable_mode_hidden">
+                                    <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none o_default_snippet_text">
+                                        Your Dynamic Snippet will be displayed here...
+                                        This message is displayed because you did not provide both a filter and a template to use.
+                                    </div>
+                                </div>
+                                <div class="dynamic_snippet_template"></div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-4 s_col_no_bgcolor pb16 h-100">
+                            <section data-snippet="s_dynamic_snippet_brand"
+                                class="oe_unmovable oe_unremovable s_dynamic_snippet_brand s_dynamic pb32 o_colored_level s_product_brand_style_1"
+                                data-name="Brand Configuration" style="background-image: none;" t-att-data-filter-id="request.env['website'].get_all_product_brand_template_filter()"
+                                data-template-key="theme_clarico_vega.dynamic_filter_template_product_brand_style_1" data-number-of-elements="2"
+                                data-number-of-elements-small-devices="1" data-number-of-records="4" data-carousel-interval="5000" data-bs-original-title="" title="">
+                                <div class="container o_not_editable">
+                                    <div class="css_non_editable_mode_hidden">
+                                        <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none o_default_snippet_text">
+                                            Your Dynamic Snippet will be displayed here...
+                                            This message is displayed because you did not provide both a filter and a template to use.
+                                        </div>
+                                    </div>
+                                    <div class="dynamic_snippet_template"></div>
+                                </div>
+                            </section>
+                        <section>
+                            <img class="img_hotspot_setting w-100" src="/theme_clarico_vega/static/src/img/427_194.png"/>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

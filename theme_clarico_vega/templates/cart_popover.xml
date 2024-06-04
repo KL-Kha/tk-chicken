@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="cart_popover" inherit_id="emipro_theme_base.cart_popover">
+        <xpath expr="//div[hasclass('cart_popover_content')]" position="replace">
+            <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
+                Your cart is empty!
+            </div>
+            <t t-if="website_sale_order and website_sale_order.website_order_line">
+                <div class="scrollbar" t-attf-class="scrollbar">
+                    <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                        <div class="row mb8 cart_line">
+                            <div class="col-sm-9 col-9">
+                                <div class="te_prod_name_info d-inline-block">
+                                    <t t-call="website_sale.cart_line_product_link">
+                                        <span class="h6 te_cart_popover_p_name" t-esc="line.name_short"/>
+                                    </t>
+                                </div>
+                                <div class="te_cart_popover_details">
+                                    <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                                       t-set='product_price'
+                                       t-value='line.price_unit'/>
+                                    <t t-else=""
+                                       t-set='product_price'
+                                       t-value='line.price_unit'/>
+                                    <span t-out="product_price" style="white-space: nowrap;"
+                                          t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                    <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
+                                           class="cart_product_base_unit_price d-block text-muted"
+                                           groups="website_sale.group_show_uom_price">
+                                        <t t-call='website_sale.base_unit_price'>
+                                            <t t-set='product' t-value='line.product_id'/>
+                                            <t t-set='combination_info'
+                                               t-value="{'base_unit_price':product._get_base_unit_price(product_price)}"/>
+                                        </t>
+                                    </small>
+                                    <t t-if="line.discount">
+                                        <del t-attf-class="#{'text-danger mr8'}"
+                                             style="white-space: nowrap;"
+                                             t-out="line.price_unit"
+                                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    </t>
+                                </div>
+                                <div class="te_prod_rm_info">
+                                    <div class="line_qty">Qty:
+                                        <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-3">
+                                <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                    <img t-att-src="image_data_uri(line.product_id.image_128)"
+                                         class="img o_image_64_max rounded mb-2 img-fluid te_mini_img" t-att-alt="line.name_short"/>
+                                </span>
+                                <span t-else="" class="te_mini_img"
+                                      t-field="line.product_id.image_128"
+                                      t-options="{'widget': 'image', 'qweb_img_responsive': True, 'class': 'rounded o_image_64_max mb-2'}"
+                                />
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div class="text-center cart_subtotal">
+                    <span class="h6">
+                        <t t-call="website_sale.total">
+                            <t t-set="hide_promotions" t-value="True"/>
+                        </t>
+                    </span>
+                    <!-- Clear Cart Button -->
+                    <div class="te_clear_cart_popover me-4 text-end"
+                         t-if="request.website.viewref('theme_clarico_vega.clear_cart_link_ept').active">
+                        <i class="fa fa-trash-o"/>
+                        Clear Cart
+                    </div>
+                    <div class="te_cart_btn">
+                        <a role="button" class="btn btn-primary mb-2" href="/shop/cart">
+                            Proceed to Checkout
+                        </a>
+                        <!--<a role="button" class="btn btn-primary" href="/shop/xml">
+                            View Cart (
+                            <span class="o_wsale_cart_quantity" t-esc="website_sale_order.cart_quantity"/>
+                            item(s))
+                        </a>-->
+                    </div>
+
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

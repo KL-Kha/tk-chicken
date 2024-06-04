@@ -1,0 +1,1531 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="theme_clarico_vega" inherit_id="website.snippets">
+        <!--====== All Sliders Style ======-->
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_header')]" position="before">
+            <div class="o_panel_header"><i class="fa fa-sliders"/> Sliders</div>
+            <div class="o_panel_body">
+                <!-- Slider Style 1 -->
+                <t t-snippet="theme_clarico_vega.slider_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/slider_style/slider_style_9.jpg">
+                    <keywords>Sliders, Sliders style 1</keywords>
+                </t>
+                <!-- Full Slider Style 1 -->
+                <t t-snippet="theme_clarico_vega.full_slider_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/slider_style/slider_style_8.jpg">
+                    <keywords>Sliders, Full screen 1</keywords>
+                </t>
+                 <!-- Full Slider Style 2 -->
+                <t t-snippet="theme_clarico_vega.full_slider_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet29.jpg">
+                    <keywords>Sliders, Full screen 2</keywords>
+                </t>
+                <!-- Full Slider Style 3 -->
+                <t t-snippet="theme_clarico_vega.full_slider_style_3" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet39.jpg">
+                    <keywords>Sliders, Full screen 3</keywords>
+                </t>
+                <!-- Full Slider Style 4 -->
+                <t t-snippet="theme_clarico_vega.full_slider_style_4" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet39.jpg">
+                    <keywords>Sliders, Full screen 4</keywords>
+                </t>
+                <!-- Full Banner With Slider -->
+                <t t-snippet="theme_clarico_vega.banner_slider" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet37.jpg">
+                    <keywords>Sliders, Full screen banner</keywords>
+                </t>
+            </div>
+
+            <!--====2 COLUMNS SNIPPET =====-->
+            <div class="o_panel_header"><i class="fa fa-columns"/> 2 Columns </div>
+            <div class="o_panel_body">
+                <!--2 Columns Style 1 -->
+                 <t t-snippet="theme_clarico_vega.2_column_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/3_columns/3col_style10.jpg">
+                    <keywords>2 Columns, 2 Columns Style 1</keywords>
+                </t>
+                <!-- 2 Column Style 2 -->
+                <t t-snippet="theme_clarico_vega.2_column_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/2col_style4.jpg">
+                    <keywords>2 Column, 2 Column Style 2</keywords>
+                </t>
+                 <!-- 2 Columns Style 3 -->
+                <t t-snippet="theme_clarico_vega.two_columns_style_3" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/3_columns/icon-style-1.jpg">
+                    <keywords>2 Columns, 2 Columns Style 3</keywords>
+                </t>
+            </div>
+
+            <!--====3 COLUMNS SNIPPET =====-->
+            <div class="o_panel_header"><i class="fa fa-columns"/> 3 Columns</div>
+            <div class="o_panel_body">
+                <!-- 3 Columns Style 1 -->
+                <t t-snippet="theme_clarico_vega.three_columns_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/6_blocks.jpg">
+                    <keywords>3 Columns, 3 Columns Style 1</keywords>
+                </t>
+                <!-- 3 Columns Style 2 -->
+                <t t-snippet="theme_clarico_vega.three_columns_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet_15.jpg">
+                    <keywords>3 Columns, 3 Columns Style 2</keywords>
+                </t>
+                <!--3 Columns Style 3 -->
+                <t t-snippet="theme_clarico_vega.three_columns_style_3" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/3_columns/style-4.jpg">
+                    <keywords>3 Columns, 3 Columns Style 3</keywords>
+                </t>
+                <!--3 Columns Style 4 -->
+                <t t-snippet="theme_clarico_vega.three_columns_style_4" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/3_columns/snippet8.jpg">
+                    <keywords>3 Columns, 3 Columns Style 4</keywords>
+                </t>
+            </div>
+
+             <!--==== 4 Columns ===-->
+            <div class="o_panel_header"><i class="fa fa-columns"/> 4 Columns</div>
+            <div class="o_panel_body">
+                <!-- 4 Columns Style 2 -->
+                <t t-snippet="theme_clarico_vega.four_columns_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet18.jpg">
+                    <keywords>4 Columns, 4 Columns Style 1</keywords>
+                </t>
+            </div>
+            <!--==== Title style ===-->
+            <div class="o_panel_header"> Title</div>
+            <div class="o_panel_body">
+                <t t-snippet="theme_clarico_vega.s_title_2_ept" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/title_style3.jpg">
+                    <keywords>Title, Title Style 1</keywords>
+                </t>
+            </div>
+
+            <!--==== Offer ===-->
+            <div class="o_panel_header"><i class="fa fa-tags"/> Offers</div>
+            <div class="o_panel_body">
+                <!--====OFFER SNIPPETS =====-->
+                <!--Offer Style 3 -->
+                <t t-snippet="theme_clarico_vega.offer_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/offer_style/style-3.jpg">
+                    <keywords>Offers, Offer Style 1</keywords>
+                </t>
+                 <!--Offer Style 1 -->
+                <t t-snippet="theme_clarico_vega.offer_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet23.jpg">
+                    <keywords>Offers, Offer Style 2</keywords>
+                </t>
+
+                <!--Offer Style 2 -->
+                <t t-snippet="theme_clarico_vega.offer_style_3" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet24.jpg">
+                    <keywords>Offers, Offer Style 3</keywords>
+                </t>
+            </div>
+
+            <!--==== Offer Timer ===-->
+            <div class="o_panel_header"> Offer Timer</div>
+            <div class="o_panel_body">
+                <!-- Offer Timer Style 2 -->
+                <t t-snippet="theme_clarico_vega.offer_timer_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet38.jpg">
+                    <keywords>Offer Timer, Offer Timer Style 1</keywords>
+                </t>
+            </div>
+
+             <div class="o_panel_header"><i class="fa fa-sliders"/> Service Plan</div>
+            <div class="o_panel_body">
+                <!-- Service Plan Style 1 -->
+                <t t-snippet="theme_clarico_vega.service_plan_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet21.jpg">
+                    <keywords>Service Plan, Service Plan Style 1</keywords>
+                </t>
+                <!-- Price Style 3 -->
+                <t t-snippet="theme_clarico_vega.service_plan_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet13.jpg">
+                    <keywords>Service Plan, Service Plan Style 2</keywords>
+                </t>
+                <!-- Price Style 4 -->
+                <t t-snippet="theme_clarico_vega.service_plan_style_3" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/4-col-snippet.jpg">
+                    <keywords>Service Plan, Service Plan Style 3</keywords>
+                </t>
+            </div>
+
+            <div class="o_panel_header"><i class="fa fa-users"/> Team</div>
+            <div class="o_panel_body">
+                <!-- Team-1 -->
+                <t t-snippet="theme_clarico_vega.team_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/team-1.jpg">
+                    <keywords>Team, Team Style 1</keywords>
+                </t>
+                <!-- Team-2 -->
+                <t t-snippet="theme_clarico_vega.team_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/team-snippet-4.jpg">
+                    <keywords>Team, Team Style 2</keywords>
+                </t>
+                <!-- Team-3 -->
+                <t t-snippet="theme_clarico_vega.team_style_3" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/team-snippet-6.jpg">
+                    <keywords>Team, Team Style 3</keywords>
+                </t>
+                <!-- Team-4 -->
+                <t t-snippet="theme_clarico_vega.team_style_4" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/team-snippet-7.jpg">
+                    <keywords>Team, Team Style 4</keywords>
+                </t>
+            </div>
+
+            <div class="o_panel_header"><i class="fa fa-users"/> Customer Testimonial</div>
+            <div class="o_panel_body">
+                <!-- Customer-1 -->
+                <t t-snippet="theme_clarico_vega.customers_style_1" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/snippet32.jpg">
+                    <keywords>Customer Testimonial, Customer Style 1</keywords>
+                </t>
+                <!-- Customer-2 -->
+                <t t-snippet="theme_clarico_vega.customers_style_2" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/Content.jpg">
+                    <keywords>Customer Testimonial, Customer Style 2</keywords>
+                </t>
+            </div>
+
+            <div class="o_panel_header"> Clarico Vega Other Snippets</div>
+            <div class="o_panel_body">
+                <!-- Space -->
+                <t t-snippet="theme_clarico_vega.s_space" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/space.jpg">
+                    <keywords>Space</keywords>
+                </t>
+                <!-- Header Offer -->
+                <t t-snippet="theme_clarico_vega.header_offer_text" t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/header-offer-text.jpg">
+                    <keywords>Header Offer</keywords>
+                </t>
+            </div>
+        </xpath>
+
+        <!--==== Banners ===-->
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]/t[@t-snippet='website.s_banner']"
+               position="after">
+            <!-- Banner Style 2 -->
+            <t t-snippet="theme_clarico_vega.banner_ept"
+               t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/banner.jpg">
+                <keywords>Banner Style 2</keywords>
+            </t>
+            <!-- Banner Style 3 -->
+            <t t-snippet="theme_clarico_vega.banner_style_3"
+               t-thumbnail="/theme_clarico_vega/static/src/img/snippets/snippets_icon/Header-Section.jpg">
+                <keywords>Banner Style 3</keywords>
+            </t>
+
+        </xpath>
+    </template>
+
+    <!--====================== Slider Style 1 ============================-->
+    <template id="slider_style_1" name="Style 1">
+        <section class="s_carousel_wrapper" data-vxml="001">
+            <div id="myCarousel" class="s_carousel s_carousel_default carousel slide d-flex" data-interval="10000">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"/>
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"/>
+                </ol>
+                <div class="container">
+                    <div class="carousel-inner te_arrow_small">
+                        <div class="carousel-item te_slider_10_bg oe_custom_bg oe_img_bg pt0 pb16 active" data-name="Slide"
+                             style="background-image: url('/theme_clarico_vega/static/src/img/snippets/slider_styles/style_6/1920_800.jpg');">
+                            <section class="my-md-5 te_slider_text_content p-4">
+                                <div class="te_slider_heading pb-1">Lorem ipsum</div>
+                                <div class="te_slider_main_heading">Lorem ipsum dolor sit amet</div>
+                                <section class="s_btn"><a href="#" class="btn btn-primary te_theme_button">Know more</a></section>
+                            </section>
+                        </div>
+                        <div class="carousel-item te_slider_10_bg oe_custom_bg oe_img_bg pt16 pb16" data-name="Slide"
+                             style="background-image: url('/theme_clarico_vega/static/src/img/snippets/slider_styles/style_6/1920_800.jpg');">
+                            <section class="my-md-5 te_slider_text_content p-4">
+                                <div class="te_slider_heading pb-1">Lorem ipsum</div>
+                                <div class="te_slider_main_heading">Lorem ipsum dolor sit amet</div>
+                                <section class="s_btn"><a href="#" class="btn btn-primary te_theme_button">Know more</a></section>
+                            </section>
+                        </div>
+                        <!-- Controls -->
+                        <div class="invisible">
+                            <div class="carousel-control-prev" data-bs-target="#myCarousel" data-bs-slide="prev" role="img" aria-label="Previous" title="Previous">
+                                <span class="carousel-control-prev-icon"/>
+                                <span class="sr-only">Previous</span>
+                            </div>
+                            <div class="carousel-control-next " data-bs-target="#myCarousel" data-bs-slide="next" role="img" aria-label="Next" title="Next">
+                                <span class="carousel-control-next-icon"/>
+                                <span class="sr-only">Next</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!--====================== Full Slider Style 1 ============================-->
+    <template id="full_slider_style_1" name="Full screen 1">
+        <section class="s_carousel_wrapper te_slider_full_screen_5" data-vxml="001">
+            <div id="myCarousel" class="s_carousel s_carousel_default carousel carousel-fade slide d-flex" data-interval="10000">
+                <ol class="carousel-indicators d-md-flex d-none">
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"/>
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"/>
+                </ol>
+                <div class="carousel-inner te_arrow_small">
+                    <t t-call="theme_clarico_vega.full_slider_style_1_carousel">
+                        <t t-set="_item_class" t-value="'active'"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.full_slider_style_1_carousel"/>
+                    <!-- Controls -->
+                    <t t-call="theme_clarico_vega.next_prev_button"/>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="full_slider_style_1_carousel">
+        <div t-attf-class="#{_item_class} carousel-item oe_custom_bg oe_img_bg pt16 pb16" style="background-color:rgb(239,239,239);" data-name="Slide">
+            <div class="container">
+                <div class="row align-items-center">
+                    <section class="te_slider_left_content col-lg-6 col-md-6 t_img_hover_1">
+                        <img class="img img-fluid o_animate o_animate_preview o_anim_zoom_in img_hotspot_setting" src="/theme_clarico_vega/static/src/img/snippets/slider_styles/style_4/437_500.jpg"/>
+                    </section>
+                    <section class="te_slider_right_content col-lg-5 col-md-5">
+                        <div class="te_sub_title o_animated_text o_animate o_anim_slide_in o_anim_from_top o_visible o_animated">Lorem ipsum</div>
+                        <div class="te_main_title">oblique<br/>pertinacia</div>
+                        <section class="s_btn"><a href="#" class="btn btn-primary te_theme_button te_slider_9_btn o_animate o_anim_slide_in o_anim_from_bottom o_visible o_animated">Know more</a></section>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--====================== Full Slider Style 2 ============================-->
+    <template id="full_slider_style_2" name="Full screen 2">
+        <section class="s_carousel_wrapper" data-vxml="001">
+            <div id="myCarousel" class="s_carousel s_carousel_default carousel slide d-flex te_s_slider_10" data-interval="10000">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"/>
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"/>
+                </ol>
+                <!-- Content -->
+                <div class="carousel-inner te_arrow_small te_ts_style_7_inner">
+                    <!-- #01 -->
+                    <t t-call="theme_clarico_vega.full_slider_style_2_carousel">
+                        <t t-set="is_active" t-valuef="active"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.full_slider_style_2_carousel"/>
+                    <!-- Controls -->
+                    <t t-call="theme_clarico_vega.next_prev_button"/>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="full_slider_style_2_carousel">
+        <div t-attf-class="#{is_active} carousel-item oe_custom_bg oe_img_bg"
+             style="background-image: url('/theme_clarico_vega/static/src/img/snippets/slider_styles/style_7/1920_800.jpg');" data-name="Slide">
+            <div class="container">
+                <div class="row content">
+                    <div class="carousel-content col-lg-5 col-md-7 col-sm-8 col-10 te_slider_10">
+                        <div class="s_title o_animate o_anim_slide_in o_anim_from_left o_visible o_animated" data-name="Title"><h3 class="te_slider_10_title mb-0">My Heading 3</h3></div><br/>
+                        <div class="te_slider_10_content mt-2 o_animate o_anim_slide_in o_anim_from_right o_visible o_animated"><p>Lorem Ipsum Dolor Sit Amet</p></div>
+                        <div class="s_btn text-left pt16 pb16 mt16" data-name="Buttons"><a href="/contactus" class="btn btn-primary te_theme_button o_animate o_anim_slide_in o_anim_from_bottom o_visible o_animated">Know more</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--=============== Full Slider style 3 ================== -->
+    <template id="full_slider_style_3" name="Full screen 3">
+        <section class="s_carousel_wrapper" data-vxml="001">
+            <div id="myCarousel" class="s_carousel s_carousel_default carousel slide d-flex" data-interval="10000">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"/>
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"/>
+                </ol>
+                <div class="carousel-inner te_arrow_small te_slider_13_main">
+                    <t t-call="theme_clarico_vega.full_slider_style_3_carousel">
+                        <t t-set="is_active" t-valuef="active"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.full_slider_style_3_carousel"/>
+                   <!-- Controls -->
+                    <t t-call="theme_clarico_vega.next_prev_button"/>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="full_slider_style_3_carousel">
+        <section t-attf-class="oe_img_bg oe_custom_bg pt96 pb96 carousel-item oe_custom_bg #{is_active} te_slider_13_sub" data-scroll-background-ratio="1"
+                style="background-image: url(/theme_clarico_vega/static/src/img/snippets/structure/full_image/1920_800.jpg);">
+            <span class="s_parallax_filter"/>
+            <div class="container">
+                <div class="row content te_text_img_left_right t_zoom_img_effect align-items-center">
+                    <div class="carousel-content col-lg-5 py-5 py-sm-3 te_slider13_content">
+                        <h5 class="te_slider13_sub_heading o_animated_text o_animate o_anim_zoom_out o_visible o_animated">My Heading 5</h5>
+                        <h2 class="te_carousel_text text-black mb16 te_slider13_heading  fw-bold d-block o_animated_text o_animate o_anim_zoom_out o_visible o_animated">My Heading 2</h2>
+                        <p class="t_carousel_subtext te_slider13_text o_animated_text o_animate o_anim_zoom_in o_visible o_animated">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
+                        <section class="te_slider13_button pt16 pb16 mt16" data-name="Buttons"><a href="#" class="btn btn-primary te_theme_button o_default_snippet_text o_animate o_anim_rotate_in o_visible o_animated">Know more</a></section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!--======================== Full Slider Style 4 ===========================-->
+    <template id="full_slider_style_4" name="Full screen 4">
+        <section class="s_carousel_wrapper" data-vxml="001">
+            <div id="myCarousel" class="s_carousel s_carousel_default carousel slide d-flex" data-interval="10000">
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"/>
+                    <li data-bs-target="#myCarousel" data-bs-slide-to="1"/>
+                </ol>
+                <div class="carousel-inner te_arrow_small">
+                    <t t-call="theme_clarico_vega.full_slider_style_4_carousel">
+                        <t t-set="is_active" t-valuef="active"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.full_slider_style_4_carousel"/>
+                    <!-- Controls -->
+                    <t t-call="theme_clarico_vega.next_prev_button"/>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="full_slider_style_4_carousel">
+        <div t-attf-class="carousel-item oe_custom_bg oe_img_bg te_s14_banner_bg #{is_active}" style="background-color:rgb(239,239,239);" data-name="Slide">
+            <div class="container">
+                <div class="row content">
+                    <section class="carousel-content col-md-5 col-9 align-self-center text-center slider_14_content">
+                        <h4 class="te_s14_small_heading">Lorem Ipsum</h4>
+                        <div>Lorem ipsum dolor sit amet eam et reque justo quidam</div>
+                        <section class="s_btn pt32" data-name="Buttons"><a href="#" class="btn btn-primary te_theme_button o_default_snippet_text">Know more</a></section>
+                    </section>
+                    <section class=" col-md-7 align-self-center">
+                        <div class="t_img_hover_1 te_s14_img">
+                            <img class="img img-responsive img-fluid d-block mt-4 mb-4" src="/theme_clarico_vega/static/src/img/snippets/slider_styles/1000_850.png"/>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--============== Full Banner With Slider =====================-->
+    <template id="banner_slider" name="Full Banner With Slider">
+        <section class="s_banner parallax s_parallax_is_fixed pt96 pb96" data-scroll-background-ratio="1">
+            <span class="s_parallax_bg oe_img_bg oe_custom_bg"
+                  style="background-image: url('/theme_clarico_vega/static/src/img/snippets/structure/banner/1920_800.jpg'); background-position: center"/>
+            <div class="container te_banner_slider">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 te_banner_slider_info pt32 pb32" data-name="Box">
+                        <p class="te_banner_heading_small">Lorem Ipsum Dolor</p>
+                        <p class="te_banner_heading_big">Lorem Ipsum Dolor Sit Amet</p>
+                        <p class="te_banner_content pt8 pb8">Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius. Duis meis quas vim ex, ius no oblique. Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius. Duis meis quas vim ex, ius no oblique.</p>
+                        <div class="s_btn pt16 pb16" data-name="Button">
+                            <a href="#" class="btn btn-primary te_theme_button">know more</a>
+                            <a href="#" class="btn btn-primary te_theme_button">Shop Now</a>
+                        </div>
+                    </div>
+                    <section class="col-lg-6 owl-slider">
+                        <div class="owl-carousel te_banner_slider_content">
+                            <div class="item"><img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/></div>
+                            <div class="item"><img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/></div>
+                            <div class="item"><img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/></div>
+                            <div class="item"><img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/></div>
+                            <div class="item"><img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!--============== next/prev button =================-->
+    <template id="next_prev_button" name="next prev">
+        <div class="carousel-control-prev" data-bs-target="#myCarousel" data-bs-slide="prev" role="img" aria-label="Previous" title="Previous">
+            <span class="carousel-control-prev-icon"/>
+            <!--<span class="sr-only">Previous</span>-->
+        </div>
+        <div class="carousel-control-next" data-bs-target="#myCarousel" data-bs-slide="next" role="img" aria-label="Next" title="Next">
+            <span class="carousel-control-next-icon"/>
+            <!--<span class="sr-only">Next</span>-->
+        </div>
+    </template>
+
+    <!--================= 2 Column Style 1 ==============================-->
+    <template id="2_column_style_1" name="Style 1">
+        <section>
+            <div class="container">
+                <div class="row pt32 pb32">
+                    <t t-call="theme_clarico_vega.three_columns_style_4_content">
+                        <t t-set="items" t-value="3"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="three_columns_style_4_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="column_style_11_cards col-lg-4 col-md-4 col-sm-12 pb-lg-0 pb-3 te_3_s11_image">
+                    <div class="t_img_hover_1">
+                        <img class="img img-fluid mx-auto d-block" src="/theme_clarico_vega/static/src/img/snippets/menu_snippets/style_4/370_300.png"/>
+                    </div>
+                    <div class="te_3_s11_content"><h3>My Heading 3</h3><a href="#">See All Collection</a></div>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--================= 2 Column Style 2 ==============================-->
+    <template id="2_column_style_2" name="Style 2">
+        <section class="d-inline-block w-100 pt32 pb32">
+            <div class="container">
+                <h4 class="te_col_5_title fw-bold">My Heading 4</h4>
+                <p class="te_col_5_sub_title">Lorem ipsum dolor</p>
+                <div class="row align-items-center te_2_col_style_4">
+                    <section class="col-sm-6">
+                        <div class="te_s_4_img t_img_hover_1">
+                            <a href="#"><img class="img img-responsive img-fluid mx-auto o_animate o_anim_slide_in o_anim_from_left o_visible o_animated" src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_9/865_750.png"/></a>
+                        </div>
+                        <div class="te_main_content">
+                            <h4>My Heading 4</h4>
+                            <p class="overflow-hidden mb-3">Lorem Ipsum</p>
+                            <div class="te_extra_btn"><i class="fa fa-plus"/><a href="#">Explore</a></div>
+                        </div>
+                    </section>
+                    <section class="col-sm-6">
+                        <t t-call="theme_clarico_vega.2_column_style4_content">
+                            <t t-set="items" t-value="3"/>
+                        </t>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="2_column_style4_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <section class="row align-items-center te_img_txt mb-3">
+                    <div class="col-sm-6 col-6 t_img_hover_1">
+                        <a href="#"><img class="img img-responsive img-fluid mx-auto o_animate o_anim_slide_in o_anim_from_bottom o_visible o_animated" src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_6/470_451.png"/></a>
+                    </div>
+                    <div class="col-sm-6 col-6">
+                        <div class="te_right_content">
+                            <h4 class="mb-3 fw-bold">My Heading 4</h4>
+                            <p>Lorem Ipsum Dolor Sit Amet</p>
+                            <div class="te_extra_btn"><i class="fa fa-plus"/><a href="#">Explore</a></div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--================ 2 Columns Icon Style 3 =================-->
+    <template id="two_columns_style_3" name="Style 3">
+        <section class="s_features pt32 pb32">
+            <div class="container">
+                <div class="row">
+                    <t t-call="theme_clarico_vega.two_columns_style_3_content">
+                        <t t-set="fa_class" t-valuef="fa-rotate-right"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.two_columns_style_3_content">
+                        <t t-set="fa_class" t-valuef="fa-truck"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.two_columns_style_3_content">
+                        <t t-set="fa_class" t-valuef="fa-opencart"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="two_columns_style_3_content">
+        <div class="col-lg-4 col-md-4 col-sm-4 te_menu_flip_box">
+            <section class="te_icon_1 text-center">
+                <div class="te_icon_1_before"><span t-attf-class="te_dashed_border fa fa-2x #{fa_class}"/></div>
+            </section>
+            <section class="te_title_tex ">
+                <a href="#" class="te_icon_title_1 fw-bold o_default_snippet_text">Lorem ipsum</a>
+                <p class="te_sub_text o_default_snippet_text">Lorem ipsum dolor sit amet</p>
+            </section>
+        </div>
+    </template>
+
+     <!--=============== 3 Columns Style 1 ===================-->
+    <template id="three_columns_style_1" name="Style 1">
+        <section class="container pb32 pt32">
+            <div class="te_max_width_3_blocks">
+                <div class="row">
+                    <t t-call="theme_clarico_vega.t_three_blocks_ept">
+                        <t t-set="items" t-value="4"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="t_three_blocks_ept">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <section class="col-md-4 px-lg-4 te_menu_flip_box">
+                    <div class="card border-0 h-100">
+                        <section class="te_service_icon te_menu_flip_box_inner pb48">
+                            <span class="te_three_blocks_icon bg-white rounded-circle text-center te_span_icon_block z-index-1"><span class="fa fa-bicycle align-middle fa-2x te_icon_styling"/></span>
+                        </section>
+                        <section class="text-center pt-4 card-body" style="background-color:#F7F7F7 !important">
+                            <section><h4 class="te_three_blocks_heading m-4">My Heading 4</h4></section>
+                            <section><p class="p-4 pt0 te_three_blocks_content">Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius Duis meis quas vim ex, ius no oblique phaedrum</p>
+                            </section>
+                        </section>
+                    </div>
+                </section>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--=============== 3 Columns Style 3 ===================-->
+    <template id="three_columns_style_3" name="Style 3">
+        <section class="pb32 pt32">
+            <div class="container">
+                <div class="row d-flex align-items-stretch ">
+                    <t t-call="theme_clarico_vega.three_columns_style_4_opt">
+                        <t t-set="items" t-value="4"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="three_columns_style_4_opt">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-4 col-md-4 s_col_no_bgcolor te_t3_col_bg_div">
+                    <div>
+                        <section class="te_bgimage" style="background-image:url('/theme_clarico_vega/static/src/img/snippets/3_column/style_4/370_415.png')">
+                            <section class="te_title_text te_3_column_left_heading text-left p-4">
+                                <p class="card-title te_three_columns_heading">Lorem ipsum</p>
+                                <p class="card-text te_three_columns_para o_default_snippet_text">Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius. Duis meis quas vim ex. oblique Ornatus
+                                    <em class="o_default_snippet_text"/>cu.
+                                </p>
+                                <div class="s_btn text-left pb0 pt16 text-left" data-name="Button">
+                                    <a href="#" class="btn btn-primary te_theme_button o_default_snippet_text">Know more</a>
+                                </div>
+                            </section>
+                        </section>
+                    </div>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--================= 3 Columns Style 4 ========================-->
+    <template id="three_columns_style_4" name="Style 4">
+        <section class="s_three_columns pt32 pb32">
+            <div class="container">
+                <div class="row d-flex align-items-stretch">
+                    <t t-call="theme_clarico_vega.three_columns_style_5_opt">
+                        <t t-set="items" t-value="4"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="three_columns_style_5_opt">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-4 col-md-4 s_col_no_bgcolor te_col_ind">
+                    <div class="te_image_overflow t_img_hover_1 overflow-hidden position-relative">
+                        <img class="card-img-top img img-responsive te_feature_image" src="/theme_clarico_vega/static/src/img/snippets/3_column/style_5/436_424.jpg"
+                             alt="Clarico-3 Columns Style 4"/>
+                    </div>
+                    <div class="te_center_position">
+                        <section class="text-center pb8 pt16 te_button_position">
+                            <h6 class="mb0"><a href="#" class="te_fix_content_h3 ">My Heading 6</a></h6>
+                            <span class="d-block">Lorem ipsum dolor sit amet, eam et req</span>
+                        </section>
+                    </div>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--======================== 4 columns style 1 =====================-->
+    <template id="four_columns_style_1" name="Style 1">
+        <section class="four_columns_style_5 pb32 pt32">
+            <div class="container">
+                <h4 class="te_col_5_title fw-bold">My Heading 4</h4>
+                <p class="te_col_5_sub_title mb-3 ps-4 ms-1">Lorem ipsum dolor</p>
+                <div class="row">
+                    <t t-call="theme_clarico_vega.four_columns_style_1_content">
+                        <t t-set="items" t-value="5"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="four_columns_style_1_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-3 col-sm-6 te_col_5_main mb-2">
+                    <section class="t_img_hover_1">
+                        <a href="#">
+                            <img class="img img-responsive img-fluid mx-auto d-block" alt="" src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/></a>
+                    </section>
+                    <section class="te_4_col_content text-center position-relative">
+                        <div class="te_s_5_img"><img class="img img-responsive img-fluid mx-auto d-block" alt="" src="/theme_clarico_vega/static/src/img/snippets/structure/4_blocks/40_40.png"/></div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <div class="te_extra_btn d-inline-block"><i class="fa fa-plus"/><a href="#">Explore</a></div>
+                    </section>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+     <!--======================== Title =====================-->
+    <template id="s_title_2_ept" name="Title style 1">
+        <section class="s_title_2_ept">
+            <div class="container">
+                <div class="row s_nb_column_fixed">
+                    <div class="col-lg-12 te_title_2 text-center pt32">
+                        <div class="te_title_sub_div position-relative d-inline-block ps72">
+                            <h4 class="te_s_title_default te_title_style2 position-relative d-block">My Heading 4</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+        <!--================== Offer style 3 ======================-->
+    <template id="offer_style_1" name="Style 1">
+        <section class="w-100 offer_3_main pt32 pb32">
+            <div class="container">
+                <div class="row align-items-center te_set_res">
+                    <div class="col-lg-6">
+                        <section class="card bg-200 px-5 te_offerleft_h border-0 rounded-0">
+                            <div class="row align-items-center">
+                                <section class="col-lg-6 col-md-6 te_offer_3_text_left">
+                                    <h3>My Heading 3</h3>
+                                    <p>Lorem ipsum sit<span>50%</span>amet, eam et reque justo</p>
+                                    <section class="s_btn"><a href="#" class="btn btn-primary te_theme_button te_btn_r_space">Know more</a></section>
+                                </section>
+                                <div class="col-lg-6 col-md-6 text-center">
+                                    <div class="t_img_hover_1">
+                                        <img alt="Clarico-Offer style 3" class="img img-responsive img-fluid d-block mx-auto"
+                                             src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_3/200_500.png"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <section class="col-lg-6">
+                        <div class="row align-items-center mb32">
+                            <t t-call="theme_clarico_vega.offer_style_3_content">
+                                <t t-set="items" t-value="3"/>
+                            </t>
+                        </div>
+                        <div class="row align-items-center">
+                            <t t-call="theme_clarico_vega.offer_style_3_content">
+                                <t t-set="items" t-value="3"/>
+                            </t>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="offer_style_3_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-6 col-sm-6 col-md-6 te_top_space">
+                    <section class="card bg-200 px-4 py-2 te_offerright_h text-center border-0 rounded-0">
+                        <div class="t_img_hover_1">
+                            <img class="img img-responsive img-fluid d-block mx-auto" alt="Clarico-Offer style 1"
+                                 src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_3/230_150.png"/>
+                        </div>
+                        <section class="te_offerright_txt"><a href="#"><h4>My Heading 4</h4></a><p>Lorem ipsum dolor sit</p></section>
+                    </section>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+     <!--================== Offer style 2 ======================-->
+    <template id="offer_style_2" name="Style 2">
+        <section class="w-100 pt32 pb32">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="offer_style_6 col-lg-6 pb-3 pb-sm-0 position-relative">
+                        <div class="t_img_hover_1 te_offer_s6_img_big">
+                            <img class="img img-fluid" src="/theme_clarico_vega/static/src/img/snippets/slider_styles/style_5/785_700.jpg"/>
+                        </div>
+                        <div class="te_offer_main_content w-50">
+                            <span>Lorem Ipsum</span>
+                            <h3>My Heading 3</h3>
+                            <a href="#" class="pb-1">Show More</a>
+                        </div>
+                    </div>
+                    <section class="col-lg-6">
+                        <div class="row align-items-center pb-5 pb-sm-0">
+                            <div class="col-lg-6 col-sm-6 col-md-6">
+                                <div class="t_img_hover_1 te_offer_s6_img_small">
+                                    <img class="img img-fluid" src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_6/470_451.png"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-md-6 pt-4 pt-sm-0">
+                                <div class="te_offer_right_content">
+                                    <span>Lorem Ipsum</span>
+                                    <p>Lorem Ipsum Dolor Sit Amet</p>
+                                    <a href="#">Show More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-sm-6 col-md-6 pb-4 pb-sm-0">
+                                <div class="te_offer_right_content">
+                                    <span>Lorem Ipsum</span>
+                                    <p>Lorem Ipsum Dolor Sit Amet</p>
+                                    <a href="#">Show More</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6 col-md-6">
+                                <div class="t_img_hover_1 te_offer_s6_img_small">
+                                    <img class="img img-fluid" src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_6/470_451.png"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!--================== Offer style 3 ======================-->
+    <template id="offer_style_3" name="Style 3">
+        <section class="w-100 pt32 pb32">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 pb-0 pb-sm-3 pb-lg-0">
+                        <div class="t_img_hover_1 te_img_effect2 te_offer_s7_img_big overflow-hidden position-relative d-inline-block">
+                            <img class="img img-fluid o_animate o_anim_zoom_in o_visible o_animated" src="/theme_clarico_vega/static/src/img/snippets/slider_styles/style_5/785_700.jpg"/>
+                            <div class="te_offer_big_img_content">
+                                <h3>My Heading 3</h3>
+                                <p>Lorem Ipsum Dolor Sit Amet</p>
+                            </div>
+                        </div>
+                        <t t-call="theme_clarico_vega.offer_style_7_content">
+                            <t t-set="align_class" t-valuef="te_offer_s7_left"/>
+                        </t>
+                    </div>
+                    <section class="col-lg-6 pt-3 pt-lg-0">
+                        <t t-call="theme_clarico_vega.offer_style_7_content">
+                            <t t-set="align_class" t-valuef="te_offer_s7_right"/>
+                        </t>
+                        <div class="t_img_hover_1 te_img_effect2 te_offer_s7_img_big overflow-hidden position-relative d-inline-block">
+                            <img class="img img-fluid o_animate o_anim_zoom_in o_visible o_animated" src="/theme_clarico_vega/static/src/img/snippets/slider_styles/style_5/785_700.jpg"/>
+                            <div class="te_offer_big_img2_content">
+                                <h3>My Heading 3</h3>
+                                <p>Lorem Ipsum Dolor Sit Amet</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="offer_style_7_content">
+        <div t-attf-class="row align-items-center #{align_class}">
+            <div class=" offer_style_7_content col-lg-6 col-sm-6 col-md-6 position-relative">
+                <div class="t_img_hover_1 te_img_effect2 te_offer_s7_img_small overflow-hidden position-relative d-inline-block">
+                    <img class="img img-fluid o_animate o_anim_zoom_in o_visible o_animated" src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_6/470_451.png"/>
+                </div>
+                <div class="te_offer_small_img_content">
+                    <h4>My Heading 4</h4>
+                    <p>Lorem Ipsum Dolor Sit Amet</p>
+                </div>
+            </div>
+            <div class="offer_style_7_content col-lg-6 col-sm-6 col-md-6 position-relative">
+                <div class="t_img_hover_1 te_img_effect2 te_offer_s7_img_small overflow-hidden position-relative d-inline-block">
+                    <img class="img img-fluid o_animate o_anim_zoom_in o_visible o_animated" src="/theme_clarico_vega/static/src/img/snippets/offer_styles/style_6/470_451.png"/>
+                </div>
+                <div class="te_offer_small_img_content">
+                    <h4>My Heading 4</h4>
+                    <p>Lorem Ipsum Dolor Sit Amet</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--=================== Offer Timer Style 1 ======================-->
+    <template id="offer_timer_style_1" name="Offer Timer Style 1">
+        <section class="container te_offer_div">
+            <div class="row">
+                <div class="col-lg-6 align-self-center text-center">
+                    <div class="te_offer_s3_img position-relative">
+                        <section class="te_offer_s3_img_before d-block"/>
+                        <img class="img img-fluid d-block" src="/theme_clarico_vega/static/src/img/snippets/3_column/style_2/437_500.jpg"/>
+                        <div class="te_vertical_line">Lorem Ipsum Dolor</div>
+                    </div>
+                </div>
+                <section class="col-lg-6 align-self-center te_offer_s3_section text-center">
+                    <section class="pb-2">
+                        <p class="te_offer_s3_heading position-relative pb-3">Lorem Ipsum Dolor Sit</p>
+                    </section>
+                    <section>
+                        <p class="te_offer_s3_text d-inline-block py-3">$100</p>
+                        <p class="te_offer_s3_discount d-inline-block text-decoration-line-through ps-2">$500</p>
+                    </section>
+                    <section class="s_btn pt16 pb16" data-name="Buttons">
+                        <a href="#" class="btn btn-primary te_theme_button o_default_snippet_text">Know  more</a>
+                    </section>
+                </section>
+            </div>
+        </section>
+    </template>
+
+
+    <!--===================== Service Plan Style 1 =====================-->
+    <template id="service_plan_style_1" name="Style 1">
+        <section class="container-fluid" style="background-color: #f6f7f8;">
+            <section class="container">
+                <h2 class="te_3_col_price_heading text-center pt-3">My Heading 2</h2>
+                <p class="text-center">Lorem ipsum dolor sit amet, eam et reque justo quidam, Duis meis quas vimex, ius no oblique phaedrum pertinacia. Ornatus referrentur nec,</p>
+                <div class="row pt16 pb32">
+                    <t t-call="theme_clarico_vega.three_columns_style_10_content">
+                        <t t-set="main_days_val" t-value="35"/>
+                        <t t-set="sub_days_val" t-value="15"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.three_columns_style_10_content">
+                        <t t-set="main_days_val" t-value="90"/>
+                        <t t-set="sub_days_val" t-value="55"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.three_columns_style_10_content">
+                        <t t-set="main_days_val" t-value="55"/>
+                        <t t-set="sub_days_val" t-value="29"/>
+                    </t>
+                </div>
+            </section>
+        </section>
+    </template>
+    <template id="three_columns_style_10_content">
+        <div class="col-lg-4 col-md-4 text-center pt16" data-name="Box">
+            <div class="te_3_col_price">
+                <h3 class="my-4">My Heading 3</h3>
+                <div class="text-center py-4 te_big_price position-relative">
+                    <span class="te_price_fsize">
+                        <sup class="te_3_col_price_currency z-index-1">$</sup>
+                        <t t-if="main_days_val" t-esc="main_days_val"/>
+                    </span>
+                    <br/>
+                    <span class="te_days"><t t-if="main_days_val" t-esc="sub_days_val"/>Days</span>
+                </div>
+                <ul class="list-group list-group-flush px-5 py-4">
+                    <li class="list-unstyled py-2"><i class="fa fa-check"/>Lorem ipsum &amp; dolor sit amet, eam et reque</li>
+                    <li class="list-unstyled py-2"><i class="fa fa-check"/>bonorum &amp; inermisefficiantur</li>
+                    <li class="list-unstyled py-2"><i class="fa fa-check"/>Lorem phaedrum</li>
+                    <li class="list-unstyled py-2"><i class="fa fa-times"/>Lorem ipsum</li>
+                    <li class="list-unstyled py-2"><i class="fa fa-check"/>Lorem phaedrum</li>
+                    <li class="list-unstyled py-2"><i class="fa fa-times"/>Lorem ipsum dolor sit amet</li>
+                    <li class="list-unstyled py-2"><i class="fa fa-check"/>Lorem ipsum dolor</li>
+                </ul>
+                <div><a href="/contactus" class="btn btn-primary te_theme_button mb32">Know more</a></div>
+            </div>
+        </div>
+    </template>
+
+     <!--===================== Service Plan Style 2 =====================-->
+    <template id="service_plan_style_2" name="Style 2">
+        <section class="pb32 pt32">
+            <div class="container">
+                <div class="row">
+                    <t t-call="theme_clarico_vega.t_four_columns_pricing_ept">
+                        <t t-set="price" t-value="35"/>
+                    </t>
+                    <t t-call="theme_clarico_vega.t_four_columns_pricing_ept"><t t-set="price" t-value="55"/></t>
+                    <t t-call="theme_clarico_vega.t_four_columns_pricing_ept"><t t-set="price" t-value="85"/></t>
+                    <t t-call="theme_clarico_vega.t_four_columns_pricing_ept"><t t-set="price" t-value="99"/></t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="t_four_columns_pricing_ept">
+        <div class="col-lg-3 col-md-6 col-sm-6 s_col_no_bgcolor text-center" data-name="Box">
+            <section class="card rounded-5 te_pricing_box">
+                <h5 class="card-header te_four_column_title rounded-0">My Heading 5</h5>
+                <div class="text-center py-4 te_common_border_bottom">
+                    <p class="card-title te_heading_price">
+                        <sup class="te_price_currency">$</sup>
+                        <t t-esc="price"/>
+                    </p>
+                    <span class="te_cost_validity">/ Lorem</span>
+                </div>
+                <ul class="list-group list-group-flush px-5 py-4">
+                    <li class="list-unstyled li_text py-3">Lorem ipsum</li>
+                    <li class="list-unstyled li_text py-3">Lorem ipsum dolor</li>
+                    <li class="list-unstyled li_text py-3">Lorem ipsum</li>
+                    <li class="list-unstyled li_text py-3">phaedrum pertinacia</li>
+                </ul>
+                <section class="s_btn">
+                    <a href="/contactus" class="btn btn-primary te_theme_button mx-4 mb32">Know more</a>
+                </section>
+            </section>
+        </div>
+    </template>
+
+    <!--===================== Service Plan Style 3 =====================-->
+    <template id="service_plan_style_3" name="Style 3">
+        <section class="pb32 pt32">
+            <div class="container">
+                <div class="row">
+                    <t t-call="theme_clarico_vega.four_columns_price_content">
+                        <t t-set="items" t-value="5"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="four_columns_price_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-3 col-md-6 col-sm-6 s_col_no_bgcolor" data-name="Box">
+                    <section class="card rounded-5 te_price_main">
+                        <div class="text-center te_price_head text-center p-2">
+                            <h3 class="rounded-0">My Heading 3</h3>
+                            <p>Lorem ipsum dolor sit</p>
+                        </div>
+                        <div class="text-center p-4 te_only_price">
+                            <span class="te_sign">$</span>
+                            <span class="te_price">359.99</span>
+                            <p class="">Monthly Plan</p>
+                        </div>
+                        <section class="s_btn te_price_btn positiom-relative">
+                            <a href="#" class="btn btn-primary p-2 z-index-1">Know more</a>
+                        </section>
+                        <ul class="list-group list-group-flush text-center p-4">
+                            <li class="list-unstyled p-2">Lorem ipsum</li>
+                            <li class="list-unstyled p-2">Lorem ipsum sit</li>
+                            <li class="list-unstyled p-2">Lorem ipsum dolor</li>
+                            <li class="list-unstyled p-2">phaedrum pertinacia</li>
+                        </ul>
+                    </section>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--=================== Team Style 1 =============================-->
+    <template id="team_style_1" name="Team Style 1">
+        <section id="" class="container ">
+            <div class="row mx-auto pt32 pb32">
+                <t t-call="theme_clarico_vega.employee_team_1_opt">
+                    <t t-set="items" t-value="5"/>
+                </t>
+            </div>
+        </section>
+    </template>
+    <template id="employee_team_1_opt">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                    <section class="col-12 col-sm-6 ps-3 pe-3 col-md-4 col-lg-3 s_col_no_resize s_col_no_bgcolor">
+                        <section class="">
+                            <div class="te_img_hover_overflow">
+                                <img alt="Clarico-Team-1" src="/theme_clarico_vega/static/src/img/snippets/employee_and_customers/team_1/320_290.jpg" class="img-fluid d-block mx-auto"/>
+                            </div>
+                        </section>
+                        <section class="col-lg-12 text-center">
+                            <p class="te_employee_name mt16">Lorem ipsum</p>
+                            <p class="te_employee_job_title mt8">Lorem</p>
+                            <hr class="te_designation_border p-0"/>
+                        </section>
+                        <section class="col-lg-12 te_social_icon text-center">
+                            <section class="d-inline-block"><a href="#"><span class="fa fa-facebook"/></a></section>
+                            <section class="d-inline-block"><a href="#"><span class="fa fa-twitter"/></a></section>
+                            <section class="d-inline-block"><a href="#"><span class="fa fa-instagram"/></a></section>
+                            <section class="d-inline-block"><a href="#"><span class="fa fa-linkedin"/></a></section>
+                        </section>
+                </section>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--=================== Team-2 =============================-->
+    <template id="team_style_2" name="Team Style 2">
+        <section class="container pt32 pb32 main_container_team2">
+            <div class="row mx-auto">
+                <t t-call="theme_clarico_vega.employee_team_2_content">
+                    <t t-set="items" t-value="5"/>
+                </t>
+            </div>
+        </section>
+    </template>
+    <template id="employee_team_2_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <section class="col-12 col-md-4 col-lg-3 s_col_no_resize s_col_no_bgcolor pt32 pb32">
+                    <section class=" ">
+                        <section class="te_img_hover_overflow">
+                            <img alt="Clarico-Team-2" src="/theme_clarico_vega/static/src/img/snippets/employee_and_customers/team_2/320_290.jpg" class="img-fluid d-block mx-auto"/>
+                        </section>
+                        <section class="text-center te_team_2_design">
+                            <p class="te_employee_name mt16 fw-bold">Lorem ipsum</p>
+                            <p class="te_employee_job_title mt8">Lorem</p>
+                            <section class="te_social_2_icon text-center">
+                                <section class="te_social_icon_inline d-inline-block">
+                                    <a href="#" class="cursor-pointer d-block"><span class="fa fa-facebook"/></a>
+                                </section>
+                                <section class="te_social_icon_inline d-inline-block">
+                                    <a href="#" class="cursor-pointer d-block"><span class="fa fa-twitter"/></a>
+                                </section>
+                                <section class="te_social_icon_inline d-inline-block">
+                                    <a href="#" class="cursor-pointer d-block"><span class="fa fa-instagram"/></a>
+                                </section>
+                                <section class="te_social_icon_inline d-inline-block">
+                                    <a href="#" class="cursor-pointer d-block"><span class="fa fa-linkedin"/></a>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
+                </section>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--===================== Team-3 ============================-->
+    <template id="team_style_3" name="Team Style 3">
+        <section class=" pb32 pt32 ">
+            <div class="container-fluid te_team_6_bg">
+                <div class="container">
+                    <div class="row">
+                        <t t-call="theme_clarico_vega.employee_team_6_opt">
+                            <t t-set="items" t-value="5"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="employee_team_6_opt">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <section class="col-12 col-6 col-sm-6 col-md-6 col-lg-3 te_team_6_col pt32 pb32">
+                    <section class="te_team_6_img">
+                        <img alt="Clarico-Team-1" src="/theme_clarico_vega/static/src/img/snippets/3_column/style_6/130_130.png" class="img-fluid d-block mx-auto rounded-circle p-1"/>
+                    </section>
+                    <section class="col-lg-12 text-center">
+                        <p class="te_employee_name mt16">Lorem ipsum</p>
+                        <p>lorem</p>
+                        <p class="te_employee_job_title mt8"> Lorem ipsum dolor sit amet, eam et reque justo quidam Lorem ipsum dolor sit amet</p>
+                        <span class="te_team_6_tel"><span class="fa fa-phone mt16">1234567890</span></span>
+                    </section>
+                    <section class="col-lg-12 te_social_icon text-center">
+                        <section class="d-inline-block"><a href="#"><span class="fa fa-facebook"/></a></section>
+                        <section class="d-inline-block"><a href="#"><span class="fa fa-twitter"/></a></section>
+                        <section class="d-inline-block"><a href="#"><span class="fa fa-instagram"/></a></section>
+                        <section class="d-inline-block"><a href="#"><span class="fa fa-linkedin"/></a></section>
+                    </section>
+                </section>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--===================== Team-4 ============================-->
+    <template id="team_style_4" name="Team Style 4">
+        <section class="container team_style_4">
+            <section class="row pb32 pt32">
+                <t t-call="theme_clarico_vega.employee_team_7_opt">
+                    <t t-set="items" t-value="5"/>
+                </t>
+            </section>
+        </section>
+    </template>
+    <template id="employee_team_7_opt">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <section class="col-6 col-sm-6 col-md-6 col-lg-3 te_team_7_section pb-3">
+                    <div class="te_team_7_img position-relative">
+                        <img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_5/436_424.jpg" class="img-fluid d-block mx-auto"/>
+                        <section class="te_team_7_social_icon h-100 text-center">
+                            <div class="d-inline-block d-lg-block pb-2 pt-2">
+                                <a href="#"><span class="fa fa-facebook"/></a>
+                            </div>
+                            <div class="d-inline-block d-lg-block pb-2">
+                                <a href="#"><span class="fa fa-twitter"/></a>
+                            </div>
+                            <div class="d-inline-block d-lg-block pb-2">
+                                <a href="#"><span class="fa fa-instagram"/></a>
+                            </div>
+                            <div class="d-inline-block d-lg-block pb-2">
+                                <a href="#"><span class="fa fa-linkedin"/></a>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="te_team_7_content p-3">
+                        <h4>My Heading 4</h4>
+                        <span>Lorem ipsum</span>
+                    </div>
+                </section>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--================= Customer-1 ==============================-->
+    <template id="customers_style_1" name="Customer Style 1">
+        <section class="container customers_style_1">
+            <div class="row pt32 pb32">
+                <t t-call="theme_clarico_vega.customers_3_content">
+                    <t t-set="items" t-value="4"/>
+                </t>
+            </div>
+        </section>
+    </template>
+    <template id="customers_3_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-4 col-sm-12 text-center pb-4 pb-lg-0">
+                    <section class="te_quote_section position-relative overflow-hidden">
+                        <div class="mt8">
+                            <p class="te_quote_text o_default_snippet_text position-relative">
+                                <span class="fa fa-4x fa-quote-left"/>Lorem ipsum dolor sit amet, eam et reque justo quidam, audire Lorem ipsum dolor sit amet, eam et reque justo quidam, audire Lorem ipsum dolor sit amet, eam et reque justo quidam, audire
+                            </p>
+                            <hr class="border-600 p-0 s_hr_solid w-100 mr-auto s_hr_1px pb0 mb0"/>
+                            <div>
+                                <img src="/theme_clarico_vega/static/src/img/snippets/3_column/style_7/100_100.png" class="te_img_emp mt16 mb16 col-lg-2 col-2 te_emp_img rounded-circle"/>
+                                <div class="te_employee_img te_space_emp ps-2 align-middle d-inline-block">
+                                    <span class="te_name_name">Lorem ipsum</span>
+                                    <span class="te_name_designation">- position</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!--====================== Customer 2 ===========================-->
+    <template id="customers_style_2" name="Customer Style 2">
+        <section class="te_customer_testimonial_s5 pt64 container-fluid text-center">
+            <div class="row">
+                <div class="col-lg-5 col-9 mx-auto">
+                    <div class="te_customer_testimonial">Lorem Ipsum</div>
+                    <div class="te_what_customer_saying_s5 pt-3 fw-bold">Lorem ipsum dolor sit amet</div>
+                    <div class="te_customer_caption_s5 pt-4">Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius. Duis meis quas vim ex, ius no oblique. Lorem ipsum dolor sit</div>
+                </div>
+            </div>
+            <div class="container pt80 pb80">
+                <div class="row">
+                    <t t-call="theme_clarico_vega.customers_4_content">
+                        <t t-set="items" t-value="5"/>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="customers_4_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-lg-6 te_customer_testimonial_item text-left">
+                    <div class="te_cutomer_item_bg">
+                        <div class="col-lg-3 col-3 d-inline-block p-0">
+                            <img class="img img-fluid mx-auto" src="/theme_clarico_vega/static/src/img/snippets/3_column/style_6/130_130.png"/>
+                        </div>
+                        <div class="col-lg-9 col-9 d-inline-block float-end pe-0 ps-3">
+                            <div class="">
+                                <p class="pb-2">Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius. Duis meis quas vim ex, ius no oblique. Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius. Duis meis quas vim ex, ius no oblique.</p>
+                                <div class="te_customer_name_s5">Lorem Ipsum</div>
+                                <div class="te_customer_position_s5">Lorem Ipsum Dolor</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+    <!--============== Space =================-->
+    <template id="s_space" name="Space">
+        <section class="py-3 py-sm-5 te_space_style"/>
+    </template>
+    <!--================ Header Offer =======================-->
+    <template id="header_offer_text" name="Header Offer">
+        <div class="s_rating row te_s_header_offer_text">
+            <ul><li class="d-inline-block px-2 py-0">Lorem ipsum dolor sit amet,</li><li class="d-inline-block px-2 py-0"><section>|</section></li>
+                <li class="d-inline-block px-2 py-0">Lorem : #ASDA44</li>
+                <li class="d-inline-block px-2 py-0"><section>|</section></li>
+                <li class="d-inline-block px-2 py-0">Lorem 50% sit</li>
+            </ul>
+        </div>
+    </template>
+    <!--=================== Banner Style 2 =================-->
+    <template id="banner_ept" name="Banner Style 2">
+        <section class="s_banner parallax s_parallax_is_fixed oe_img_bg pt96 pb96 bg-white-75"
+                 data-scroll-background-ratio="1"
+                 style="background-image: url('/theme_clarico_vega/static/src/img/snippets/structure/banner/1920_800.jpg');">
+            <span class="s_parallax_filter"/>
+            <div class="container">
+                <div class="s_nb_column_fixed row te_banner_s2">
+                    <div class="col-lg-7 jumbotron pt32 pb32 o_colored_level o_animate o_anim_pulse o_visible o_animated" style="background-color: rgb(255, 255, 255);float: left;"
+                         data-name="Box">
+                        <div class="row pt32">
+                            <div class="col-lg-6 col-md-6 p-0">
+                                <section class="te_img_hover_overflow d-inline-block t_img_hover_1 te_img_effect2">
+                                    <img class="img img-responsive img-fluid mx-auto"
+                                         src="/theme_clarico_vega/static/src/img/snippets/structure/banner/350_366.png"
+                                         alt="Clarico-Banner"/>
+                                </section>
+                            </div>
+                            <div class="col-lg-6 col-md-6 p-0">
+                                <div class="col-lg-12 s_title_banner s_col_no_bgcolor" data-name="Title">
+                                    <p class="te_banner_heading mb16">
+                                        <font>Lorem ipsum dolor sit amet, eam viris essent dissentiet at</font>
+                                    </p>
+                                </div>
+                                <div class="col-lg-12 s_text_banner pt8 pb32 s_col_no_bgcolor" data-name="Text">
+                                    <p class="te_banner_subheading">
+                                        Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius
+                                        Duis meis quas vim ex, ius no oblique phaedrum.
+                                        <br/>
+                                        Lorem ipsum dolor sit amet, eam et reque justo quidam, te est audire persius
+                                        Duis meis quas vim ex, ius no oblique phaedrum.
+                                    </p>
+                                </div>
+                                <div class="col-lg-12 s_btn text-left pt16 pb16" data-name="Button">
+                                    <a href="#" class="btn btn-primary te_theme_button">Know more</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 p-0" style="float: right;">
+                        <a href="#">
+
+                            <div class="t_img_hover_1">
+                                <img class="img mt16 te_img_height img-responsive img-fluid mx-auto"
+                                     src="/theme_clarico_vega/static/src/img/snippets/structure/banner/500_475.png"
+                                     alt="Clarico-Banner"/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <!--=================== Banner Style 3 =================-->
+    <template id="banner_style_3" name="Banner Style 3">
+        <section class="te_banner_s3">
+            <section class="pt32 oe_img_bg oe_custom_bg"
+                     style="background-image: url('/theme_clarico_vega/static/src/img/snippets/structure/banner/1920_800.jpg'); background-position: center">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 te_banner_s3_content">
+                            <div class="te_banner_sub_heading fw-bold">Lorem</div>
+                            <div class="te_banner_main_heading fw-bold">Lorem Ipsum</div>
+                            <p class="">
+                                Lorem ipsum dolor s it amet, consectetur adipisicing elit, sed do
+                                eiusmod
+                                tempor incididunt ut labore et dolore magna ipsum dolor sit amet,
+                            </p>
+                            <section class="s_btn pt32 pb16" data-name="Buttons">
+                                <a href="#" class="btn btn-primary shop_now_btn te_theme_button o_default_snippet_text">
+                                    Read More
+                                </a>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="container">
+                <div class="te_category_banner_block">
+                    <div class="row">
+                        <t t-call="theme_clarico_vega.banner_style_3_content">
+                            <t t-set="items" t-value="5"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <template id="banner_style_3_content">
+        <t t-foreach="items" t-as="item">
+            <t t-if="item &gt; 0">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 d-inline-block">
+                    <div class="te_banner_categ_block">
+                        <section class="te_categ_content">
+                            <a href="#" class="d-flex align-middle text-decoration-none justify-content-center align-items-center">
+                                <img class="img img-fluid"
+                                     src="/theme_clarico_vega/static/src/img/snippets/structure/4_blocks/40_40.png"/>
+                                <div class="te_banner_categ_name d-inline-block align-middle align-items-center">
+                                    Lorem Ipsum
+                                </div>
+                            </a>
+                        </section>
+                    </div>
+                </div>
+            </t>
+            <t t-set="item" t-value="item-1"/>
+        </t>
+    </template>
+
+    <!-- dynamic snippet option-->
+    <template id="s_dynamic_snippet_options_ept" inherit_id="website.s_dynamic_snippet_options_template">
+        <xpath expr="//div" position="inside">
+            <we-title class="mt-2 o_grouping_message"><t t-esc="grouping_message"/></we-title>
+            <we-select string="⌙ Desktop" data-name="number_of_elements_opt" data-attribute-default-value="4" data-attribute-name="numberOfElements" data-no-preview="true"><!-- &emsp; -->
+                <we-button data-select-data-attribute="1">1</we-button>
+                <we-button data-select-data-attribute="2">2</we-button>
+                <we-button data-select-data-attribute="3">3</we-button>
+                <we-button data-select-data-attribute="4">4</we-button>
+                <we-button data-select-data-attribute="5">5</we-button>
+                <we-button data-select-data-attribute="6">6</we-button>
+            </we-select>
+            <we-select string="⌙ Mobile" data-name="number_of_elements_small_devices_opt" data-attribute-default-value="1" data-attribute-name="numberOfElementsSmallDevices" data-no-preview="true"><!-- &emsp; -->
+                <we-button data-select-data-attribute="1">1</we-button>
+                <we-button data-select-data-attribute="2">2</we-button>
+                <we-button data-select-data-attribute="3">3</we-button>
+            </we-select>
+        </xpath>
+    </template>
+
+    <!--=================== Brand Builder With Banner =================-->
+    <template id="product_brand_style_3" name="Brand Builder with Banner">
+        <section class="container-fluid">
+            <section class="container brand_builder_banner flex_reverse_row">
+                <div class="row s_nb_column_fixed pt8 pb32">
+                    <div class="col-lg-6 pb-lg-0 pb-2 text-center">
+                        <section class="te_2_col_bg">
+                            <img class="img img-fluid img_hotspot_setting p-0" src="/theme_clarico_vega/static/src/img/snippets/2_column/box2.jpg"/>
+                        </section>
+                    </div>
+                    <div class="col-lg-6 pb-lg-0 pb-2">
+                        <section>
+                           <div data-exclude="data-limit" data-limit="9">
+                               <t t-call="website.s_dynamic_snippet_template">
+                                    <t t-set="snippet_name" t-value="'s_dynamic_snippet_brand'"/>
+                                    <t t-set="snippet_classes" t-value="'s_dynamic_snippet_brand'"/>
+                               </t>
+                           </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </template>
+
+    <!--=================== Product Builder With Banner =================-->
+    <template id="product_builder_banner" name="Product Builder with Banner">
+        <section class="container-fluid">
+            <section class="container flex_reverse_row">
+                <div class="row s_nb_column_fixed pt8 pb32">
+                    <div class="col-lg-8 pb-lg-0 pb-2 text-center">
+                        <section>
+                            <img class="img img-fluid img_hotspot_setting" src="/theme_clarico_vega/static/src/img/snippets/2_column/box2.jpg"/>
+                        </section>
+                    </div>
+                    <div class="col-lg-4 pb-lg-0 pe-lg-0 ps-lg-0 pb-2 product_builder_banner">
+                        <section>
+                           <div data-exclude="data-limit" data-limit="9">
+                               <t t-call="website.s_dynamic_snippet_template">
+                                    <t t-set="snippet_name" t-value="'s_dynamic_snippet_product_template'"/>
+                                </t>
+                           </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </template>
+
+    <!--=================== Blog Post - card layout image resolution =================-->
+    <template id="blog_post_card_ext" inherit_id="website_blog.dynamic_filter_template_blog_post_card">
+        <xpath expr="//a[hasclass('s_blog_posts_post_cover')]/t[@t-call='website.record_cover']" position="replace">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="record"/>
+                    <t t-set="_resize_height" t-value="512"/>
+                    <t t-set="_resize_width" t-value="512"/>
+                    <t t-set="additionnal_classes" t-value="'thumb'"/>
+                </t>
+        </xpath>
+    </template>
+
+    <!--=================== Blog Post Style 1 =================-->
+    <template id="dynamic_filter_template_blog_post_style_template_1" name="Blog Template Style 1"
+              inherit_id="website_blog.dynamic_filter_template_blog_post_list">
+        <xpath expr="//div[hasclass('ps-2')]/a" position="before">
+            <div class="te_blog_post_date s_blog_posts_post">
+                <i class="fa fa-clock-o"/>
+                <span t-field="record.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('ps-2')]/a" position="after">
+            <div class="te_tag_list">
+                <t t-foreach="record.tag_ids" t-as="one_tag">
+                    <div class="te_tag_div">
+                        <i class="fa fa-pencil-square-o"/>
+                        <span t-esc="one_tag.name"/>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('s_blog_posts_post')]" position="attributes">
+            <attribute name="class">d-flex s_blog_posts_post</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website.record_cover']" position="replace">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--=================== Blog Post Style 2 =================-->
+    <template id="dynamic_filter_template_blog_post_style_template_2" name="Blog Template Style 2"
+              inherit_id="website_blog.dynamic_filter_template_blog_post_list">
+        <xpath expr="//div[hasclass('s_blog_posts_post')]" position="attributes">
+            <attribute name="class">d-flex s_blog_posts_post</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website.record_cover']" position="replace">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--=================== Blog Post Style 3 =================-->
+    <template id="dynamic_filter_template_blog_post_style_template_3" name="Blog Template Style 3"
+              inherit_id="website_blog.dynamic_filter_template_blog_post_list">
+        <xpath expr="//div[hasclass('s_blog_posts_post')]" position="attributes">
+            <attribute name="class">d-flex s_blog_posts_post</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website.record_cover']" position="replace">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--=================== Blog Post Style 4 =================-->
+    <template id="dynamic_filter_template_blog_post_style_template_4" name="Blog Template Style 4"
+              inherit_id="website_blog.dynamic_filter_template_blog_post_list">
+        <xpath expr="//div[hasclass('s_blog_posts_post')]" position="attributes">
+            <attribute name="class">d-flex s_blog_posts_post</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website.record_cover']" position="replace">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--=================== Blog Post Style 5 =================-->
+    <template id="dynamic_filter_template_blog_post_style_template_5" name="Blog Template Style 5"
+              inherit_id="website_blog.dynamic_filter_template_blog_post_big_picture">
+        <xpath expr="//div[@t-field='record.subtitle']" position="after">
+            <div class="te_blog_post_date">
+                <span t-field="record.post_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+            </div>
+        </xpath>
+        <xpath expr="//figcaption" position="after">
+            <span class="te_icon_r_more text-center fw-normal">
+                <span class="fa fa-arrow-right"/>
+            </span>
+        </xpath>
+        <xpath expr="//a[hasclass('s_blog_posts_post_cover')]" position="attributes">
+            <attribute name="class">s_blog_posts_post_cover d-flex flex-column shadow-sm overflow-hidden
+                rounded text-decoration-none</attribute>
+        </xpath>
+    </template>
+</odoo>

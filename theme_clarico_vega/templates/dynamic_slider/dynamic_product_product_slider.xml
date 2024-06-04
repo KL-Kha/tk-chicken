@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--============= 'Add to cart',Wishlist,Quick view icons ===================-->
+    <template id="product_slider_btn">
+        <t t-set="in_wish" t-value="record and record._is_in_wishlist()"/>
+        <button t-if="data" type="button" role="button"
+                class="btn btn-link o_add_wishlist card_hover_btn" t-att-disabled='in_wish or None'
+                t-att-data-product-template-id="record.product_tmpl_id.id" t-att-data-product-product-id="record.id"
+                title="Add to wishlist">
+                <span class="fa fa-heart-o " role="img" aria-label="Add to wishlist"/>
+        </button>
+        <t t-if="is_view_active('theme_clarico_vega.quick_view_template')">
+            <button title="Quick View" class="btn btn-secondary btn-sm quick-view-a te_quick_view card_hover_btn"
+                    t-att-data-id="'%s' % record.product_tmpl_id.id">
+                <span class="fa fa-eye"/>
+            </button>
+        </t>
+    </template>
+
+    <!--===== new style 1=======-->
+    <template id="dynamic_filter_template_product_product_style1" name="Product slider Style 1">
+        <t t-foreach="records" t-as="data" data-thumb="/theme_clarico_vega/static/src/img/style_1.png">
+            <t t-set="record" t-value="data['_record']"/>
+            <t t-set="html_class" t-value="record.product_tmpl_id.website_ribbon_id.html_class"/>
+            <t t-set="bg_color" t-value="record.product_tmpl_id.website_ribbon_id.bg_color"/>
+            <t t-set="text_color" t-value="record.product_tmpl_id.website_ribbon_id.text_color"/>
+            <div class="card-group">
+                <div t-attf-class="oe_website_sale card o_carousel_product_card text-center position-relative w-100 product_slider_style1 te_product_ind #{'overflow-visible' if html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' ')) else ''}"
+                     t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <t t-if="record.product_tmpl_id.website_ribbon_id">
+                        <t t-if="html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' '))">
+                            <span t-attf-class="o_ribbon #{html_class}"
+                                  t-attf-style="#{bg_color and ('border-bottom-color: %s; ' % bg_color)} #{bg_color and ('border-left-color: %s; ' % bg_color)} #{text_color and ('color: %s; ' % text_color)} #{bg_color and 'background-color:' + bg_color + ' !important'}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                        <t t-else="">
+                            <span t-attf-class="#{html_class}"
+                                  t-attf-style="background-color: #{record.product_tmpl_id.website_ribbon_id.bg_color} !important; color: #{record.product_tmpl_id.website_ribbon_id.text_color}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                    </t>
+                    <input type="hidden" name="product-id" t-att-data-product-id="record.product_variant_id.id"/>
+                    <section class="te_slider_img dd_slider_prod_bg">
+                        <t t-call="theme_clarico_vega.slider_product_image_section">
+                            <t t-set="product" t-value="record.product_tmpl_id"/>
+                        </t>
+                        <t t-if="website.option_out_of_stock and record.remove_cart_button()" t-call="theme_clarico_vega.out_of_stock_label"/>
+                    </section>
+                    <div class="te_prod_info_2 card-title d-flex align-items-center h-100">
+                        <section class="d-block position-relative p-2 te_prod_info_sub w-100">
+                            <a class="text-decoration-none d-block">
+                                <h6 class="product_name text-truncate fw-normal mw-100 overflow-hidden mb-1 pt-2" t-field="record.name"/>
+                            </a>
+                            <div class="h6 mb-0">
+                                <t t-if="is_view_active('website_sale.product_comment')">
+                                    <t t-call="theme_clarico_vega.rating_widget_stars_slider">
+                                        <t t-set="product" t-value="record.product_tmpl_id"/>
+                                    </t>
+                                </t>
+                            </div>
+                            <div class="product_price fw-normal">
+                                <t t-call="theme_clarico_vega.slider_product_price">
+                                    <t t-set="product" t-value="record.product_tmpl_id"/>
+                                </t>
+                            </div>
+                            <t t-if="is_view_active('theme_clarico_vega.products_item_attribute_image_swatches')" t-call="theme_clarico_vega.product_slider_attribute_swatches">
+                                <t t-set="product" t-value="record.product_tmpl_id"/>
+                            </t>
+                            <section class="te_prod_cart_wish_2 pb-2 overflow-hidden">
+                                <t t-if="record._website_show_quick_add()">
+                                    <button type="button" role="button"
+                                            class="btn btn-primary js_add_cart fa fa-shopping-cart card_hover_btn"
+                                            title="Add to Cart"/>
+                                </t>
+                                <t t-call="theme_clarico_vega.product_slider_btn"/>
+                            </section>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--===== new style 2 =======-->
+    <template id="dynamic_filter_template_product_product_slider_style2" name="Product slider style 2">
+        <t t-foreach="records" t-as="data" data-thumb="/theme_clarico_vega/static/src/img/style_2.png">
+            <t t-set="record" t-value="data['_record']"/>
+            <t t-set="html_class" t-value="record.product_tmpl_id.website_ribbon_id.html_class"/>
+            <t t-set="bg_color" t-value="record.product_tmpl_id.website_ribbon_id.bg_color"/>
+            <t t-set="text_color" t-value="record.product_tmpl_id.website_ribbon_id.text_color"/>
+            <div class="card-group">
+                <div t-attf-class="oe_website_sale card o_carousel_product_card text-center position-relative w-100 te_product_ind product_slider_style2 #{'overflow-visible' if html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' ')) else ''}"
+                     t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <t t-if="record.product_tmpl_id.website_ribbon_id">
+                        <t t-if="html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' '))">
+                            <span t-attf-class="o_ribbon #{html_class}"
+                                  t-attf-style="#{bg_color and ('border-bottom-color: %s; ' % bg_color)} #{bg_color and ('border-left-color: %s; ' % bg_color)} #{text_color and ('color: %s; ' % text_color)} #{bg_color and 'background-color:' + bg_color + ' !important'}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                        <t t-else="">
+                            <span t-attf-class="#{html_class}"
+                                  t-attf-style="background-color: #{record.product_tmpl_id.website_ribbon_id.bg_color} !important; color: #{record.product_tmpl_id.website_ribbon_id.text_color}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                    </t>
+                    <input type="hidden" name="product-id" t-att-data-product-id="record.product_variant_id.id"/>
+                    <section class="te_slider_img dd_slider_prod_bg">
+                        <t t-call="theme_clarico_vega.slider_product_image_section">
+                            <t t-set="product" t-value="record.product_tmpl_id"/>
+                        </t>
+                        <t t-if="website.option_out_of_stock and record.remove_cart_button()" t-call="theme_clarico_vega.out_of_stock_label"/>
+                        <div class="te_wishlist_quickview_icon">
+                            <t t-call="theme_clarico_vega.product_slider_btn"/>
+                        </div>
+                    </section>
+                    <div class="card-title d-flex justify-content-center align-items-center h-100 flex-column p-0 m-0">
+                        <div class="te_prod_info_2 text-center w-100">
+                            <section class="d-block position-relative p-2 te_prod_info_sub">
+                                <a class="text-decoration-none">
+                                    <h6 class="product_name text-truncate fw-normal" t-field="record.name"/>
+                                </a>
+                                <t t-call="theme_clarico_vega.product_slider_attribute_swatches" t-if="is_view_active('theme_clarico_vega.products_item_attribute_image_swatches')">
+                                    <t t-set="product" t-value="record.product_tmpl_id"/>
+                                </t>
+                                <div class="h6 mb-0">
+                                    <t t-if="is_view_active('website_sale.product_comment')">
+                                        <t t-call="theme_clarico_vega.rating_widget_stars_slider">
+                                            <t t-set="product" t-value="record.product_tmpl_id"/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="product_price">
+                                    <t t-call="theme_clarico_vega.slider_product_price">
+                                        <t t-set="product" t-value="record.product_tmpl_id"/>
+                                    </t>
+                                </div>
+                            </section>
+                        </div>
+                        <t t-if="record._website_show_quick_add()">
+                            <div class=" justify-content-between flex-wrap flex-md-column flex-lg-row align-items-center w-100 pb-2">
+                                <button type="button" role="button"
+                                        class="btn btn-secondary js_add_cart btn-sm card_hover_btn"
+                                        t-att-disabled="record.remove_cart_button()">
+                                    <span class="fa fa-shopping-cart"/>Add to Cart
+                                </button>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--===== new style 3 =======-->
+    <template id="dynamic_filter_template_product_product_slider_style3" name="Product slider style 3" >
+        <t t-foreach="records" t-as="data" data-thumb="/theme_clarico_vega/static/src/img/style_3.png">
+            <t t-set="record" t-value="data['_record']" />
+            <t t-set="html_class" t-value="record.product_tmpl_id.website_ribbon_id.html_class"/>
+            <t t-set="bg_color" t-value="record.product_tmpl_id.website_ribbon_id.bg_color"/>
+            <t t-set="text_color" t-value="record.product_tmpl_id.website_ribbon_id.text_color"/>
+            <div class="card-group">
+                <div t-attf-class="oe_website_sale card o_carousel_product_card w-100 te_product_ind product_slider_style_3 mb-2 #{'overflow-visible' if html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' ')) else ''}" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                    <t t-if="record.product_tmpl_id.website_ribbon_id">
+                        <t t-if="html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' '))">
+                            <span t-attf-class="o_ribbon #{html_class}"
+                                  t-attf-style="#{bg_color and ('border-bottom-color: %s; ' % bg_color)} #{bg_color and ('border-left-color: %s; ' % bg_color)} #{text_color and ('color: %s; ' % text_color)} #{bg_color and 'background-color:' + bg_color + ' !important'}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                        <t t-else="">
+                            <span t-attf-class="#{html_class}"
+                                  t-attf-style="background-color: #{record.product_tmpl_id.website_ribbon_id.bg_color} !important; color: #{record.product_tmpl_id.website_ribbon_id.text_color}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                    </t>
+                    <input type="hidden" name="product-id" t-att-data-product-id="record.product_variant_id.id"/>
+                    <section class="te_slider_img dd_slider_prod_bg position-relative">
+                        <t t-call="theme_clarico_vega.slider_product_image_section">
+                            <t t-set="product" t-value="record.product_tmpl_id"/>
+                        </t>
+                        <t t-if="website.option_out_of_stock and record.remove_cart_button()"
+                           t-call="theme_clarico_vega.out_of_stock_label"/>
+                        <div class="te_prod_icons_style_3">
+                            <t t-if="record._website_show_quick_add()">
+                                <button type="button" role="button"
+                                        class="btn btn-secondary card_hover_btn js_add_cart btn-sm"
+                                        t-att-disabled="record.remove_cart_button()">
+                                    <span class="fa fa-shopping-cart"/>
+                                </button>
+                            </t>
+                            <t t-call="theme_clarico_vega.product_slider_btn"/>
+                        </div>
+                    </section>
+                    <div class="card-title w-100 h-100">
+                        <div class="te_prod_info_2 text-center">
+                            <section class="d-block position-relative p-2 te_prod_info_sub">
+                                <a class="text-decoration-none">
+                                    <h6 class="product_name text-truncate fw-normal" t-field="record.name"/>
+                                </a>
+                                <t t-call="theme_clarico_vega.product_slider_attribute_swatches" t-if="is_view_active('theme_clarico_vega.products_item_attribute_image_swatches')">
+                                    <t t-set="product" t-value="record.product_tmpl_id"/>
+                                </t>
+                                <div class="h6 mb-0">
+                                    <t t-if="is_view_active('website_sale.product_comment')">
+                                        <t t-call="theme_clarico_vega.rating_widget_stars_slider">
+                                            <t t-set="product" t-value="record.product_tmpl_id"/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="product_price">
+                                    <t t-call="theme_clarico_vega.slider_product_price">
+                                        <t t-set="product" t-value="record.product_tmpl_id"/>
+                                    </t>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--===== new style 4 =======-->
+    <template id="dynamic_filter_template_product_product_slider_style4" name="Product slider style 4" >
+        <t t-foreach="records" t-as="data" data-thumb="/theme_clarico_vega/static/src/img/style_4.png">
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="html_class" t-value="record.product_tmpl_id.website_ribbon_id.html_class"/>
+        <t t-set="bg_color" t-value="record.product_tmpl_id.website_ribbon_id.bg_color"/>
+        <t t-set="text_color" t-value="record.product_tmpl_id.website_ribbon_id.text_color"/>
+            <div t-attf-class="card-group oe_website_sale card o_carousel_product_card text-center position-relative w-100 te_product_ind product_slider_style4 #{'overflow-visible' if html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' ')) else ''}"
+                t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <input type="hidden" name="product-id" t-att-data-product-id="record.product_variant_id.id"/>
+                <t t-if="record.product_tmpl_id.website_ribbon_id">
+                        <t t-if="html_class and any(cls in ['o_product_label_style_4_left','o_product_label_style_4_right'] for cls in html_class.split(' '))">
+                            <span t-attf-class="o_ribbon #{html_class}"
+                                  t-attf-style="#{bg_color and ('border-bottom-color: %s; ' % bg_color)} #{bg_color and ('border-left-color: %s; ' % bg_color)} #{text_color and ('color: %s; ' % text_color)} #{bg_color and 'background-color:' + bg_color + ' !important'}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                        <t t-else="">
+                            <span t-attf-class="#{html_class}"
+                                  t-attf-style="background-color: #{record.product_tmpl_id.website_ribbon_id.bg_color} !important; color: #{record.product_tmpl_id.website_ribbon_id.text_color}"
+                                  t-out="record.product_tmpl_id.website_ribbon_id.html"/>
+                        </t>
+                    </t>
+                <div class="col-lg-5 d-flex justify-content-center align-items-center p-0 te_slider_img dd_slider_prod_bg position-relative">
+                    <t t-call="theme_clarico_vega.slider_product_image_section">
+                        <t t-set="product" t-value="record.product_tmpl_id"/>
+                    </t>
+                    <t t-if="website.option_out_of_stock and record.remove_cart_button()" t-call="theme_clarico_vega.out_of_stock_label"/>
+                </div>
+                <div class="col-lg-7 p-3 text-start">
+                    <a class="text-decoration-none d-block">
+                        <h6 class="product_name text-truncate fw-normal mw-100 overflow-hidden mb-1 pt-2" t-field="record.name"/>
+                    </a>
+                    <div class="h6 mb-0">
+                        <t t-if="is_view_active('website_sale.product_comment')">
+                            <t t-call="theme_clarico_vega.rating_widget_stars_slider">
+                                <t t-set="product" t-value="record.product_tmpl_id"/>
+                            </t>
+                        </t>
+                    </div>
+                    <div class="product_price fw-normal">
+                        <t t-call="theme_clarico_vega.slider_product_price">
+                            <t t-set="product" t-value="record.product_tmpl_id"/>
+                        </t>
+                    </div>
+                    <div class="product_desc">
+                        <p t-field="record.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents."/>
+                    </div>
+                    <t t-if="is_view_active('theme_clarico_vega.products_item_attribute_image_swatches')" t-call="theme_clarico_vega.product_slider_attribute_swatches">
+                        <t t-set="product" t-value="record.product_tmpl_id"/>
+                    </t>
+                    <div class="cart_button">
+                        <div class="te_wishlist_quickview_icon">
+                            <t t-if="record._website_show_quick_add()">
+                                <button type="button" role="button" class="btn btn-primary js_add_cart fa fa-shopping-cart card_hover_btn" title="Add to Cart"/>
+                            </t>
+                            <t t-call="theme_clarico_vega.product_slider_btn"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

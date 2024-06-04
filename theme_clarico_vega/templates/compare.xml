@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+        <!--========================= Compare Page ==========================-->
+    <template id="product_compare" inherit_id="website_sale_comparison.product_compare">
+        <xpath expr="//h3" position="attributes">
+            <attribute name="class">compare_products_heading pb-2 mb-4 mt-4</attribute>
+        </xpath>
+        <xpath expr="//table[@id='o_comparelist_table']" position="attributes">
+            <attribute name="class">table table-bordered text-center mt16 table-comparator te_compare_table</attribute>
+        </xpath>
+        <xpath expr="//td[@t-foreach='products']/a[1]" position="attributes">
+            <attribute name="class">o_comparelist_remove te_close cursor-pointer d-block end-0 text-center top-0</attribute>
+        </xpath>
+        <xpath expr="//td[@t-foreach='products']/a[1]/strong" position="replace">
+            <strong class="fa fa-times"></strong>
+        </xpath>
+        <xpath expr="//td[@t-foreach='products']/a[2]/img" position="replace">
+            <div class="te_cmp_img_div position-relative">
+                <t t-set="check_stock" t-value="website.option_out_of_stock and product.type=='product' and (not product.allow_out_of_stock_order) and (product.sudo().free_qty &lt; 1)"/>
+                <t t-if="website.is_lazy_load">
+                    <img t-attf-data-src="/web/image/product.product/#{product.id}/image_256/300x300" t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                         t-attf-class="img img-fluid lazyload #{'sold-out' if check_stock else ''}" style="margin:auto;" t-att-alt="product.name" t-att-title="product.name"/>
+                </t>
+                <t t-else="">
+                    <img t-attf-src="/web/image/product.product/#{product.id}/image_256/300x300"
+                         t-attf-class="img img-fluid #{'sold-out' if check_stock else ''}" style="margin:auto;" alt="Product image"/>
+                </t>
+                <div class="te-out-of-stock-lbl" t-if="website.option_out_of_stock and product.type=='product' and (not product.allow_out_of_stock_order) and (product.sudo().free_qty &lt; 1)">
+                    <t t-call="theme_clarico_vega.out_of_stock_label"/>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//a[hasclass('o_product_comparison_table')]//span" position="attributes">
+            <attribute name="class" add="text-truncate" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('product_summary')]//span[hasclass('o_comparison_price')][1]" position="attributes">
+            <attribute name="t-if" add="and website.display_product_price()" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('product_summary')]//span[hasclass('o_comparison_price')][2]" position="attributes">
+            <attribute name="t-else" remove=" " separator=" "/>
+            <attribute name="t-elif">website.display_product_price()</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('product_summary')]//span[hasclass('o_comparison_price')][2]//strong" position="replace"/>
+        <xpath expr="//form[hasclass('o_add_cart_form_compare')]//a[hasclass('btn_cta')]" position="attributes">
+            <attribute name="t-if" add="and website.display_product_price()" separator=" "/>
+        </xpath>
+        <xpath expr="//form[hasclass('o_add_cart_form_compare')]//a[hasclass('a-submit')]" position="attributes">
+            <attribute name="t-else" remove=" " separator=" "/>
+            <attribute name="t-elif">website.display_add_to_cart()</attribute>
+        </xpath>
+        <xpath expr="//form[hasclass('o_add_cart_form_compare')]" position="before">
+            <t t-if="website.display_b2b_message()" t-call="theme_clarico_vega.b2b_hide_details_msg"/>
+        </xpath>
+    </template>
+
+    <template id="compare_products" inherit_id="website_sale_comparison.product_product">
+       <xpath expr="//a[@t-att-href='product.website_url']/.." position="replace">
+        <a t-att-href="product.website_url"><t t-esc="combination_info['display_name']" /></a><br/>
+            <div t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else ''}}">
+                 <t t-if="website.display_add_to_cart()">
+                     <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                     <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                 </t>
+            </div>
+           <div t-attf-class="{{'' if combination_info['prevent_zero_price_sale'] else 'd-none'}}" t-field="website.prevent_zero_price_sale_text"/>
+       </xpath>
+        <xpath expr="//div[hasclass('row')]/div[hasclass('col-1')]" position="attributes">
+            <attribute name="class">col-1 text-center</attribute>
+        </xpath>
+    </template>
+</odoo>

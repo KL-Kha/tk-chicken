@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="cart_lines_ept" inherit_id="website_sale.cart_lines">
+        <xpath expr="//t[@t-if='show_qty']//input" position="attributes">
+            <attribute name="class" add="mx-2" remove="border-start-0 border-end-0" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-if='line.product_id']//div[@t-field='line.product_id.image_128']" position="attributes">
+            <attribute name="t-options">{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max cart_img d-inline-block'}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='line.product_id']//h6" position="replace">
+            <h6 t-field="line.product_id.name" class="d-inline align-top h6 cart_dec_title"/>
+        </xpath>
+        <xpath expr="//t[@t-if='line.product_id']//div[hasclass('align-items-end')]" position="attributes">
+            <attribute name="class" add="flex-row-reverse align-items-baseline" remove="flex-column " separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-if='line.product_id']//div[hasclass('align-items-end')]//div[hasclass('text-end')]" position="replace">
+            <div class="mb-0 h6 cart_pr_price mr8" name="website_sale_cart_line_price">
+                <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                   t-set='product_price'
+                   t-value='line.price_subtotal'/>
+                <t t-else=""
+                   t-set='product_price'
+                   t-value='line.price_total'/>
+                <span t-out="product_price" style="white-space: nowrap;"
+                      t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
+                       class="cart_product_base_unit_price d-block text-muted"
+                       groups="website_sale.group_show_uom_price">
+                    <t t-call='website_sale.base_unit_price'>
+                        <t t-set='product' t-value='line.product_id'/>
+                        <t t-set='combination_info'
+                           t-value="{'base_unit_price':product._get_base_unit_price(product_price)}"/>
+                    </t>
+                </small>
+                <t t-if="line.discount">
+                    <del t-attf-class="#{'text-danger  te_cart_del'}" style="white-space: nowrap;"
+                         t-out="line.price_unit * line.product_uom_qty" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//a[hasclass('js_delete_product')]" position="replace">
+            <a href='#' class="js_delete_product d-none d-md-inline-block small" aria-label="Remove from cart" title="Remove from cart">Remove <i class="fa fa-trash-o"/></a>
+        </xpath>
+
+    </template>
+    <template id="cart_line_description_following_lines_ept" inherit_id="website_sale.cart_line_description_following_lines">
+        <xpath expr="//div[@t-if='description_lines']//span" position="attributes">
+            <attribute name="class" add="cart_dec" separator=" "/>
+            <attribute name="t-if">not is_view_active('theme_clarico_vega.hide_variant_info_in_cart')</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='description_lines']" position="after">
+            <div class="te_cart_prod_attr_lines mt4">
+            <t t-if="not is_view_active('theme_clarico_vega.hide_variant_info_in_cart')">
+                <t t-set="total_attribute" t-value="0"></t>
+                <t t-foreach="line.product_id.product_template_attribute_value_ids" t-as="val_vart">
+                    <label>
+                        <span class="te_attr_span">
+                            <t t-esc="val_vart.attribute_id.name"></t>
+                        </span>
+                        -
+                        <span class="te_attr_span">
+                            <t t-esc="val_vart.name"></t>
+                        </span>
+                        <t t-set="total_attribute" t-value="total_attribute + 1"></t>
+                    </label>
+                </t>
+            </t>
+        </div>
+        </xpath>
+    </template>
+    <template id="cart_line_product_link_es" inherit_id="website_sale.cart_line_product_link">
+        <xpath expr="//a[@t-att-href='line.product_id.website_url']" position="attributes">
+            <attribute name="class" add="product_cart_name d-inline-block" separator=" "/>
+        </xpath>
+    </template>
+     <template id="clear_cart_link_ept" inherit_id="website_sale.cart">
+        <xpath expr="//h3[hasclass('mb-4')]" position="before">
+            <div class="mb-3" t-if="website_sale_order.order_line">
+                <div class="float-end te_clear_cart"><i class="fa fa-trash-o mr4"/>Clear Cart</div>
+            </div>
+        </xpath>
+    </template>
+    <template id="suggested_products_list_esc" inherit_id="website_sale.suggested_products_list">
+        <xpath expr="//div[@t-if='suggested_products']//div[hasclass('d-flex')]" position="replace">
+            <div class="mb-0 h-6 text-center cart_pr_price mr16 d-inline-block" name="website_sale_suggested_product_price">
+                <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                <span t-esc="combination_info['price']" t-options="{'widget': 'monetary','display_currency': website.currency_id}" style="white-space: nowrap;"/>
+                    <del t-attf-class="text-danger  {{'' if combination_info['has_discounted_price'] else 'd-none'}}" t-esc="combination_info['list_price']"
+                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" style="white-space: nowrap;"/>
+            </div>
+            <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden"/>
+            <a t-if="product._website_show_quick_add()"
+               role="button"
+               class="js_add_suggested_products btn text-nowrap p-0 ">
+                <span class="d-md-none fa fa-shopping-cart"/>
+                <span class="d-none d-md-inline suggest_add_cart">Add to cart</span>
+            </a>
+        </xpath>
+        <xpath expr="//div[@t-field='product.description_sale']" position="attributes">
+            <attribute name="t-if">not request.website.viewref('theme_clarico_vega.hide_variant_info_in_cart').active</attribute>
+        </xpath>
+    </template>
+    <template id="hide_variant_info_in_cart" active="False"/>
+    <template id="step_wizard_ept" inherit_id="website.step_wizard">
+        <xpath expr="//div[hasclass('o_wizard')]" position="attributes">
+            <attribute name="class" remove="justify-content-md-start" add="justify-content-md-end" separator=" "/>
+        </xpath>
+    </template>
+</odoo>

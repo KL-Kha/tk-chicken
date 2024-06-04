@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="see_all_attr">
+        <t t-set="attrib_list" t-value="request.httprequest.args.getlist('attrib')"/>
+        <t t-set="attrib_values" t-value="[[int(x) for x in v.split('-')] for v in attrib_list if v]"/>
+        <t t-set="attrib_set" t-value="{v[1] for v in attrib_values if v[0] != 0}"/>
+        <t t-set="is_count" t-value="is_view_active('theme_clarico_vega.website_attribute_values_count_ept')"/>
+        <t t-foreach="attributes" t-as="a">
+            <div t-attf-id="o_products_attributes_{{a.id}}" class="">
+                <t t-set="attrib_values_updated" t-value="filter(lambda attrib_value: attrib_value[0]!=a.id, attrib_values)"/>
+                <t t-set="attribute_value_count" t-value="website.get_shop_products(search=search, category=category,attrib_values=attrib_values_updated) if is_count else {}"/>
+                <t t-if="a.display_type == 'select'">
+                    <select t-attf-class="form-select css_attribute_select mb-2 accordion-collapse list-unstyled collapse te_duration show #{'hide' if website.collapse_filter else 'show'}"
+                            t-attf-id="o_wsale_attr_accordion2_{{a.id}}" aria-labelledby="o_wsale_attr_accordion_{{a.id}}" name="attrib">
+                        <option value="" selected="true">-</option>
+                        <t t-foreach="a.value_ids" t-as="v">
+                            <option t-att-value="'%s-%s' % (a.id,v.id)">
+                            t-att-selected="v.id in attrib_set"><t t-esc="v.name"/> <t t-if="is_count"> (<span t-esc="attribute_value_count.get(v.id,'0')"/>) </t>
+                            </option>
+                        </t>
+                    </select>
+                </t>
+                <t t-if="a.display_type in ('radio', 'pills', 'multi')">
+                    <div class="flex-column mb-3" t-attf-id="o_wsale_attr_accordion2_{{a.id}}" aria-labelledby="o_wsale_attr_accordion_{{a.id}}"
+                    t-attf-class="flex-column accordion-collapse list-unstyled collapse attribute_filter_scroll mb-1 show #{'hide' if website.collapse_filter else 'show'}">
+                        <t t-foreach="a.value_ids" t-as="v">
+                            <div t-attf-class="form-check mb-1 #{'active' if v.id in attrib_set else ''}" t-if="attribute_value_count.get(v.id, 0)">
+                                <input type="checkbox" name="attrib" class="form-check-input"
+                                       t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)"
+                                       t-att-checked="'checked' if v.id in attrib_set else None"/>
+                                <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)"
+                                       t-field="v.name"/>
+                                <span t-if="is_count" t-esc="attribute_value_count.get(v.id,'0')" style="font-weight: normal" class="attr_counter pull-right" />
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <div t-if="a.display_type == 'color'" aria-labelledby="o_wsale_attr_accordion_{{a.id}}" t-attf-id="o_wsale_attr_accordion2_{{a.id}}"
+                t-attf-class="mb-3 accordion-collapse list-unstyled collapse te_duration show #{'hide' if website.collapse_filter else 'show'}">
+                    <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="see_all_attr_brand" >
+        <t t-set="attrib_list" t-value="request.httprequest.args.getlist('attrib')"/>
+        <t t-set="attrib_values" t-value="[[int(x) for x in v.split('-')] for v in attrib_list if v]"/>
+        <t t-set="attrib_set" t-value="{v[1] for v in attrib_values if v[0] != 0}"/>
+        <t t-set="is_count" t-value="is_view_active('theme_clarico_vega.website_attribute_values_count_ept')"/>
+        <t t-set="attrib_values_updated" t-value="filter(lambda attrib_value: attrib_value[0]==0, attrib_values)"/>
+        <t t-set="brand_value_count" t-value="website.get_brand_products(search=search, category=category,attrib_values=attrib_values_updated) if is_count else {}"/>
+        <t t-set="show_brand_logo_enabled" t-value="is_view_active('theme_clarico_vega.product_show_brand_logo')"/>
+        <div t-attf-aria-labelledby="o_wsale_attr_accordion_0" t-attf-id="o_wsale_attr_accordion2_0" t-attf-class="nav nav-pills brand_filter_canvas_scroll flex-column brand_main accordion-collapse list-unstyled  collapse brand_filter_scroll mb-1 #{'hide' if website.collapse_filter else 'show'} show">
+            <t t-if="show_brand_logo_enabled">
+                <t t-foreach="brands" t-as="v">
+                    <div t-attf-class="form-check mb-1 #{'active' if [0,v.id] in attrib_values else ''} nav-item te_s_attr_brand">
+                        <label class="form-check-label fw-normal te_text te_s_attr_val text-truncate"
+                               t-att-for="'%s-%s' % (0,v.id)" t-field="v.name" style="visibility:hidden;"/>
+                        <label style="margin: 0 20px; cursor:pointer;"
+                               t-attf-class="nav-link#{' active' if [0,v.id] in attrib_values else ''}">
+                            <input type="checkbox" name="attrib"
+                                   t-att-value="'0-%s' % (v.id)"
+                                   t-att-checked="'checked' if [0,v.id] in attrib_values else None"/>
+                            <img t-attf-src="/web/image/product.brand/#{v.id}/image_128/60x60"
+                                 class="d-block text-center mx-auto"
+                                 t-att-title="'%s(%s)' % (v.name,v.products_count)"/>
+                        </label>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-foreach="brands" t-as="v">
+                    <div t-attf-class="form-check mb-1 #{'active' if [0,v.id] in attrib_values else ''}">
+                        <input type="checkbox" name="attrib"
+                               t-att-class="'form-check-input active' if [0,v.id] in attrib_values else 'form-check-input'"
+                               t-att-id="'%s-%s'% (0,v.id)" t-att-value="'%s-%s' % (0,v.id)"
+                               t-att-checked="'checked' if [0,v.id] in attrib_values else None"/>
+                        <label class="form-check-label fw-normal te_text te_s_attr_val text-truncate"
+                               t-att-for="'%s-%s' % (0,v.id)" t-field="v.name"/>
+                        <span t-if="is_count" style="font-weight: normal"
+                              class="attr_counter pull-right"
+                              t-esc="brand_value_count.get(v.id,'0')"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </template>
+
+    <template id="see_all_tags">
+        <t t-set="tag_list" t-value="request.httprequest.args.getlist('tags')"/>
+        <t t-set="is_count" t-value="is_view_active('theme_clarico_vega.website_attribute_values_count_ept')"/>
+        <t t-foreach="all_tags" t-as="tag" class="list-group-item border-0 ps-0 pb-0">
+            <div class="form-check mb-1">
+                <input type="checkbox"
+                       name="tags"
+                       class="form-check-input"
+                       t-att-id="tag.id"
+                       t-att-value="tag.id"
+                       t-att-checked="'checked' if tag.id in tag_list else None"
+                />
+                <label class="form-check-label fw-normal" t-att-for="tag.id" t-field="tag.name"/>
+<!--                <span style="font-weight: normal" class="attr_counter pull-right" t-if="is_count"><t t-esc="tag_count.get(tag.id, 0)"/></span>-->
+            </div>
+        </t>
+    </template>
+
+    <!-- Mobile -->
+    <template id="theme_clarico_vega.o_wsale_offcanvas" name="SeeAll" inherit_id="website_sale.o_wsale_offcanvas">
+        <xpath expr="//t[@t-foreach='attributes']" position="before">
+            <t t-set="is_show_see_all" t-value="request.website.see_all"/>
+            <t t-set="show_attr_value" t-value="request.website.show_attr_value"/>
+            <t t-set="attrib_set_attr" t-value="{v[0] for v in attrib_values}"/>
+        </xpath>
+        <xpath expr="//div[@t-attf-id='o_wsale_offcanvas_attribute_{{a.id}}']" position="attributes">
+            <attribute name="t-if">not is_show_see_all</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='attributes']//h2[hasclass('accordion-header')]" position="inside">
+            <t t-set="attribute_url" t-value="request.website.get_attribute_clear_url(request.httprequest.full_path, a)"/>
+            <a t-att-attribute-name="a.id" class="te_clear_all_variant_off_canvas ps-4" t-if="attribute_url" t-att-href="attribute_url">
+                [Clear]
+            </a>
+        </xpath>
+        <xpath expr="//div[@t-attf-id='o_wsale_offcanvas_attribute_{{a.id}}']" position="after">
+            <t t-set="attrib_list" t-value="request.httprequest.args.getlist('attrib')"/>
+            <t t-set="attrib_values" t-value="[[int(x) for x in v.split('-')] for v in attrib_list if v]"/>
+            <t t-set="attrib_set" t-value="{v[1] for v in attrib_values if v[0] != 0}"/>
+            <t t-set="is_count" t-value="is_view_active('theme_clarico_vega.website_attribute_values_count_ept')"/>
+            <div t-if="is_show_see_all"
+                 t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}"
+                 t-attf-class="accordion-collapse collapse {{ (_status == 'active') and 'show'}}"
+                 t-att-aria-expanded="(_status == 'active') and 'True' or 'False'"
+                 t-attf-aria-labelledby="o_wsale_offcanvas_attribute_{{a.id}}_header">
+                <div class="accordion-body pt-0">
+                    <t t-set="attrib_values_updated" t-value="filter(lambda attrib_value: attrib_value[0]!=a.id, attrib_values)"/>
+                    <t t-set="attribute_value_count" t-value="website.get_shop_products(search=search, category=category,attrib_values=attrib_values_updated) if is_count else {}"/>
+                    <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
+                        <t t-set="count_color" t-value="1"/>
+                        <t t-set="total_value_count" t-value="int(len(a.value_ids))"/>
+                        <t t-foreach="a.value_ids" t-as="v">
+                            <t t-if="(int(count_color) &lt;= int(show_attr_value) if a.id not in attrib_set_attr else True) and (attribute_value_count.get(v.id, 0))">
+                                <t t-set="img_style" t-value="'background:url(/web/image/product.attribute.value/%s/image/22*22); background-size:cover;' % v.id if v.image else ''"/>
+                                <t t-set="color_style"
+                                   t-value="'background: ' + str(v.html_color or v.name if not v.is_custom else '')"/>
+                                <div class="color-with-name-divmax te_s_attr_color" t-if="attribute_value_count.get(v.id, 0)">
+                                    <label t-attf-style="#{img_style or color_style}"
+                                           t-attf-class="css_attribute_color mb-1 #{'active' if v.id in attrib_set else ''}">
+                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id, v.id)"
+                                               t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name"/>
+                                    </label>
+                                    <label t-attf-class="form-check-label fw-normal te_text te_s_attr_val te_color-name te_s_attr_val cursor-pointer d-inline-block text-truncate #{'active' if v.id in attrib_set else ''}"
+                                           t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
+                                    <span t-attf-class="attr_counter me-0 pull-right #{'active' if v.id in attrib_set else ''}" t-if="is_count"
+                                          t-esc="attribute_value_count.get(v.id,'0')"/>
+                                </div>
+                                <t t-set="count_color" t-value="count_color + 1"/>
+                            </t>
+                        </t>
+                        <label t-if="total_value_count &gt; int(show_attr_value) and a.id not in attrib_set_attr" class="form-check-label ms-3 fw-normal lbl_see_all cursor-pointer">
+                            <a href="#" class="see_all_attr_btn text-decoration-none" t-attf-id="see_all_attr_btn_{{a.id}}" t-att-attr-id="a.id" is-mobile="True" is-color="True">
+                                <span>+ See All</span> </a>
+                        </label>
+                    </div>
+                    <div t-elif="a.display_type in ('radio', 'pills', 'select')"
+                         class="list-group list-group-flush">
+                        <t t-set="count_mobile" t-value="1"/>
+                        <t t-set="total_value_count" t-value="int(len(a.value_ids))"/>
+                        <div t-if="int(count_mobile) &lt;= int(show_attr_value) if a.id not in attrib_set_attr else True" t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                            <div t-attf-class="form-check mb-1 #{'active' if v.id in attrib_set else ''}" t-if="attribute_value_count.get(v.id, 0)">
+                                <input type="checkbox"
+                                       name="attrib"
+                                       class="form-check-input"
+                                       t-att-id="'%s-%s' % (a.id,v.id)"
+                                       t-att-value="'%s-%s' % (a.id,v.id)"
+                                       t-att-checked="'checked' if v.id in attrib_set else None"/>
+                                <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)"
+                                       t-field="v.name"/>
+                                <span style="font-weight: normal" class="attr_counter pull-right" t-if="is_count" t-esc="attribute_value_count.get(v.id,'0')"/>
+                            </div>
+                            <t t-set="count_mobile" t-value="count_mobile + 1"/>
+                        </div>
+                        <label t-if="total_value_count &gt; int(show_attr_value) and a.id not in attrib_set_attr" class="form-check-label ms-3 fw-normal lbl_see_all cursor-pointer">
+                            <a href="#" class="see_all_attr_btn text-decoration-none" t-attf-id="see_all_attr_btn_{{a.id}}" t-att-attr-id="a.id" is-mobile="True">
+                                <span>+ See All</span> </a>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@t-if='all_tags']//h2[@t-attf-id='o_wsale_offcanvas_tags_header']" position="inside">
+            <t t-set="clear_tag_url" t-value="request.website.get_clear_tag_url(request.httprequest.full_path)"/>
+            <a t-att-href="clear_tag_url" t-if="clear_tag_url" class="te_clear_all_variant_off_canvas ps-4">[Clear]</a>
+        </xpath>
+    </template>
+
+    <template id="see_all_attr_mobile">
+        <t t-set="attrib_list" t-value="request.httprequest.args.getlist('attrib')"/>
+        <t t-set="attrib_values" t-value="[[int(x) for x in v.split('-')] for v in attrib_list if v]"/>
+        <t t-set="attrib_set" t-value="{v[1] for v in attrib_values if v[0] != 0}"/>
+        <t t-set="is_count" t-value="is_view_active('theme_clarico_vega.website_attribute_values_count_ept')"/>
+        <t t-foreach="attributes" t-as="a">
+            <t t-set="attrib_values_updated" t-value="filter(lambda attrib_value: attrib_value[0]!=a.id, attrib_values)"/>
+            <t t-set="attribute_value_count" t-value="website.get_shop_products(search=search, category=category,attrib_values=attrib_values_updated) if is_count else {}"/>
+            <div class="accordion-body pt-0">
+                <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
+                    <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
+                </div>
+                <div t-elif="a.display_type in ('radio', 'pills', 'select')"
+                     class="list-group list-group-flush">
+                    <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                        <div class="form-check mb-1">
+                            <input type="checkbox"
+                                   name="attrib"
+                                   class="form-check-input"
+                                   t-att-id="'%s-%s' % (a.id,v.id)"
+                                   t-att-value="'%s-%s' % (a.id,v.id)"
+                                   t-att-checked="'checked' if v.id in attrib_set else None"/>
+                            <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)"
+                                   t-field="v.name"/>
+                            <span style="font-weight: normal" class="attr_counter pull-right" t-if="is_count" t-esc="attribute_value_count.get(v.id,'0')"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="see_all_attr_brand_mobile" >
+        <t t-set="attrib_list" t-value="request.httprequest.args.getlist('attrib')"/>
+        <t t-set="attrib_values" t-value="[[int(x) for x in v.split('-')] for v in attrib_list if v]"/>
+        <t t-set="attrib_set" t-value="{v[1] for v in attrib_values if v[0] != 0}"/>
+        <t t-set="is_count" t-value="is_view_active('theme_clarico_vega.website_attribute_values_count_ept')"/>
+        <t t-set="attrib_values_updated" t-value="filter(lambda attrib_value: attrib_value[0]==0, attrib_values)"/>
+        <t t-set="brand_value_count" t-value="website.get_brand_products(search=search, category=category,attrib_values=attrib_values_updated) if is_count else {}"/>
+        <t t-set="show_brand_logo_enabled" t-value="is_view_active('theme_clarico_vega.product_show_brand_logo')"/>
+        <div class="accordion-body pt-0 brand_filter_canvas_scroll brand_main">
+            <div t-foreach="brands" t-as="v" class="te_s_attr_brand list-group-item border-0 ps-0 pb-0">
+                <t t-if="show_brand_logo_enabled">
+                    <div t-attf-class="form-check mb-1 nav-item">
+                        <label style="margin: 0 20px; cursor:pointer;"
+                               t-attf-class="nav-link#{' active' if [0,v.id] in attrib_values else ''}">
+                            <input type="checkbox" name="attrib"
+                                   t-att-value="'0-%s' % (v.id)"
+                                   t-att-checked="'checked' if [0,v.id] in attrib_values else None"/>
+                            <img t-attf-src="/web/image/product.brand/#{v.id}/image_128/60x60"
+                                 class="d-block text-center mx-auto"
+                                 t-att-title="'%s(%s)' % (v.name,v.products_count)"/>
+                        </label>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="form-check mb-1">
+                        <input type="checkbox"
+                               name="attrib"
+                               class="form-check-input"
+                               t-att-id="'%s-%s' % (0,v.id)"
+                               t-att-value="'%s-%s' % (0,v.id)"
+                               t-att-checked="'checked' if v.id in attrib_set else None"/>
+                        <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (0,v.id)" t-field="v.name"/>
+                        <span t-if="is_count" style="font-weight: normal"
+                          class="attr_counter pull-right"
+                          t-esc="brand_value_count.get(v.id,'0')"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

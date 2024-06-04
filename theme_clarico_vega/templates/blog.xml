@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--===================== Latest Blog list snippet =====================-->
+    <template id="s_latest_posts_list_template_ept" inherit_id="website_blog.dynamic_filter_template_blog_post_list">
+        <xpath expr="//div[hasclass('s_blog_posts_post_subtitle')]" position="after">
+            <a class="btn btn-primary btn-sm mt-1 px-2 py-1 rounded-0 common_blog_btn"
+               t-attf-href="/blog/#{record.blog_id.id}/post/#{record.id}">
+                <span>Read More</span>
+            </a>
+        </xpath>
+        <xpath expr="//div[hasclass('s_blog_posts_post_subtitle')]" position="attributes">
+            <attribute name="t-attf-class">s_blog_posts_post_subtitle mb-1 d-sm-block</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('s_blog_posts_post')]" position="attributes">
+            <attribute name="class">d-flex s_blog_posts_post</attribute>
+        </xpath>
+    </template>
+</odoo>

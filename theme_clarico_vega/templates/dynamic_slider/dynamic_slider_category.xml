@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_dynamic_snippet_category" name="Categories">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet_category'"/>
+        </t>
+    </template>
+
+    <template id="s_dynamic_snippet_category_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.dynamic_snippet_carousel_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet_category'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_category'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="s_dynamic_snippet_category_template_options" inherit_id="website.s_dynamic_snippet_options_template">
+        <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+            <t t-if="snippet_name == 'dynamic_snippet_category'">
+                <t t-set="domain" t-translation="off">["|", ["website_id", "=", false], ["website_id", "=",<t
+                        t-out="current_website.id"/>]]
+                </t>
+                <we-many2many string="Category"
+                              data-name="product_category_opt"
+                              data-attribute-name="productCategoryIds"
+                              data-no-preview="true"
+                              data-model="product.public.category"
+                              t-att-data-domain="domain"
+                              data-allow-delete="true"
+                              data-fakem2m="true"
+                              data-select-data-attribute=""/>
+                <we-checkbox string="Product Count" data-select-data-attribute="false|true" data-attribute-name="count" data-no-preview="true"/>
+            </t>
+        </xpath>
+    </template>
+
+
+
+    <!--========================== categories 1 =========================-->
+    <template id="dynamic_filter_template_product_public_category_style_1" name="Category Style 1">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2" data-thumb="/theme_clarico_vega/static/src/img/category-builder-style-1.png">
+            <t t-set="category" t-value="data['_record']"/>
+            <div class="te_category_item item">
+                <t t-set="page_url" t-value="'/shop/category/%s' % category.id"/>
+                <a t-att-href="page_url" class="text-decoration-none">
+                    <div class="te_category_img t_img_hover_1 te_img_effect2 d-flex align-items-center position-relative overflow-hidden d-inline-block">
+                        <t t-if="website.is_lazy_load">
+                            <img t-attf-data-src="/web/image/product.public.category/#{category.id}/image_128"
+                                 t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                                 t-attf-class="img img-fluid lazyload w-100 mx-auto" t-att-alt="category.name"/>
+                        </t>
+                        <t t-else="">
+                            <img t-att-alt="category.name" t-attf-src="/web/image/product.public.category/#{category.id}/image_128" class="w-100 mx-auto"/>
+                        </t>
+                    </div>
+                    <div class="te_category_name w-100 text-center">
+                        <div class=" text-truncate text-center" t-attf-class="text-center cate_name #{'p-0 ' if data.get('count') else 'p-2'}" t-esc="category.name"/>
+                        <t t-if="data.get('count')">
+                            <span t-if="data.get('count')"  class= "t4s-count text-center pe-1" t-esc="category.get_product_count()"/><span class="t4s-count pe-1">Item(s)</span>
+                        </t>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </template>
+
+    <!--========================== categories 2 =========================-->
+    <template id="dynamic_filter_template_product_public_category_style_2" name="Category Style 2">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2" data-thumb="/theme_clarico_vega/static/src/img/category-builder-style-3.png">
+            <t t-set="category" t-value="data['_record']"/>
+            <div class="item slider_cate_2 position-relative">
+                <div class="te_category_item position-relative overflow-hidden">
+                    <t t-if="website.is_lazy_load">
+                        <img t-attf-data-src="/web/image/product.public.category/#{category.id}/image_256"
+                             t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                             t-attf-class="img img-fluid lazyload te_category_2_img" t-att-alt="category.name"/>
+                    </t>
+                    <t t-else="">
+                        <img t-att-alt="category.name" class="te_category_2_img" t-attf-src="/web/image/product.public.category/#{category.id}/image_256"/>
+                    </t>
+                </div>
+                <div class="category_2_name align-items-center category_2_name d-block text-center justify-content-center">
+                    <a t-att-href="'/shop/category/%s' % category.id" class="text-decoration-none">
+                        <div class="" t-attf-class="te_category_name text-center  d-block text-truncate text-capitalize #{'p-0 ' if data.get('count') else 'p-2'}" t-esc="category.name"/>
+                        <t t-if="data.get('count')">
+                            <div class="t4s-count d-inline-block align-items-center pe-1" t-esc="category.get_product_count()"/><span class="t4s-count">Item(s)</span>
+                        </t>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--========================== categories 3 =========================-->
+    <template id="dynamic_filter_template_product_public_category_styles_3" name="Category Style 3">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2" data-thumb="/theme_clarico_vega/static/src/img/VP1.png">
+            <t t-set="category" t-value="data['_record']"/>
+            <div class="card-group">
+                <div class="te_category_item card h-100 border d-flex flex-row align-items-center pe-1">
+                    <t t-set="page_url" t-value="'/shop/category/%s' % category.id"/>
+                    <div class="category_3_img pe-3 col-6">
+                        <a t-att-href="page_url">
+                            <t t-if="website.is_lazy_load">
+                                <img t-attf-data-src="/web/image/product.public.category/#{category.id}/image_256"
+                                     t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                                     t-attf-class="img img-fluid lazyload card-img-top rounded-0" t-att-alt="category.name"/>
+                            </t>
+                            <t t-else="">
+                                <img t-att-alt="category.name" t-attf-src="/web/image/product.public.category/#{category.id}/image_256" class="rounded-0"/>
+                            </t>
+                        </a>
+                    </div>
+                    <div class="category_details_3 col-6">
+                        <a t-att-href="page_url" class="d-block text-decoration-none">
+                            <div  t-attf-class="te_category_name card-title #{'mb-0' if data.get('count') else 'mb-2'}" t-esc="category.name"/>
+                            <t t-if="data.get('count')">
+                                <span class="t4s-count d-inline-flex align-items-center mb-1 pe-1" t-esc="category.get_product_count()"/><span class="t4s-count">Item(s)</span>
+                            </t>
+                        </a>
+                        <a t-att-href="page_url" class="btn btn-primary px-2 py-1 explore_btn">
+                            Explore
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!--========================== categories 4 =========================-->
+    <template id="dynamic_filter_template_product_public_category_styles_4" name="Category Style 4">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2"  data-thumb="/theme_clarico_vega/static/src/img/Thumbnails.png">
+            <t t-set="category" t-value="data['_record']"/>
+            <div class="card-group">
+                <div class="te_category_item cate_4 card h-100 border-0 align-items-center pe-1">
+                    <t t-set="page_url" t-value="'/shop/category/%s' % category.id"/>
+                    <div class="category_4_img">
+                        <a t-att-href="page_url" class="category_conntent position-relative d-block mx-auto">
+                            <t t-if="website.is_lazy_load">
+                                <img t-attf-data-src="/web/image/product.public.category/#{category.id}/image_256"
+                                     t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                                     t-attf-class="img img-fluid lazyload" t-att-alt="category.name"/>
+                            </t>
+                            <t t-else="">
+                                <img t-att-alt="category.name" t-attf-src="/web/image/product.public.category/#{category.id}/image_256" class="img img-fluid"/>
+                            </t>
+                        </a>
+                    </div>
+                    <div class="category_details_4 mt-3">
+                        <a t-att-href="page_url" class="d-inline-flex text-decoration-none text-center position-relative">
+                            <div class="te_category_name d-inline-block font-bold card-title position-relative" t-esc="category.name"/>
+                            <t t-if="data.get('count')">
+                                <span t-if="data.get('count')" class="t4s-count align-items-center d-inline-block mx-1" t-esc="category.get_product_count()"/>
+                            </t>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

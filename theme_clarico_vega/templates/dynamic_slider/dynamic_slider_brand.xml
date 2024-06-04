@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_dynamic_snippet_brand" name="Categories">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet_brand'"/>
+        </t>
+    </template>
+
+    <template id="s_dynamic_snippet_brand_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.dynamic_snippet_carousel_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet_brand'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_brand'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="s_dynamic_snippet_brand_template_options" inherit_id="website.s_dynamic_snippet_options_template">
+        <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+            <t t-if="snippet_name == 'dynamic_snippet_brand'">
+                <t t-set="domain" t-translation="off">["|", ["website_id", "=", false], ["website_id", "=",<t
+                        t-out="current_website.id"/>]]
+                </t>
+                <we-many2many string="brand"
+                              data-name="product_brand_opt"
+                              data-attribute-name="productBrandIds"
+                              data-no-preview="true"
+                              data-model="product.brand"
+                              t-att-data-domain="domain"
+                              data-allow-delete="true"
+                              data-fakem2m="true"
+                              data-select-data-attribute=""/>
+                <we-checkbox string="Product Count" data-select-data-attribute="false|true" data-attribute-name="count" data-no-preview="true"/>
+
+            </t>
+        </xpath>
+    </template>
+
+    <template id="show_product_count" name="Show Product Count" />
+
+
+    <!--========================== Brand Count =========================-->
+    <template id="brand_product_count" name="Brand Product Count">
+        <t t-if="data.get('count')">
+            <div class="product_count pt-1">
+                <span t-esc="brand.get_product_count()"/>
+                item(s)
+            </div>
+        </t>
+    </template>
+
+    <!--========================== Brand 1 =========================-->
+    <template id="dynamic_filter_template_product_brand_style_1" name="Brand Style 1">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2" data-thumb="/theme_clarico_vega/static/src/img/VP1.png">
+            <t t-set="brand" t-value="data['_record']"/>
+            <div class="card-group">
+                <div class="te_brand_img item card h-100 border d-flex flex-row align-items-center">
+                    <a t-attf-href="/shop/brands/#{brand.id}"  class="brand_link"/>
+                    <div class="category_3_img pe-3 col-6">
+                        <t t-if="website.is_lazy_load">
+                            <img t-attf-data-src="/web/image/product.brand/#{brand.id}/image_128"
+                             t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                             t-attf-class="img img-fluid lazyload brand-img" t-att-alt="brand.name"/>
+                        </t>
+                        <t t-else="">
+                            <img t-att-alt="brand.name" class="brand-img" t-attf-src="/web/image/product.brand/#{brand.id}/image_128"/>
+                        </t>
+                    </div>
+                    <div class="brand_details_1 col-6">
+                        <a t-attf-href="/shop/brands/#{brand.id}" class="brand_link  text-decoration-none d-block justify-content-between">
+                            <div  t-attf-class="brand_name card-title #{'mb-0' if data.get('count') else 'mb-2'}" t-esc="brand.name"/>
+                            <t t-call="theme_clarico_vega.brand_product_count"/>
+                        </a>
+                        <a t-attf-href="/shop/brands/#{brand.id}" class="brand_link btn btn-primary px-2 py-1 explore_btn">
+                            Explore
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!--==================== Brand Slider Style 2 ===================-->
+    <template id="dynamic_filter_template_product_brand_style_2" name="Brand Style 2">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2" data-thumb="/theme_clarico_vega/static/src/img/brand-builder-style-3.png">
+            <t t-set="brand" t-value="data['_record']"/>
+            <div class="item te_brand_img w-100">
+                <a t-attf-href="/shop/brands/#{brand.id}"  class="brand_link text-decoration-none">
+                    <span class="brand_image text-center mx-auto border-bottom-0 d-flex align-item-center">
+                        <t t-if="website.is_lazy_load">
+                            <img t-attf-data-src="/web/image/product.brand/#{brand.id}/image_256"
+                                 t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                                 t-attf-class="img img-fluid lazyload py-3 px-2 mx-auto w-auto h-auto" t-att-alt="brand.name"/>
+                        </t>
+                        <t t-else="">
+                            <img t-attf-src="/web/image/product.brand/#{brand.id}/image_256" t-att-alt="brand.name" class="py-3 px-2 mx-auto w-auto h-auto"/>
+                        </t>
+                    </span>
+                    <div class="brand-content py-2 px-2 clearfix">
+                    <div class="brand_name align-middle mt-0 text-center" t-esc="brand.name"/>
+                    <t t-call="theme_clarico_vega.brand_product_count"/>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </template>    
+    <!--==================== Brand Slider Style 3 ===================-->
+    <template id="dynamic_filter_template_product_brand_style_3" name="Brand Style 3">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-row-per-slide="3" data-number-of-elements-sm="3" data-thumb="/theme_clarico_vega/static/src/img/brand-builder-style-2.png">
+        <t t-set="brand" t-value="data['_record']"/>
+            <section class="brand_slider_3 te_brand_slider slider_body o_not_editable">
+                <div class="container overflow-hidden">
+                    <section class="te_brand_slider_3">
+                       <div class="item te_brand_img p-2">
+                            <a t-attf-href="/shop/brands/#{brand.id}"  class="brand_link text-decoration-none">
+                                <span class="brand_image text-center mx-auto t_img_hover_1 te_img_effect2 overflow-hidden position-relative d-inline-block">
+                                    <t t-if="website.is_lazy_load">
+                                        <img t-attf-data-src="/web/image/product.brand/#{brand.id}/image_256"
+                                             t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                                             t-attf-class="img img-fluid lazyload p-2" t-att-alt="brand.name"/>
+                                    </t>
+                                    <t t-else="">
+                                        <img t-attf-src="/web/image/product.brand/#{brand.id}/image_256" t-att-alt="brand.name" class="p-2 w-100"/>
+                                    </t>
+                                </span>
+                            </a>
+                       </div>
+                    </section>
+                    <t t-call="theme_clarico_vega.brand_product_count"/>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!--==================== Brand Slider Style 4 ===================-->
+    <template id="dynamic_filter_template_product_brand_style_4" name="Brand Style 4">
+        <t t-foreach="records" t-as="data" data-number-of-elements="6" data-number-of-elements-sm="2" data-thumb="/theme_clarico_vega/static/src/img/Thumbnails.png">
+            <t t-set="brand" t-value="data['_record']"/>
+            <div class="item te_brand_img brand_style_4 w-100 position-relative">
+                <a t-attf-href="/shop/brands/#{brand.id}"  class="brand_link text-decoration-none position-relative d-block">
+                    <span class="brand_image position-relative d-block mx-auto align-item-center">
+                        <t t-if="website.is_lazy_load">
+                            <img t-attf-data-src="/web/image/product.brand/#{brand.id}/image_256"
+                                 t-attf-src="/web/image/website/#{website.id}/lazy_load_image"
+                                 t-attf-class="img img-fluid lazyload" t-att-alt="brand.name"/>
+                        </t>
+                        <t t-else="">
+                            <img t-attf-src="/web/image/product.brand/#{brand.id}/image_256" t-att-alt="brand.name" class=""/>
+                        </t>
+                    </span>
+                    <div class="brand-content text-center py-2 px-2 clearfix">
+                        <div  class="d-inline-flex brand_link text-decoration-none text-center d-inline-block position-relative">
+                             <div class="brand_name align-middle mt-0 text-capitalize d-inline-block" t-esc="brand.name"/>
+                                <span t-if="data.get('count')" class="t4s-count align-items-center d-inline-block mx-1" t-esc="brand.get_product_count()"/>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </t>
+    </template>
+
+</odoo>

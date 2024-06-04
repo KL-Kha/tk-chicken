@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Shop Page | Product Attribute Color Swatches and stock product information -->
+    <template id="products_item_attribute_image_swatches" inherit_id="theme_clarico_vega.products_item_ept" name="Shop: Image Swatches">
+        <xpath expr="//div[hasclass('sub_desc')]" position="after">
+            <t t-call="theme_clarico_vega.product_slider_attribute_swatches"/>
+        </xpath>
+    </template>
+</odoo>
