@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="x_mjb_automated_vendor_bill_rule" model="base.automation">
+        <field name="name">MJB - Automatic Vendor Billing Rule Engine - Start/Stop</field>
+        <field name="model_id" ref="mjb_automatic_vendor_billing.model_automatic_billing_rule_engine"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="trigger_field_ids" eval="[(4, ref('mjb_automatic_vendor_billing.field_automatic_billing_rule_engine__x_boolean_start_stop_action'))]" />
+        <field name="action_server_ids" eval="[(4, ref('mjb_automatic_vendor_billing.x_mjb_automated_vendor_bill_rule_action'))]"/>
+    </record>
+
+    <record id="x_mjb_onchange_period_option_rule" model="base.automation">
+        <field name="name">MJB - Onchnage - Period Option For Vendor Billing</field>
+        <field name="model_id" ref="mjb_automatic_vendor_billing.model_automatic_billing_rule_engine"/>
+        <field name="trigger">on_write</field>
+        <field name="trigger_field_ids" eval="[(4, ref('mjb_automatic_vendor_billing.field_automatic_billing_rule_engine__x_period')),(4, ref('mjb_automatic_vendor_billing.field_automatic_billing_rule_engine__x_interval_number')),(4, ref('field_automatic_billing_rule_engine__x_interval_type'))]" />
+        <field name="action_server_ids" eval="[(4, ref('mjb_automatic_vendor_billing.x_mjb_onchange_period_option_rule_action'))]"/>
+    </record>
+
+    <record id="x_mjb_automated_period_on_receive" model="base.automation">
+        <field name="name">MJB - On Receive - Period Option For Vendor Billing</field>
+        <field name="model_id" ref="mjb_automatic_vendor_billing.model_automatic_billing_rule_engine"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="trigger_field_ids" eval="[(4, ref('mjb_automatic_vendor_billing.field_automatic_billing_rule_engine__x_boolean_start_stop_action'))]" />
+        <field name="action_server_ids" eval="[(4, ref('mjb_automatic_vendor_billing.x_mjb_automated_period_on_receive_action'))]"/>
+    </record>
+</odoo>
