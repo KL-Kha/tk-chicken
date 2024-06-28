@@ -1,0 +1,4 @@
+[submodule "KL-Kha/tk-chicken"]
+	path = KL-Kha/tk-chicken
+	url = git@github.com:KL-Kha/tk-chicken.git
+	branch = prod
