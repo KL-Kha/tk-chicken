@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="x_mjb_field_history_tracking_form_view" model="ir.ui.view">
+        <field name="name">x_mjb_field_history_tracking.form</field>
+        <field name="model">x_mjb_field_history_tracking</field>
+        <field name="arch" type="xml">
+            <form string="Fapiao">
+                <sheet>
+                    <group name="sale_header">
+                        <group name="model">
+                            <field name="x_mjb_track_model" required="1"/>
+                            <field name="x_mjb_is_tracking"/>
+                        </group>
+                        <group name="fields">
+                            <field name="x_mjb_track_field" required="1" widget="many2many_tags"
+                                   domain="[('model_id', '=', x_mjb_track_model)]"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="x_mjb_field_history_tracking_tree_view" model="ir.ui.view">
+        <field name="name">x_mjb_field_history_tracking.tree</field>
+        <field name="model">x_mjb_field_history_tracking</field>
+        <field name="arch" type="xml">
+            <tree string="History" editable="bottom">
+                <field name="x_mjb_track_model" required="1"
+                       options="{'no_open': True, 'no_create': True, 'no_quick_create': True}"/>
+                <field name="x_mjb_track_field" required="1" widget="many2many_tags"
+                       domain="[('model_id', '=', x_mjb_track_model)]"
+                       options="{'no_create': True, 'no_quick_create': True}"/>
+                <field name="write_date"/>
+                <field name="write_uid"/>
+                <field name="x_mjb_is_tracking" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_x_mjb_field_history_tracking" model="ir.actions.act_window">
+        <field name="name">History Tracking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">x_mjb_field_history_tracking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new history tracking.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_x_mjb_field_history_tracking"
+              name="MJB History Tracking"
+              parent="base.menu_custom"
+              action="action_x_mjb_field_history_tracking"
+              sequence="2"/>
+
+</odoo>

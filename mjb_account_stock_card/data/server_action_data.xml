@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="x_mjb_stock_card_refresh" model="ir.actions.server">
+        <field name="name">MJB - Stock Card Refresh</field>
+        <field name="model_id" ref="mjb_account_stock_card.model_x_mjb_stock_card"/>
+        <field name="state">code</field>
+        <field name="code">
+def alert(m):
+    raise(Warning(m))
+
+def genReportLines(REPORT_ID,CURRENCY_ID,LOCATION_ID,START_DATE,END_DATE, ADDITIONAL=""):
+    # LOCATION_ID = 8
+    NOW_DATE = '2052-12-31'
+
+    opts = {
+        "REPORT_ID": REPORT_ID,
+        "LOCATION_ID": LOCATION_ID,
+        "CURRENCY_ID": CURRENCY_ID,
+        "START_DATE": START_DATE,
+        "END_DATE": END_DATE,
+        "NOW_DATE": NOW_DATE,
+        "ADDITIONAL": ADDITIONAL
+    }
+
+    opts['QUERY_MOVELINE'] = """
+        SELECT
+            date,
+            product_id,
+            lot_id,
+            quantity,
+            product_uom_id,
+            location_id,
+            location_dest_id,
+            (
+                COALESCE(
+                    CASE
+                        WHEN (location_dest_id = {LOCATION_ID}) THEN (
+                            COALESCE(quantity * COALESCE(_product_uom.factor/_move_uom.factor, 1), 0)
+                        )
+                    END,
+                    0
+                )
+            ) AS qty_in,
+            (
+                COALESCE(
+                    CASE
+                        WHEN (location_id = {LOCATION_ID}) THEN (
+                            COALESCE(quantity * COALESCE(_product_uom.factor/_move_uom.factor, 1), 0)
+                        )
+                    END,
+                    0
+                )
+            ) AS qty_out
+        FROM
+            stock_move_line
+        LEFT OUTER JOIN product_product on product_product.id = product_id
+        LEFT OUTER JOIN product_template on product_template.id = product_product.product_tmpl_id
+        LEFT OUTER JOIN uom_uom _product_uom on _product_uom.id = product_template.uom_id
+        LEFT OUTER JOIN uom_uom _move_uom on _move_uom.id = product_uom_id
+        WHERE
+            (
+                location_dest_id IN ({LOCATION_ID})
+                OR location_id IN ({LOCATION_ID})
+            )
+            AND state = 'done'
+            {ADDITIONAL}
+    """.format(**opts)
+
+    opts['QUERY_IN_OUT'] = """
+        SELECT
+            l.*,
+            (
+                COALESCE(
+                    CASE
+                        WHEN ((l.date &gt;= '{START_DATE}') AND (l.date &lt; '{END_DATE}')) 
+                        THEN (
+                            l.qty_in
+                        )
+                    END,
+                    0
+                )
+            ) AS qty_in_period,
+            (
+                COALESCE(
+                    CASE
+                        WHEN ((l.date &gt;= '{START_DATE}') AND (l.date &lt; '{END_DATE}'))
+                        THEN (
+                            l.qty_out
+                        )
+                    END,
+                    0
+                )
+            ) AS qty_out_period,
+            (
+                COALESCE(
+                    CASE
+                        WHEN l.date &gt;= '{END_DATE}' THEN (
+                            l.qty_in
+                        )
+                    END,
+                    0
+                )
+            ) AS qty_in_now,
+            (
+                COALESCE(
+                    CASE
+                        WHEN l.date &gt;= '{END_DATE}' THEN (
+                            l.qty_out
+                        )
+                    END,
+                    0
+                )
+            ) AS qty_out_now
+        FROM
+            ({QUERY_MOVELINE}) AS l
+    """.format(**opts)
+    
+    opts['QUERY_QUANTITIES'] = """
+        SELECT
+            product_id,
+            SUM(m.qty_in_period) AS qty_in,
+            SUM(m.qty_out_period) AS qty_out,
+            SUM(m.qty_in_now) AS qty_in_todate,
+            SUM(m.qty_out_now) AS qty_out_todate,
+            0 AS qty_available
+        FROM
+            ({QUERY_IN_OUT}) AS m
+        GROUP BY
+            product_id
+    """.format(**opts)
+    
+    opts['QUERY_QUANTS'] = """
+        SELECT
+            product_id,
+            0 AS qty_in,
+            0 AS qty_out,
+            0 AS qty_in_todate,
+            0 AS qty_out_todate,
+            SUM(quantity) AS qty_available
+        FROM
+            stock_quant
+        WHERE
+            location_id = {LOCATION_ID}
+        GROUP BY
+            product_id
+    """.format(**opts)
+    
+    opts['QUERY_REPORT'] = """
+        SELECT
+            product_id,
+            SUM(qty_in) AS qty_in,
+            SUM(qty_out) AS qty_out,
+            SUM(qty_in_todate) AS qty_in_todate,
+            SUM(qty_out_todate) AS qty_out_todate,
+            SUM(qty_available) AS qty_available
+        FROM
+            (
+                (
+                    {QUERY_QUANTITIES}
+                ) 
+                UNION ALL
+                (
+                    {QUERY_QUANTS}
+                )
+            ) AS "unified"
+        GROUP BY
+            product_id
+    """.format(**opts)
+    
+    opts['QUERY_FINAL'] = """
+        SELECT
+            {REPORT_ID} AS x_stock_card_id,
+            report.product_id AS x_product_id,
+            product_template.categ_id AS x_category_id,
+            product_template.uom_id AS x_uom_id,
+            {LOCATION_ID} AS x_location_id,
+            {CURRENCY_ID} AS x_currency_id,
+            ir_property.value_float AS x_standard_cost,
+            (qty_available - (qty_in_todate - qty_out_todate) - (qty_in - qty_out)) AS x_qty_start,
+            qty_in AS x_qty_in,
+            qty_out AS x_qty_out,
+            (qty_available - (qty_in_todate - qty_out_todate)) AS x_qty_end,
+            (qty_in - qty_out) AS x_qty_variation,
+            COALESCE((qty_available - (qty_in_todate - qty_out_todate) - (qty_in - qty_out))  * ir_property.value_float , 0) AS x_val_start,
+            COALESCE(qty_in * ir_property.value_float , 0) AS x_val_in,
+            COALESCE(qty_out * ir_property.value_float , 0) AS x_val_out,
+            COALESCE((qty_available - (qty_in_todate - qty_out_todate)) * ir_property.value_float , 0) AS x_val_end,
+            COALESCE((qty_in - qty_out) * ir_property.value_float , 0) AS x_val_variation
+        FROM
+            ({QUERY_REPORT}) AS report
+        LEFT OUTER JOIN product_product on product_product.id = report.product_id
+        LEFT OUTER JOIN product_template on product_template.id = product_product.product_tmpl_id
+        LEFT OUTER JOIN ir_property on ir_property.res_id = 'product.product,' || report.product_id
+    """.format(**opts)
+
+    query = opts['QUERY_FINAL'].format(**opts)
+    env.cr.execute(query)
+    res = env.cr.dictfetchall()
+    # alert(res)
+    
+    return res
+
+def refreshReport(report):
+    REPORT_ID = report.id
+    CURRENCY_ID = report.x_company_id.currency_id.id
+    START_DATE = report.x_start_date
+    END_DATE = report.x_end_date
+    # datetime.datetime(report.x_end_date.year, report.x_end_date.month, report.x_end_date.day) + datetime.timedelta(hours=8)
+    locations = report.x_location_ids
+    if len(locations) == 0:
+        return False
+
+    lines = []
+    for location in locations:
+        LOCATION_ID = location.id
+        lines += genReportLines(
+            REPORT_ID,
+            CURRENCY_ID,
+            LOCATION_ID,
+            START_DATE,
+            END_DATE
+            # "AND product_id = 11817"
+        )
+    # alert(len(lines))
+    
+    env['x_mjb_stock_card_line'].search([('x_stock_card_id','=',report.id)]).unlink()
+    env['x_mjb_stock_card_line'].create(lines)
+    # env.cr.commit()
+    
+# record = env['x_mjb_stock_card'].browse(1)
+if record:
+    refreshReport(record)
+    # log("done")
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_line_purchase" model="ir.actions.server">
+        <field name="name">MJB - Stock Card Line - Purchase Details</field>
+        <field name="model_id" ref="mjb_account_stock_card.model_x_mjb_stock_card_line"/>
+        <field name="state">code</field>
+        <field name="code">
+def alert(m):
+    raise(Warning(m))
+
+action = env.ref('mjb_account_stock_card.x_mjb_purchase_order_line_window').read()[0]
+action['domain'] = [
+    ('product_id','=', record.x_product_id.id),
+    # ('date_order','&gt;=', record.x_stock_card_id.x_start_date),
+    # ('date_order','&lt;=', record.x_stock_card_id.x_end_date)
+    # ('state','=','done')
+]
+# action['context'] = {'search_default_done': 0, 'search_default_groupby_product_id': 0, 'create': 0}
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_line_pickings" model="ir.actions.server">
+        <field name="name">MJB - Stock Card Line - Details Pickings</field>
+        <field name="model_id" ref="mjb_account_stock_card.model_x_mjb_stock_card_line"/>
+        <field name="state">code</field>
+        <field name="code">
+def alert(m):
+    raise(Warning(m))
+
+action = env.ref('stock.action_picking_tree_all').read()[0]
+action['domain'] = [
+    ('product_id','=', record.x_product_id.id),
+    ('date_done','&gt;=', record.x_stock_card_id.x_start_date),
+    ('date_done','&lt;=', record.x_stock_card_id.x_end_date),
+    ('state','=','done')
+]
+# action['context'] = {'search_default_done': 0, 'search_default_groupby_product_id': 0, 'create': 0}
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_line_sm" model="ir.actions.server">
+        <field name="name">MJB - Stock Card Line - Details</field>
+        <field name="model_id" ref="mjb_account_stock_card.model_x_mjb_stock_card_line"/>
+        <field name="state">code</field>
+        <field name="code">
+def alert(m):
+    raise(Warning(m))
+
+action = env.ref('stock.stock_move_line_action').read()[0]
+action['domain'] = [
+    ('product_id','=', record.x_product_id.id),
+    ('date','&gt;=', record.x_stock_card_id.x_start_date),
+    ('date','&lt;=', record.x_stock_card_id.x_end_date),
+    ('state','=','done'),
+    '|', ('location_id', '=', record.x_location_id.id), ('location_dest_id', '=', record.x_location_id.id)
+]
+action['context'] = {'search_default_done': 0, 'search_default_groupby_product_id': 0, 'create': 0}
+        </field>
+    </record>
+</odoo>

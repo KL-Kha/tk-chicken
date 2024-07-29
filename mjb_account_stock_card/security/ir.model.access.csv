@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+mjb_account_stock_card.access_x_mjb_stock_card_group_user,Stock Card group_user,mjb_account_stock_card.model_x_mjb_stock_card,base.group_user,1,1,1,0
+mjb_account_stock_card.access_x_mjb_stock_card_group_system,Stock Card group_system,mjb_account_stock_card.model_x_mjb_stock_card,base.group_system,1,1,1,1
+mjb_account_stock_card.access_x_mjb_stock_card_line_group_user,Stock Card Line group_user,mjb_account_stock_card.model_x_mjb_stock_card_line,base.group_user,1,1,1,0
+mjb_account_stock_card.access_x_mjb_stock_card_line_group_system,Stock Card Line group_system,mjb_account_stock_card.model_x_mjb_stock_card_line,base.group_system,1,1,1,1
+

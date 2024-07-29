@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="automatic_billing_rule_engine_form" model="ir.ui.view">
+        <field name="name">automatic_billing_rule_engine.form</field>
+        <field name="model">automatic.billing.rule.engine</field>
+        <field name="arch" type="xml">
+            <form string="Automatic Billing Rules Form">
+                <header>
+                    <field name="x_state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title" modifiers="{}">
+                        <label for="name" class="oe_edit_only" modifiers="{}"/>
+                        <h1 modifiers="{}">
+                            <field name="x_name" placeholder="e.g. Automatic Billing Rules" on_change="1" modifiers="{'required':true}" id="name" readonly="x_state == 'running'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="x_model_id" invisible="1"/>
+                            <field name="x_model_selection" invisible="1"/>
+                            <field name="x_domain_filter" widget="domain" options="{'model': 'x_model_selection'}" readonly="x_state == 'running'"/>
+                            <field name="x_engine_type" readonly="x_engine_type != False"/>
+                        </group>
+                        <group>
+                            <field name="x_period" widget="selection_badge" readonly="x_state == 'running'"/>
+                            <label for="x_interval_number" string="Execute Every" readonly="x_state == 'running'" invisible="x_period != 'custom'"/>
+                            <div  readonly="x_state == 'running'" invisible="x_period != 'custom'">
+                                <field name="x_interval_number" class="oe_inline" readonly="x_state == 'running'"/>
+                                <field name="x_interval_type" class="oe_inline" readonly="x_state == 'running'"/>
+                            </div>
+                            <field name="x_cron_id" readonly="1" invisible="x_cron_id == False or x_period == 'on_receive'"/>
+                            <field name="x_base_automation_id" readonly="1" invisible="x_base_automation_id == False or x_period != 'on_receive'"/>
+                            <field name="x_group_bill" widget="boolean_toggle"/>
+                            <field name="x_action_post" widget="boolean_toggle"/>
+                            <field name="x_boolean_start_stop_action" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="automatic_billing_rule_engine_tree" model="ir.ui.view">
+        <field name="name">automatic_billing_rule_engine.tree</field>
+        <field name="model">automatic.billing.rule.engine</field>
+        <field name="arch" type="xml">
+            <tree string="Automatic Billing Rules Tree">
+                <field name="x_name"/>
+                <field name="x_domain_filter"/>
+                <field name="x_period"/>
+                <field name="x_group_bill" widget="boolean_toggle"/>
+                <field name="x_boolean_start_stop_action" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vendor_automatic_billing_rule_engine" model="ir.actions.act_window">
+        <field name="name">Automatic Billing Rule Engine</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">automatic.billing.rule.engine</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_x_engine_type': 'vendor'}</field>
+        <field name="domain" eval="[('x_engine_type', '=', 'vendor')]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Vendor Billing Rule Engine
+            </p>
+        </field>
+    </record>
+
+    <record id="partner_automatic_billing_rule_engine" model="ir.actions.act_window">
+        <field name="name">Automatic Billing Rule Engine</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">automatic.billing.rule.engine</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_x_engine_type': 'partner'}</field>
+        <field name="domain" eval="[('x_engine_type', '=', 'partner')]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Partner Billing Rule Engine
+            </p>
+        </field>
+    </record>
+
+    <record id="view_all_billing_rule_engine" model="ir.actions.act_window">
+        <field name="name">Automatic Billing Rule Engine</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">automatic.billing.rule.engine</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                All Billing Rule Engine!
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="Automatic Billing Rule"
+    id="x_mjb_automatic_billing_rule_parent"
+    parent="base.menu_custom"
+    sequence="50"/>
+
+    <menuitem id="all_rule_engine_window" name="All Billing Rule Engine" parent="x_mjb_automatic_billing_rule_parent" action="view_all_billing_rule_engine" sequence="1"/>
+    <menuitem id="vendor_billing_rule_engine_window" name="Vendor Billing Rule Engine" parent="x_mjb_automatic_billing_rule_parent" action="vendor_automatic_billing_rule_engine" sequence="2"/>
+    <menuitem id="partner_billing_rule_engine_window" name="Partner Billing Rule Engine" parent="x_mjb_automatic_billing_rule_parent" action="partner_automatic_billing_rule_engine" sequence="3"/>
+</odoo>
