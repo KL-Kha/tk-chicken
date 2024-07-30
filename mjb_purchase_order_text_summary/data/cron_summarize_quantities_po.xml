@@ -69,9 +69,9 @@ if total_records:
           pass
     
     if data_summary != {}:
-      record.write({'po_quantities_summary' : summarize_quantities_product(data_summary,summary_po_fields)})
+      record['po_quantities_summary'] = summarize_quantities_product(data_summary,summary_po_fields)
     else:
-      record.write({'po_quantities_summary' : False})
+      record['po_quantities_summary'] = False
         ]]></field>
     </record>
 </odoo>
