@@ -1,4 +1,6 @@
-openpyxl
 sqlparse>=0.4.2
 xlsxwriter
 requests
+pandas==2.0.3
+xlrd==2.0.1
+openpyxl == 3.1.2
