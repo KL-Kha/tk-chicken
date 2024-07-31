@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cron_update_exist_po" model="ir.cron">
+        <field name="name">MJB - Quantities Summary - Existing PO</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="active" eval="False"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">19</field>
+        <field name="code"><![CDATA[
+def summarize_quantities_product(data_summary, summary_po_fields):
+    grand_total = [0]
+    table_summary = "<table class='table table-bordered'>"
+    table_headers = ""
+    if summary_po_fields:
+        for field in summary_po_fields:
+            header = env['ir.model.fields'].search(
+                [('model_id', '=', 'purchase.order.line'), ('name', '=', field)])
+            table_headers += f"<th>{header.field_description}</th>"
+            grand_total.append(0)
+    table_summary += "<thead><tr><th>Product</th><th>Quantity</th>" + table_headers + "</tr></thead>"
+    table_summary += "<tbody>"
+    for key, value in data_summary.items():
+        table_summary += "<tr>"
+        table_summary += f"<td>{key}</td>"
+        table_summary += f"<td>{value[0]}</td>"
+        grand_total[0] += value[0]
+        if summary_po_fields:
+            for index in range(1, len(summary_po_fields) + 1):
+                table_summary += f"<td>{value[index]}</td>"
+                grand_total[index] += value[index]
+        table_summary += "</tr>"
+    table_summary += '<tr><td><b>Total</b></td>'
+    for index in range(0, len(grand_total)):
+        table_summary += f'<td>{grand_total[index]}</td>'
+    table_summary += "</tr></table></tbody>"
+    return table_summary
+
+batch_size = 200  # batch_size of records for each time this action runs
+total_records = env['purchase.order'].search([('po_quantities_summary','=',False)], limit = batch_size)
+if total_records:
+  for record in total_records:
+    data_summary = {}
+    summary_po_fields = env['ir.config_parameter'].sudo().get_param('purchase.num_fields_purchase_order')
+    if summary_po_fields:
+      summary_po_fields = summary_po_fields.split(',')
+      for line in record.order_line:
+        if line.display_type not in ['line_section','line_note']:
+          if line.product_id.name in data_summary.keys():
+            data_summary[line.product_id.name][0] += line.product_uom_qty
+            
+            for index in range(0,len(summary_po_fields)):
+              data_summary[line.product_id.name][index+1] += line[summary_po_fields[index]]
+          else:
+            data_summary[line.product_id.name] = [line.product_uom_qty]
+            for field in summary_po_fields:
+              data_summary[line.product_id.name].append(line[field])
+        else:
+          pass
+    else:
+      for line in record.order_line:
+        if line.display_type not in ['line_section','line_note']:
+          if line.product_id.name in data_summary.keys():
+            data_summary[line.product_id.name][0] += line.product_uom_qty
+          else:
+            data_summary[line.product_id.name] = [line.product_uom_qty]
+        else:
+          pass
+    
+    if data_summary != {}:
+      record['po_quantities_summary'] = summarize_quantities_product(data_summary,summary_po_fields)
+    else:
+      record['po_quantities_summary'] = False
+        ]]></field>
+    </record>
+</odoo>

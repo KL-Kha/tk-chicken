@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="x_mjb_stock_card_form" model="ir.ui.view">
+        <field name="name">x_mjb_stock_card.form</field>
+        <field name="model">x_mjb_stock_card</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="mjb_account_stock_card.x_mjb_stock_card_refresh"  type="action" string="Refresh"/>
+                    <field widget="statusbar" options="{'clickable': '1'}" name="x_state" string="State"/>
+                </header>
+                <sheet string="Stock Card">
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button" icon="fa-pie-chart" type="object" name="action_open_x_stock_card_line">
+                            <field widget="statinfo" name="x_stock_card_line_count" string="Lines"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" invisible = "x_active == True"/>
+                    <field name="x_active" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="x_name" required="1" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="x_start_date" string="Start Date"/>
+                            <field name="x_end_date" string="End Date"/>
+                            <field name="x_notes" string="Notes"/>
+                        </group>
+                        <group>
+                            <field name="x_company_id" string="Company ID" options="{&quot;no_create&quot;:true,&quot;no_open&quot;:true}"/>
+                            <field name="x_location_ids" string="Location IDS" widget="many2many_tags" options="{&quot;no_create&quot;:true}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter" name="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                    <field name="activity_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_tree" model="ir.ui.view">
+        <field name="name">x_mjb_stock_card.tree</field>
+        <field name="model">x_mjb_stock_card</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="x_sequence" widget="handle"/>
+                <field name="x_name"/>
+                <field name="x_start_date"/>
+                <field name="x_end_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_search" model="ir.ui.view">
+        <field name="name">x_mjb_stock_card.search</field>
+        <field name="model">x_mjb_stock_card</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="x_name"/>
+                <separator/>
+                <filter string="Archived" name="archived_x_stock_card" domain="[['x_active', '=', False]]"/>
+                <separator/>
+            </search>
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_window" model="ir.actions.act_window">
+        <field name="name">Stock Card</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">x_mjb_stock_card</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="x_mjb_stock_card_menu"
+              name="Stock Card"
+              action="x_mjb_stock_card_window"
+              parent="account_reports.account_reports_audit_reports_menu"
+              sequence="5"/>
+
+</odoo>

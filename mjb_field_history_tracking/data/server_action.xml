@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="x_mjb_field_history_tracking_action" model="ir.actions.server">
+        <field name="name">[MJB] Auto Log Tracking Actions</field>
+        <field name="model_id" ref="base.model_ir_actions_server"/>
+        <field name="state">code</field>
+        <field name="code">
+env['x_mjb_field_history_tracking']._check_update(records)
+        </field>
+    </record>
+</odoo>

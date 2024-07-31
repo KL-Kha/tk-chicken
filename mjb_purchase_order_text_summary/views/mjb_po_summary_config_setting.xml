@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_inherited_po" model="ir.ui.view">
+        <field name="name"> res.config.settings.view.form.po.inherited</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='purchase']" position="inside">
+                <block title="Majorbird" name="purchase_order_summary_setting_container">
+                    <setting id="get_num_fields_purchase_order" string="Purchase Order Line Fields" help="Choose fields in purchase order line to be summarized that user wants !">
+                        <field name="num_fields_purchase_order" class="oe_inline" widget="many2many_tags"/>
+                        <field name="num_fields_purchase_order_str" invisible="1"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field> 
+    </record>
+</odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="x_mjb_stock_card_line_form" model="ir.ui.view">
+        <field name="name">x_mjb_stock_card_line.form</field>
+        <field name="model">x_mjb_stock_card_line</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field widget="statusbar" options="{'clickable': '1'}" name="x_state" string="State"/>
+                </header>
+                <sheet string="Stock Card Line">
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" invisible = "x_active == True"/>
+                    <field name="x_active" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="x_name" required="1" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                </sheet>
+                <div class="oe_chatter" name="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_line_tree" model="ir.ui.view">
+        <field name="name">x_mjb_stock_card_line.tree</field>
+        <field name="model">x_mjb_stock_card_line</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0">
+                <field name="x_stock_card_id" string="Stock Card ID" invisible="1"/>
+                <field name="x_sequence" widget="handle"/>
+                <button name="mjb_account_stock_card.x_mjb_stock_card_line_purchase" type="action" icon="fa-dollar" />
+                <button name="mjb_account_stock_card.x_mjb_stock_card_line_pickings" type="action" icon="fa-truck" />
+                <button name="mjb_account_stock_card.x_mjb_stock_card_line_sm" type="action" icon="fa-edit" />
+                <field name="x_name" invisible="1"/>
+                <field name="x_product_tmpl_id" string="Product Tmpl ID" invisible="1"/>
+                <field name="x_product_id" string="Product" options="{&quot;no_create&quot;:true}"/>
+                <field name="x_category_id" string="Category" options="{&quot;no_create&quot;:true}"/>
+                <field name="x_location_id" string="Location" options="{&quot;no_create&quot;:true}"/>
+                <field name="x_qty_start" string="Qty Start" sum="Sum of Qty Start" class="table-info"/>
+                <field name="x_qty_in" string="Qty In" sum="Sum of Qty In" class="table-success"/>
+                <field name="x_qty_out" string="Qty Out" sum="Sum of Qty Out" class="table-danger"/>
+                <field name="x_qty_end" string="Qty End" sum="Sum of Qty End" class="table-dark"/>
+                <field name="x_qty_variation" string="Qty Variation" sum="Sum of Qty Variation" class="table-warning"/>
+                <field name="x_uom_id" string="UOM"/>
+                <field name="x_standard_cost" string="Standard Cost"/>
+                <field name="x_val_start" string="Val Start" sum="Sum of Val Start" class="table-info"/>
+                <field name="x_val_in" string="Val In" sum="Sum of Val In" class="table-in"/>
+                <field name="x_val_out" string="Val Out" sum="Sum of Val Out" class="table-danger"/>
+                <field name="x_val_end" string="Val End" sum="Sum of Val End" class="table-dark"/>
+                <field name="x_val_variation" string="Val Variation" sum="Sum of Val Variation" class="table-warning"/>
+                <field name="x_currency_id" string="Currency"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_line_search" model="ir.ui.view">
+        <field name="name">x_mjb_stock_card_line.search</field>
+        <field name="model">x_mjb_stock_card_line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="x_product_id"/>
+                <field name="x_category_id"/>
+                <field name="x_location_id"/>
+                <field name="x_name"/>
+                <separator/>
+                <filter string="Archived" name="archived_x_stock_card_line" domain="[['x_active', '=', False]]"/>
+                <separator/>
+                <group name="group_by">
+                    <filter name="group_by_category" string="Category ID" context="{'group_by': 'x_category_id'}"/>
+                    <filter name="group_by_location" string="Location ID" context="{'group_by': 'x_location_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="x_mjb_stock_card_line_window" model="ir.actions.act_window">
+        <field name="name">Stock Card Line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">x_mjb_stock_card_line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="x_mjb_purchase_order_line_window" model="ir.actions.act_window">
+        <field name="name">Purchase Order Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order.line</field>
+        <field name="target">current</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="x_mjb_stock_card_line_menu"
+              name="Stock Card Line"
+              action="x_mjb_stock_card_line_window"
+              parent="account.menu_finance_configuration"
+              sequence="1"/>
+</odoo>
