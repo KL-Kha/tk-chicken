@@ -89,13 +89,12 @@
     flex-flow: inherit !important;
 }
 
-.o_list_renderer .o_list_table thead{
+/* .o_list_renderer .o_list_table thead{
     background-color: #e9ecef;
 }
 .o_list_renderer .o_list_table thead th:not(.o_list_record_selector) {
     border-left: 1px solid #dee2e6;
-}
-
+} */
 
 .flex_column_datetimerow .apply-dashboard-date-filter{margin:0}
 
