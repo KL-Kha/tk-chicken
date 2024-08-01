@@ -26,6 +26,10 @@ var IZIViewAnalysis = Widget.extend({
         this._super.apply(this, arguments);
         
         self.parent = parent;
+        this.context = false;
+        if (parent && parent.context) {
+            this.context = parent.context;
+        }
         self.$visual;
         self.$title;
         self.$filter;

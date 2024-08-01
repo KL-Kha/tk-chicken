@@ -51,8 +51,48 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Sources">
+                                <field name="item_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="table_id"/>
+                                        <field name="type"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- IZI Data Source Item -->
+        <record id="izi_data.izi_data_source_item_form" model="ir.ui.view">
+            <field name="name">izi.data.source.item.form</field>
+            <field name="model">izi.data.source.item</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="table_id"/>
+                                <field name="source_id"/>
+                                <field name="action_to_field"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                                <field name="limit"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="process_data"
+                            string="Process"
+                            type="object"
+                            class="oe_highlight"
+                            />
+                    </footer>
                 </form>
             </field>
         </record>

@@ -44,9 +44,13 @@ var IZIConfigAnalysis = Widget.extend({
         'click .izi_update_current_filter_item': '_onUpdateCurrentFilter',
         'click .izi_select_analysis_explore': '_onClickSelectAnalysisExplore',
         'click .izi_select_analysis_edit': '_onClickSelectAnalysisEdit',
+        'click .izi_select_analysis_insight': '_onClickSelectAnalysisInsight',
+        'click .izi_exit_insight': '_onClickExitInsight',
 
         'click .izi_action_open_visual_script_editor': '_onClickVisualScriptEditor',
         'click .izi_action_open_data_script_editor': '_onClickDataScriptEditor',
+
+        'click .izi_select_lang': '_onClickLangInsight',
     },
 
     /**
@@ -85,6 +89,9 @@ var IZIConfigAnalysis = Widget.extend({
         self.selectedDashboardName;
         self.changeLimit;
         self.mode;
+        self.insightContents = [];
+        self.onInsight = false;
+        self.langInsight = "English"
     },
 
     willStart: function () {
@@ -119,6 +126,7 @@ var IZIConfigAnalysis = Widget.extend({
         self.$tabVisual = self.$('.izi_tab_visual');
         self.$tabContentData = self.$('.izi_tab_content_data');
         self.$tabContentVisual = self.$('.izi_tab_content_visual');
+        self.$tabContentInsight = self.$('.izi_tab_content_insight');
 
         self.$selectVisualContainer = self.$('.izi_select_visual_container');
         self.$changeLimitContainer = self.$('.izi_change_limit_container');
@@ -136,16 +144,40 @@ var IZIConfigAnalysis = Widget.extend({
 
         // Hide Icon Picker
         self._initHideIconPicker();
+
+        // load languange
+        self._loadLanguange();
     },
 
     /**
      * Load Method
      */
-
+    _loadLanguange: function () {
+        var self = this;
+        jsonrpc('/web/dataset/call_kw/izi.analysis/ui_get_languanges', {
+            model: 'izi.analysis',
+            method: 'ui_get_languanges',
+            args: [[]],
+            kwargs: {},
+        }).then(function (result) {
+            var languangeElement = self.$('.izi_languange')
+            languangeElement.find('.dropdown-menu').empty();
+            result.forEach(lang => {
+                languangeElement.find('.dropdown-menu').append(`<a class="dropdown-item izi_select_lang">${lang}</a>`);
+            })
+        })
+    },
 
     /**
      * Handler Method
      */
+    _onClickLangInsight: function (ev) {
+        var self = this;
+        var selectedLang = $(ev.currentTarget).text();
+        self.langInsight = selectedLang
+        $("#izi_selected_languange").val(selectedLang)
+        self._generateInsights();
+    },
     _onClickInput: function (ev) {
         var self = this;
     },
@@ -159,6 +191,122 @@ var IZIConfigAnalysis = Widget.extend({
         // Add Dialog
         var $select = new IZISelectAnalysis(self)
         $select.appendTo($('body'));
+    },
+
+    _onClickSelectAnalysisInsight: function(ev) {
+        var self = this;
+        self.onInsight = true;
+        self.$el.animate({
+            width: '40%',
+        });
+        self.$tabContentInsight.show();
+        self.$tabContentData.hide();
+        self.$tabContentVisual.hide();
+        self.$('.izi_select_analysis_container').hide();
+        self.$('.izi_config_analysis_tab').hide();
+        self.$('.izi_blank_divider').hide();
+
+        self._generateInsights();
+    },
+
+    _generateInsights: function(ev) {
+        var self = this;
+        self.$('.izi_tab_content_insight_container').empty();
+        self.insightContents = [];
+        self._getInsight();
+    },
+
+    _getInsight: function() {
+        var self = this;
+        if (self.$viewAnalysis.$visual && self.$viewAnalysis.$visual.temp_analysis_data && self.selectedAnalysis) {
+            self.$('.spinner-border').show();
+            jsonrpc('/web/dataset/call_kw/izi.analysis/action_get_lab_insight', {
+                model: 'izi.analysis',
+                method: 'action_get_lab_insight',
+                args: [
+                    self.selectedAnalysis, 
+                    self.$viewAnalysis.$visual.temp_analysis_data,
+                    self.$viewAnalysis.$visual.drilldown_level,
+                    self.$viewAnalysis.$visual.drilldown_title,
+                    self.langInsight
+                ],
+                kwargs: {},
+            }).then(function (res_json) {
+                self.$('.spinner-border').hide();
+                if (res_json.status == 200) {
+                    if (res_json.parent){
+                    // if (res_json.parent !== false || res_json.parent !== undefined){
+                        var parent_content = res_json.parent.content
+                        self.$('.izi_tab_content_insight_container').append(`
+                            <div class="izi_insight_item izi_insight_parent izi_divider card-body izi_white izi_p10">
+                                <div class="izi_insight_item_content">
+                                    ${parent_content}
+                                    <div class="izi_insight_item_tag">Parent Insight</div>
+                                </div>
+                                <div class="izi_insight_item_icon">
+                                    <span class="material-icons">chevron_right</span>
+                                </div>
+                            </div>
+                        `)
+                    }
+                    var insights = res_json.insights;
+                    insights.forEach(insight => {
+                        var content = insight.content;
+                        var record_tag = ''
+                        var param = ''
+                        if (insight.records && insight.records.length == 1) {
+                            record_tag = insight.records[0];
+                            record_tag = record_tag.split(': ')[1];
+                            record_tag = `<div class="izi_insight_item_tag">${record_tag}</div>`
+                        }
+                        if (insight.parameter) {
+                            param = insight.parameter;
+                        }
+                        self.insightContents.push(content);
+                        self.$('.izi_tab_content_insight_container').append(`
+                            <div class="izi_insight_item izi_divider card-body izi_white izi_p10">
+                                <div class="izi_insight_item_content">
+                                    ${content}
+                                    ${record_tag}
+                                </div>
+                                <div class="izi_insight_item_icon">
+                                    <span class="material-icons">chevron_right</span>
+                                </div>
+                            </div>
+                        `)
+                    });
+                } else if (self.index == 0) {
+                    if (res_analysis_text.status == 401) {
+                        new swal('Need Access', res_analysis_text.message, 'warning');
+                        self._getOwl().action.doAction({
+                            type: 'ir.actions.act_window',
+                            name: _t('Need API Access'),
+                            target: 'new',
+                            res_model: 'izi.lab.api.key.wizard',
+                            views: [[false, 'form']],
+                            context: {},
+                        },{
+                            onClose: function(){
+                            }
+                        });
+                    } else
+                        new swal('Error', res_analysis_text.message, 'error');
+                }
+            })
+        }
+    },
+
+    _onClickExitInsight: function(ev) {
+        var self = this;
+        self.onInsight = false;
+        self.$el.animate({
+            width: '20%',
+        });
+        self.$tabContentInsight.hide();
+        self._onClickTabData();
+        self.$('.izi_select_analysis_container').show();
+        self.$('.izi_config_analysis_tab').show();
+        self.$('.izi_blank_divider').show();
     },
 
     _selectAnalysis: function (id, name, table, visual_type) {

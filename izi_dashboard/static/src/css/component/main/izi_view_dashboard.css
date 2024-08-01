@@ -77,6 +77,18 @@
     font-weight: 400;
     padding: 6px 12px;
 }
+.izi_view_visual .gridjs-container {
+    font-size: 12px;
+}
+.izi_view_visual .gridjs-container th.gridjs-th {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+.izi_view_visual .gridjs-container td.gridjs-td {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 6px 12px;
+}
 .izi_view_dashboard_grid .izi_dashboard_block_title.dropdown-toggle::after {
     vertical-align: 0.2em;
     margin-left: 0.6em;
@@ -86,7 +98,7 @@
     display: none;
 }
 .izi_view_dashboard_grid .izi_analysis_filter_temp.active {
-    display: flex;
+    display: none;
 }
 /* Mode */
 .izi_dashboard_block_content.izi_mode_analysis {

@@ -6,6 +6,7 @@ from odoo.tools.safe_eval import safe_eval
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import json
+import base64
 
 class IZIAnalysisDrilldownDimension(models.Model):
     _inherit = 'izi.analysis.drilldown.dimension'
@@ -33,15 +34,15 @@ class IZIAnalysis(models.Model):
     def create(self, vals):
         rec = super(IZIAnalysis, self).create(vals)
         # Set Default Metric
-        if self._context.get('by_user') and not rec.metric_ids:
-            Field = self.env['izi.table.field']
-            metric_field = Field.search([('field_type', 'in', ('numeric', 'number')),
-                                        ('table_id', '=', rec.table_id.id)], limit=1)
-            if metric_field:
-                rec.metric_ids = [(0, 0, {
-                    'field_id': metric_field.id,
-                    'calculation': 'count',
-                })]
+        # if self._context.get('by_user') and not rec.metric_ids:
+        #     Field = self.env['izi.table.field']
+        #     metric_field = Field.search([('field_type', 'in', ('numeric', 'number')),
+        #                                 ('table_id', '=', rec.table_id.id)], limit=1)
+        #     if metric_field:
+        #         rec.metric_ids = [(0, 0, {
+        #             'field_id': metric_field.id,
+        #             'calculation': 'count',
+        #         })]
         default_visual_configs = rec._get_default_visual_configs()
         if default_visual_configs:
             rec.analysis_visual_config_ids = default_visual_configs
@@ -83,15 +84,15 @@ class IZIAnalysis(models.Model):
         res = super(IZIAnalysis, self).write(vals)
         # Set Default Metric
         for analysis in self:
-            if self._context.get('by_user') and not analysis.metric_ids:
-                Field = self.env['izi.table.field']
-                metric_field = Field.search([('field_type', 'in', ('numeric', 'number')),
-                                            ('table_id', '=', analysis.table_id.id)], limit=1)
-                if metric_field:
-                    analysis.metric_ids = [(0, 0, {
-                        'field_id': metric_field.id,
-                        'calculation': 'count',
-                    })]
+            # if self._context.get('by_user') and not analysis.metric_ids:
+            #     Field = self.env['izi.table.field']
+            #     metric_field = Field.search([('field_type', 'in', ('numeric', 'number')),
+            #                                 ('table_id', '=', analysis.table_id.id)], limit=1)
+            #     if metric_field:
+            #         analysis.metric_ids = [(0, 0, {
+            #             'field_id': metric_field.id,
+            #             'calculation': 'count',
+            #         })]
             if vals.get('metric_ids'):
                 analysis._onchange_metric_ids()
             if vals.get('dimension_ids'):
@@ -355,12 +356,11 @@ class IZIAnalysis(models.Model):
                     'name': field.name,
                     'field_type': field.field_type,
                 })
-            elif field.field_type not in ('numeric', 'number'):
-                res['fields_for_dimensions'].append({
-                    'id': field.id,
-                    'name': field.name,
-                    'field_type': field.field_type,
-                })
+            res['fields_for_dimensions'].append({
+                'id': field.id,
+                'name': field.name,
+                'field_type': field.field_type,
+            })
             res['fields_for_filters'].append({
                 'id': field.id,
                 'name': field.name,
@@ -368,11 +368,35 @@ class IZIAnalysis(models.Model):
             })
         return res
 
+    def ui_get_languanges(self):
+        result = []
+        lang_obj = self.env['res.lang'].with_context(active_test=False).search([], order='active desc')
+        # result = ['Indonesia','English']
+        result = [lang.name for lang in lang_obj]
+        return result
+
+    def ui_get_fields_dynamic(self,params,term):
+        res = []
+        fields_sorted = sorted(self.table_id.field_ids, key=lambda field: field.name)
+        for field in fields_sorted:
+            if field.field_type not in ('numeric', 'number'):
+                if not term or term.lower() in field.name.lower():
+                    res.append({
+                        'id': field.id,
+                        'name': field.name,
+                        'field_name': field.field_name,
+                        'field_type': field.field_type,
+                    })
+                if len(res)==params['limit']:
+                    break
+        return res
+
     def ui_get_filter_info(self):
         self.ensure_one()
         res = {
             'filters': [],
             'fields': {
+                'field_search': [],
                 'string_search': [],
                 'date_range': [],
                 'date_format': [],
@@ -404,6 +428,14 @@ class IZIAnalysis(models.Model):
                     'name': field.name,
                     'field_type': field.field_type,
                 })
+        for field in self.table_id.field_ids:
+            if field.field_type not in ('numeric', 'number'):
+                res['fields']['field_search'].append({
+                    'id': field.id,
+                    'name': field.name,
+                    'field_name': field.field_name,
+                    'field_type': field.field_type,
+                })
         return res
 
     def ui_add_filter_temp_by_field(self, field_id, type):
@@ -411,6 +443,13 @@ class IZIAnalysis(models.Model):
         for filter in self.filter_temp_ids:
             if filter.type == type:
                 filter.unlink()
+        if field_id > 0:
+            self.filter_temp_ids = [(0, 0, {
+                'field_id': field_id,
+                'type': type,
+            })]
+    def ui_select_dynamic_filter_temp_by_field(self, field_id):
+        self.ensure_one()
         if field_id > 0:
             self.filter_temp_ids = [(0, 0, {
                 'field_id': field_id,
@@ -515,6 +554,140 @@ class IZIAnalysis(models.Model):
             ]
         except Exception as e:
             raise ValidationError(str(e))
+
+    def update_visual_config(self, data):
+        default_visual_configs = []
+        for item in data:
+            for key, value in item.items():
+                visual_config = self.env['izi.visual.config'].search([('name', '=', key)], limit=1)
+                if visual_config:
+                    default_visual_configs += [(0, 0, {
+                        'visual_config_id': visual_config.id,
+                        'string_value': value,
+                    })]
+        self.analysis_visual_config_ids = default_visual_configs
+
+    def _prepare_export_vals(self):
+        metrics = []
+        dimensions = []
+        sorts = []
+        for metric in self.metric_ids:
+            metrics.append({'field':metric.field_id.field_name, 'calculation':metric.calculation})
+        for dimension in self.dimension_ids:
+            dimensions.append({'field':dimension.field_id.field_name, 'format':dimension.field_format})
+        for sort in self.sort_ids:
+            sorts.append({'field':sort.field_id.field_name,'sort':sort.sort})
+        
+        visual_config = []
+        for config in self.analysis_visual_config_ids:
+            vc = {}
+            vc[config.visual_config_id.name] = config.string_value
+            visual_config.append(vc)
+        vals = {
+            'source': 'Odoo',
+            'name':self.name,
+            'method':self.method,
+            'metrics':metrics,
+            'sorts': sorts,
+            'dimensions':dimensions,
+            'limit':self.limit,
+            'xywh': [0, 0, 6, 4],
+            'visual_type':self.visual_type_id.name,
+            'render_visual_script':self.render_visual_script,
+            'use_render_visual_script':self.use_render_visual_script,
+            'visual_config':visual_config
+        }
+        if self.method =='query':
+            vals['db_query'] = self.db_query
+        if self.method =='model':
+            vals['table_name'] = self.table_id.table_name
+        if self.method =='table_view':
+            vals['table_name'] = self.table_id.name
+            vals['query'] = self.db_query
+        if self.method =='table':
+            vals['table_id'] = self.table_id.id
+            vals['table_name'] = self.table_id.name
+            vals['main_code'] = self.table_id.main_code
+            fields = []
+            for field in self.table_id.field_ids:
+                fields.append({
+                    'name': field.name,
+                    'field_name': field.field_name,
+                    'field_type': field.field_type,
+                    'field_type_selection': field.field_type_selection,
+                    'field_type_origin': field.field_type_origin,
+                    'field_type_origin_selection': field.field_type_origin_selection,
+                    'field_id': field.field_id.id,
+                    'foreign_table': field.foreign_table,
+                    'foreign_column': field.foreign_column,
+                    'description': field.description,
+                })
+            vals['field_info'] = fields
+        return vals
+    
+    def export_config(self):
+        
+        vals = self._prepare_export_vals()
+
+        data = [vals]
+        json_data = json.dumps(data)
+        json_data_bytes = json_data.encode('utf-8')
+        json_data_base64 = base64.b64encode(json_data_bytes)
+        
+        attachment = {
+            'name': f'{self.name} Config.json',
+            'datas': json_data_base64,
+            'res_model': self._name,
+            'res_id': self.id,
+            'type': 'binary',
+        }
+        
+        attachment_id = self.env['ir.attachment'].create(attachment)
+        return attachment_id.id
+    
+    def ui_get_available_fields(self, kwargs):
+        fields = self.env['izi.table.field'].search([
+            ('table_id','=',self.table_id.id),
+            ('field_type','not in', ('numeric', 'number')),
+            ],order='name asc')
+        res_data = fields.mapped(lambda f: {'id': f.id, 'name': f.name, 'field_name': f.field_name, 'field_type':f.field_type, 'field_subtype':False})
+        result = []
+        for res in res_data:
+            if res['field_type'] in ('datetime', 'date'):
+                result.extend([
+                {
+                    'id': res['id'],
+                    'name': f"{res['name']} (Daily)",
+                    'field_name': f"{res['field_name']}",
+                    'field_type': res['field_type'],
+                    'field_subtype':'day'
+                },
+                {
+                    'id': res['id'],
+                    'name': f"{res['name']} (Weekly)",
+                    'field_name': res['field_name'],
+                    'field_type': res['field_type'],
+                    'field_subtype':'week'
+                },
+                {
+                    'id': res['id'],
+                    'name': f"{res['name']} (Monthly)",
+                    'field_name': res['field_name'],
+                    'field_type': res['field_type'],
+                    'field_subtype':'month'
+                },
+                {
+                    'id': res['id'],
+                    'name': f"{res['name']} (Yearly)",
+                    'field_name': res['field_name'],
+                    'field_type': res['field_type'],
+                    'field_subtype':'year'
+                }
+            ])
+            else:
+                result.append(res)
+
+        return (self.show_popup,result)
     
     def ui_get_view_parameters(self, kwargs):
         self.ensure_one()
@@ -688,10 +861,20 @@ class IZIAnalysis(models.Model):
         kwargs.update({'max_dimension': max_dimension})
         
         if kwargs.get('filters') and kwargs.get('filters').get('dynamic'):
-            dynamic_filters = [] 
+            # All Dynamic Filters
+            all_dynamic_filters = []
+            # Only Applied Filters
+            dynamic_filters = []
             for dy in kwargs.get('filters').get('dynamic'):
                 dyf = self.env['izi.dashboard.filter'].browse(dy['filter_id'])
                 if dyf:
+                    # All Filters
+                    all_dynamic_filters.append({
+                        'filter_id': dyf.id,
+                        'filter_name': dyf.name,
+                        'values': dy['values'],
+                    })
+                    # Applied Filters
                     for filter_analysis in dyf.filter_analysis_ids:
                         if filter_analysis.analysis_id.id == self.id:
                             dynamic_filters.append({
@@ -707,6 +890,7 @@ class IZIAnalysis(models.Model):
                                 'operator': filter_analysis.operator,
                                 'values': dy['values'],
                             })
+            kwargs['filters']['all_dynamic'] = all_dynamic_filters
             kwargs['filters']['dynamic'] = dynamic_filters
         
         result = self.get_analysis_data(**kwargs)
@@ -742,7 +926,7 @@ class IZIAnalysis(models.Model):
         result['render_visual_script'] = self.render_visual_script
         result['analysis_name'] = self.name
         if self.model_id:
-            result['model_field_names'] = self.model_id.field_id.mapped('name')
+            result['model_field_names'] = self.sudo().model_id.field_id.mapped('name')
 
         # Check For Drill Down
         drilldown_level = 0
@@ -767,6 +951,8 @@ class IZIAnalysis(models.Model):
                 # 2. Get All Possible Values For Second Dimension
                 second_dimension_values = []
                 for rd in result['data']:
+                    if isinstance(rd[second_dimension], (int, float, complex)):
+                        rd[second_dimension] = str(int(rd[second_dimension]))
                     if rd[second_dimension] not in second_dimension_values:
                         second_dimension_values.append(str(rd[second_dimension]))
                 # 3. Create New Metrisc With Second Dimension Values
@@ -776,6 +962,8 @@ class IZIAnalysis(models.Model):
                 new_fields = [first_dimension]
                 res_data_by_first_dimension = {}
                 for rd in result['data']:
+                    if isinstance(rd[first_dimension], (int, float, complex)):
+                        rd[first_dimension] = str(int(rd[first_dimension]))
                     if rd[first_dimension] not in res_data_by_first_dimension:
                         res_data_by_first_dimension[rd[first_dimension]] = {}
                     for rm in result['metrics']:
@@ -817,7 +1005,7 @@ class IZIAnalysis(models.Model):
             if metric.name_alias:
                 metric_alias = metric.name_alias
             else:
-                metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+                metric_alias = "%s" % (metric.field_id.name)
             if metric.suffix:
                 suffix_by_field[metric_alias] = metric.suffix
             if metric.prefix:
@@ -828,11 +1016,16 @@ class IZIAnalysis(models.Model):
                 locale_code_by_field[metric_alias] = metric.locale_code
             is_metric_by_field[metric_alias] = True
         
-        result['suffix_by_field'] = suffix_by_field
-        result['prefix_by_field'] = prefix_by_field
-        result['decimal_places_by_field'] = decimal_places_by_field
-        result['is_metric_by_field'] = is_metric_by_field
-        result['locale_code_by_field'] = locale_code_by_field
+        if not result.get('suffix_by_field'):
+            result['suffix_by_field'] = suffix_by_field
+        if not result.get('prefix_by_field'):
+            result['prefix_by_field'] = prefix_by_field
+        if not result.get('decimal_places_by_field'):
+            result['decimal_places_by_field'] = decimal_places_by_field
+        if not result.get('is_metric_by_field'):
+            result['is_metric_by_field'] = is_metric_by_field
+        if not result.get('locale_code_by_field'):
+            result['locale_code_by_field'] = locale_code_by_field
         return result
 
     # Inherit Get Data And Reformat For AmChart

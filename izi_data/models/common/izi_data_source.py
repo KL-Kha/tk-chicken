@@ -1,7 +1,44 @@
 # -*- coding: utf-8 -*-
 # Copyright 2022 IZI PT Solusi Usaha Mudah
-from odoo import models, fields
+from odoo import models, fields, api
 
+
+class IZIDataSourceItem(models.Model):
+    _name = 'izi.data.source.item'
+    _description = 'IZI Data Source Item'
+
+    name = fields.Char(string='Name', required=True)
+    type = fields.Selection(string='Type', selection=[], required=True)
+    table_id = fields.Many2one('izi.table', string='Table')
+    source_id = fields.Many2one('izi.data.source', string='Data Source')
+    limit = fields.Integer('Limit', default=1000)
+    action_to_field = fields.Selection(string='Action to Fields', selection=[
+        ('replace', 'Replace Existing Fields'),
+        ('map', 'Map New Fields To Existing'),
+        ('add', 'Add New Fields'),
+    ], required=True, default='replace')
+    # status = 'active', 'inactive'
+    # field_ids = Fields From Source Item
+    # field_map_ids = Fields Mapping, From Source Item to Table Fields
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if self._context.get('table_id', False):
+            table_id = self._context.get('table_id')
+            table = self.env['izi.table'].browse(table_id)
+            action_to_field = 'replace'
+            if table.field_ids:
+                action_to_field = 'map'
+            res['action_to_field'] = action_to_field
+            res['table_id'] = table_id
+            res['name'] = table.name
+            if table.source_id:
+                res['source_id'] = table.source_id.id
+        return res
+
+    def process_data(self):
+        return True
 
 class IZIDataSource(models.Model):
     _name = 'izi.data.source'
@@ -12,6 +49,7 @@ class IZIDataSource(models.Model):
     table_ids = fields.One2many(comodel_name='izi.table', inverse_name='source_id', string='Tables')
     table_filter = fields.Char('Table Filter')
     state = fields.Selection(selection=[('new', 'New'), ('ready', 'Ready')], default='new', string='State')
+    item_ids = fields.One2many(comodel_name='izi.data.source.item', inverse_name='source_id', string='Sources')
 
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Data Source Name Already Exist.')

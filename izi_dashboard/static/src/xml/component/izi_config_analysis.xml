@@ -1,6 +1,6 @@
 <template>
     <div t-name="IZIConfigAnalysis" class="izi_config_analysis">
-        <div class="izi_select_analysis_container flex-only">
+        <div class="izi_select_analysis_container">
             <div class="izi_select_analysis izi_p20" title="Click to select or create analysis">
                 <div class="izi_title">Select Analysis</div>
                 <div class="izi_subtitle">
@@ -16,10 +16,16 @@
                         <a class="dropdown-item izi_action_open_visual_script_editor">Visual Script Editor</a>
                     </div>
                 </div>
-                <span class="material-icons izi_select_analysis_explore" title="Explore Analysis With AI" t-esc="'magic_button'"/>
+                <div class="izi_block_left izi_dropdown dropdown">
+                    <span class="material-icons dropdown-toggle" data-toggle="dropdown" t-esc="'magic_button'"/>
+                    <div class="dropdown-menu izi_dropdown_menu_top_right">
+                        <a class="dropdown-item izi_select_analysis_insight">Get Insights</a>
+                        <a class="dropdown-item izi_select_analysis_explore">Explore Variations</a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="izi_divider"/>
+        <div class="izi_blank_divider izi_divider"/>
 
         <!-- Data / Visual -->
         <div class="izi_config_analysis_tab">
@@ -117,6 +123,31 @@
                 <div class="izi_select_visual_container card-body izi_white izi_p10_20 izi_pt0 flex-body">
                 </div>
                 <div class="izi_select_visual_config_container card-body izi_white izi_p10_20 izi_pb0"></div>
+            </div>
+        </div>
+
+        <!-- Insights -->
+        <div id="izi_accordion" class="izi_tab_content_insight" style="display:none;">
+            <div class="card izi_white">
+                <div class="izi_tab_content_insight_title_container" style="display: flex;">
+                    <h4>Insights</h4>
+                    <div style="display: flex;width: 120px;align-items: center;" class="ms-3">
+                        <input type="text" class="form-control" value="English" id="izi_selected_languange" disabled="1"/>
+                        <div class="izi_languange dropdown izi_dropdown">
+                            <span class="material-icons-outlined dropdown-toggle show" data-toggle="dropdown">translate</span>
+                            <div class="dropdown-menu"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="izi_exit_insight">
+                    <span class="material-icons">close</span>
+                </div>
+                <div class="izi_tab_content_insight_container">
+                    
+                </div>
+                <div class="izi_p10_20">
+                    <span class="spinner-border spinner-border-small" style="display:none;"/>
+                </div>
             </div>
         </div>
     </div>

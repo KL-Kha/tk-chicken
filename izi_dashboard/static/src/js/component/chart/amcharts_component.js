@@ -95,8 +95,12 @@ class amChartsComponent {
     //=======================================================
     makeRadarChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -155,8 +159,12 @@ class amChartsComponent {
     //=======================================================
     makeFlowerChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -219,8 +227,12 @@ class amChartsComponent {
     //=======================================================
     makeRadialBarChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -284,8 +296,12 @@ class amChartsComponent {
     //=======================================================
     makeBarChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -338,7 +354,7 @@ class amChartsComponent {
         valueAxis.renderer.baseGrid.disabled = true;
         
         // # 100% width series
-        // valueAxis.min = 0;
+        valueAxis.min = 0;
         // valueAxis.max = 100;
         // valueAxis.strictMinMax = true;
         // valueAxis.calculateTotals = true;
@@ -359,6 +375,8 @@ class amChartsComponent {
             series.columns.template.tooltipText = ((self.metric).length == 1) ? " {categoryX} : [bold]{valueY}[/] " : "{name} : [bold]{valueY}[/]";
             series.columns.template.tooltipY = am4core.percent(50);
             series.columns.template.tooltipX = am4core.percent(50);
+            series.columns.template.column.cornerRadiusTopLeft = 5;
+            series.columns.template.column.cornerRadiusTopRight = 5;
             // # Tooltip white background
             self.configTooltipWhite(series);
             
@@ -380,8 +398,6 @@ class amChartsComponent {
             createAxisAndSeries(field, i);
         });
 
-
-
     return chart;
 	
     }
@@ -391,8 +407,12 @@ class amChartsComponent {
     //=======================================================
     makeRowChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -401,7 +421,8 @@ class amChartsComponent {
         // chart.cursor.maxTooltipDistance = -1;
         self.configLegend(chart);
 
-        chart.data = self.data;
+        let dataChart = self.data;
+        chart.data = dataChart.reverse();
 
         self.configColorsStep(chart); 
         
@@ -434,7 +455,7 @@ class amChartsComponent {
         if (chart.xAxes.indexOf(valueAxis) != 0) {
             valueAxis.syncWithAxis = chart.xAxes.getIndex(0);
         }
-        // valueAxis.min = 0;
+        valueAxis.min = 0;
         valueAxis.renderer.minGridDistance = 60;
         valueAxis.renderer.baseGrid.disabled = true;
 
@@ -487,8 +508,12 @@ class amChartsComponent {
     //=======================================================
     makeBulletBarChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -556,8 +581,12 @@ class amChartsComponent {
     
     makeBulletRow() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -566,7 +595,8 @@ class amChartsComponent {
         chart.cursor.maxTooltipDistance = -1;
         self.configLegend(chart);
 
-        chart.data = self.data;
+        let dataChart = self.data;
+        chart.data = dataChart.reverse();
 
         self.configColorsStep(chart); 
         
@@ -580,12 +610,10 @@ class amChartsComponent {
         categoryAxis.renderer.labels.template.truncate = false;
         categoryAxis.renderer.labels.template.maxWidth = 150;
         
-
         var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
         valueAxis.min = 0;
         valueAxis.renderer.minGridDistance = 60;
         valueAxis.renderer.baseGrid.disabled = true;
-
         
         var series = chart.series.push(new am4charts.ColumnSeries());
         series.dataFields.categoryY = self.dimension;
@@ -627,8 +655,12 @@ class amChartsComponent {
     
     makeRowLine() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -637,7 +669,8 @@ class amChartsComponent {
         chart.cursor.maxTooltipDistance = -1;
         self.configLegend(chart);
 
-        chart.data = self.data;
+        let dataChart = self.data;
+        chart.data = dataChart.reverse();
 
         self.configColorsStep(chart); 
         
@@ -656,7 +689,7 @@ class amChartsComponent {
         if (chart.xAxes.indexOf(valueAxis) != 0) {
             valueAxis.syncWithAxis = chart.xAxes.getIndex(0);
         }
-        // valueAxis.min = 0;
+        valueAxis.min = 0;
         valueAxis.renderer.minGridDistance = 60;
         valueAxis.renderer.baseGrid.disabled = true;
         
@@ -742,8 +775,12 @@ class amChartsComponent {
     //=======================================================
     makeBarLineChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -767,8 +804,10 @@ class amChartsComponent {
         categoryAxis.renderer.labels.template.truncate = false;
         categoryAxis.renderer.labels.template.maxWidth = 150;
 
+        self.configRotateLabel(categoryAxis);
+
         var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        // valueAxis.min = 0;
+        valueAxis.min = 0;
         if (chart.yAxes.indexOf(valueAxis) != 0) {
             valueAxis.syncWithAxis = chart.yAxes.getIndex(0);
         }
@@ -780,6 +819,14 @@ class amChartsComponent {
             series.dataFields.categoryX = self.dimension;
             series.dataFields.valueY = field;
             series.columns.template.tooltipY = 0;
+            series.columns.template.column.cornerRadiusTopLeft = 5;
+            series.columns.template.column.cornerRadiusTopRight = 5;
+            series.columns.template.events.on('hit', (ev) => {
+                const val = ev.target.dataItem.dataContext;
+                if (self.callback) {
+                    self.callback(ev, self.visual, val);
+                }
+            }, this);
             
             series.tooltipText = ((self.metric).length == 1) ? " {categoryX} : [bold]{valueY}[/] " : "{name} : [bold]{valueY}[/]";
             // # Tooltip white background
@@ -798,13 +845,13 @@ class amChartsComponent {
             seriesLine.yAxis = valueAxis;
             seriesLine.tooltipText = ((self.metric).length == 1) ? " {categoryX} : [bold]{valueY}[/] " : "{name} : [bold]{valueY}[/]";
             seriesLine.name = (field ?? "Unnamed Series").replaceAll('_', ' ').trim();
-            seriesLine.strokeWidth = 1.5;
+            seriesLine.strokeWidth = 3;
             seriesLine.smoothing = "monotoneX";
             // seriesLine.tensionX = 0.95;
             // seriesLine.tensionY = 0.95;
             seriesLine.showOnInit = true;
 
-            seriesLine.fillOpacity = 0.2; // Filling Area
+            // seriesLine.fillOpacity = 0.2;
             
             // # Tooltip white background
             self.configTooltipWhite(seriesLine);
@@ -813,8 +860,8 @@ class amChartsComponent {
             var interfaceColors = new am4core.InterfaceColorSet();
             var bullet = seriesLine.bullets.push(new am4charts.CircleBullet());
             bullet.circle.stroke = interfaceColors.getFor("background");
-            bullet.circle.radius = 3;
-            bullet.circle.strokeWidth = 1;
+            bullet.circle.radius = 0;
+            bullet.circle.strokeWidth = 0;
 
             // # Style Node Circle w/black stroke
             // seriesLine.stroke = new am4core.InterfaceColorSet().getFor(
@@ -855,8 +902,12 @@ class amChartsComponent {
     //=======================================================
     makeLineChart() {
         self = this;
-        if (self.dimension == undefined) {
-            self.showAlert(self.idElm);
+        if (self.metric == undefined || self.metric.length == 0) {
+            self.showAlertMetric(self.idElm);
+            return true
+        }
+        if (self.dimension == undefined || self.dimension.length == 0) {
+            self.showAlertDimension(self.idElm);
             return true
         };
 
@@ -884,6 +935,7 @@ class amChartsComponent {
         }
         valueAxis.renderer.line.strokeOpacity = 1;
         valueAxis.renderer.line.strokeWidth = 1;
+        valueAxis.min = 0;
         // valueAxis.renderer.line.stroke = series.stroke;
         // valueAxis.renderer.labels.template.fill = series.stroke;
         // valueAxis.renderer.opposite = (i%2 ? true : false); // jika index series bernilai ganjil maka akan render axis di sebelah kiri
@@ -895,7 +947,7 @@ class amChartsComponent {
             series.yAxis = valueAxis;
             series.tooltipText = ((self.metric).length == 1) ? " {categoryX} : [bold]{valueY}[/] " : "{name} : [bold]{valueY}[/]";
             series.name = field;
-            series.strokeWidth = 3;
+            series.strokeWidth = 4;
             series.smoothing = "monotoneX";
             // series.tensionX = 0.95;
             // series.tensionY = 0.95;
@@ -913,7 +965,7 @@ class amChartsComponent {
             var interfaceColors = new am4core.InterfaceColorSet();
             var bullet = series.bullets.push(new am4charts.CircleBullet());
             bullet.circle.stroke = interfaceColors.getFor("background");
-            bullet.circle.radius = 0;
+            bullet.circle.radius = 4;
             bullet.circle.strokeWidth = 0;
             bullet.events.on('hit', (ev) => {
                 const val = ev.target.dataItem.dataContext;
@@ -1442,7 +1494,7 @@ class amChartsComponent {
             selfChart.legend = new am4charts.Legend();
             selfChart.legend.position = self.legendPosition;
             selfChart.legend.scrollable = true;
-            
+            selfChart.legend.background.fill = "white";
             let markerTemplate = selfChart.legend.markers.template;
             markerTemplate.width = 16;
             markerTemplate.height = 16;
@@ -1821,15 +1873,34 @@ class amChartsComponent {
     //=======================================================
     // Alert
     //=======================================================
-    showAlert(container){
+    showAlertDimension(container){
         var dom_alert = `
             <div class="row alert-danger izi_alert">
                 <div class="izi_alert_icon">
                     <span class="material-icons-outlined">error</span>
                 </div>
                 <div class="col">
-                    <h4>Dimension is not defined </h4>
-                    Please select data fields for dimension ! 
+                    <h4>Dimension Is Not Defined </h4>
+                    Please Select Dimension To Show The Chart! 
+                </div>
+            </div>`;
+
+            $('#'+container).append(dom_alert);
+            $('#'+container ).closest("div").css({
+                'display': 'flex',
+                'align-items' : 'center',
+                'justify-content': 'center',
+            });
+    }
+    showAlertMetric(container){
+        var dom_alert = `
+            <div class="row alert-danger izi_alert">
+                <div class="izi_alert_icon">
+                    <span class="material-icons-outlined">error</span>
+                </div>
+                <div class="col">
+                    <h4>Metric Is Not Defined </h4>
+                    Please Select Metric To Show The Chart! 
                 </div>
             </div>`;
 

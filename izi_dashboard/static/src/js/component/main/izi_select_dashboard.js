@@ -61,7 +61,7 @@ var IZISelectDashboard = IZIDialog.extend({
         jsonrpc('/web/dataset/call_kw/izi.dashboard/search_read', {
             model: 'izi.dashboard',
             method: 'search_read',
-            args: [[], ['id', 'name', 'write_date', 'theme_name', 'date_format', 'start_date', 'end_date']],
+            args: [[], ['id', 'name', 'write_date', 'theme_name', 'date_format', 'start_date', 'end_date', 'table_name']],
             kwargs: {},
         }).then(function (results) {
             self.allDashboards = results;
@@ -118,6 +118,8 @@ var IZISelectDashboard = IZIDialog.extend({
         self.allDashboards.forEach(dashboard => {
             if (dashboard.id == id) {
                 self.parent._selectDashboard(id, name, dashboard.write_date, dashboard.theme_name, dashboard.date_format, dashboard.start_date, dashboard.end_date);
+                // if (self.parent && self.parent.$viewDashboard && self.parent.$viewDashboard.$viewDashboardAskContainer)
+                //     self.parent.$viewDashboard.$viewDashboardAskContainer.find('.izi_view_dashboard_ask_header_table span').text(dashboard.table_name || 'Undefined');
             }
         });
         self.destroy();

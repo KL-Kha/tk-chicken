@@ -9,6 +9,10 @@ export class IZIDashboardController extends Component {
         self = this;
         self.action = useService('action');
         self.container = useRef('IZIDashboardContainer');
+        self.context = false;
+        if (self.props && self.props.context) {
+            self.context = self.props.context;
+        };
         // self.render();
         onPatched(() => {
             self = this;

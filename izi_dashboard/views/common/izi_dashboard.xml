@@ -92,12 +92,6 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="AI Settings">
-                                <group>
-                                    <field name="table_id"/>
-                                    <field name="lang_id"/>
-                                </group>
-                            </page>
                             <page string="Groups">
                                 <field name="group_ids">
                                     <tree>
@@ -112,15 +106,84 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="AI">
+                                <group>
+                                    <group>
+                                        <field name="table_id"/>
+                                        <field name="lang_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Slides">
+                                <field name="slide_ids">
+                                    <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="slide_title" />
+                                        <field name="analysis_id" />
+                                        <field name="layout" />
+                                    </tree> 
+                                </field>
+                                <group>
+                                    <field name="transition" />
+                                    <field name="theme" />
+                                    <field name="general_bg_file" filename="general_bg_filename" options="{'mimetype': 'image/*'}"/>
+                                    <field name="general_bg_filename" invisible="1"/>
+                                    <field name="is_repeat" />
+                                    <field name="auto_slide" />
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                     <footer class="izi_replace_footer">
                         <button class="btn btn-primary" string="Save &amp; Close" name="action_save_and_close" type="object"/>
-                        <button special="cancel" string="Close" class="btn-secondary"/>
-                        <button string="Duplicate" name="action_duplicate" type="object"/>
+                        <button string="Present Slides" name="action_open_slide" type="object" class="btn-secondary"/>
+                        <!-- <button special="cancel" string="Close" class="btn-secondary"/> -->
+                        <!-- <button string="Duplicate" name="action_duplicate" type="object"/> -->
                     </footer>
                 </form>
             </field>
         </record>
+
+        <record id="izi_dashboard_slide_form" model="ir.ui.view">
+            <field name="name">izi.dashboard.slide.form</field>
+            <field name="model">izi.dashboard.slide</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="dashboard_id" invisible="1"/>
+                                <field name="analysis_domain" invisible="1"/>
+                                <field name="analysis_id" />
+                                <field name="text_align" />
+                                <field name="automatic_font_size" />
+                                <field name="font_size" invisible="automatic_font_size == True"/>
+                                <field name="automatic_font_color" />
+                                <field name="font_color" invisible="automatic_font_color == True" placeholder="white, black, or #f4f4f4"/>
+                                <field name="show_logo" />
+                            </group>
+                            <group>
+                                <field name="slide_title" />
+                                <field name="layout" />
+                                <field name="layout_order" invisible="layout not in ('row','column')"/>
+                                <field name="chart_size" invisible="layout not in ('row','column')"/>
+                                <field name="text_size" invisible="layout not in ('row','column')" readonly="1"/>
+                                <field name="bg_file" filename="bg_filename" options="{'mimetype': 'image/*'}"/>
+                                <field name="bg_filename" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="text_content" />
+                        </group>
+                        <button string="Generate With AI" class="btn-secondary" invisible="analysis_id == False" type="object" name="action_generate_content_ai"/>
+                    </sheet>
+                    <footer>
+                        <button string="Save" name="action_save_only" type="object" class="btn-primary"/>
+                        <!-- <button string="Discard" class="btn-secondary" special="cancel"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
     </data>
 </odoo>

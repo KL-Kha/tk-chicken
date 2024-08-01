@@ -53,6 +53,14 @@
       <field name="name">is not</field>
       <field name="source_type">db_odoo</field>
     </record>
+    <record model="izi.analysis.filter.operator" id="izi_data.izi_analysis_filter_operator_db_odoo_in">
+      <field name="name">in</field>
+      <field name="source_type">db_odoo</field>
+    </record>
+    <record model="izi.analysis.filter.operator" id="izi_data.izi_analysis_filter_operator_db_odoo_not_in">
+      <field name="name">not in</field>
+      <field name="source_type">db_odoo</field>
+    </record>
   </data>
 </odoo>
 

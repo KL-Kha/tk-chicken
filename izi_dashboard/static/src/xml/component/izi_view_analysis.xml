@@ -4,7 +4,7 @@
         <div class="izi_dialog" style="display:none;">
             <div class="izi_view_analysis_explore_bg"></div>
             <div class="izi_view_analysis_explore_header">
-                Explore Analysis With AI
+                Explore Analysis Variations With AI
                 <span class="subtitle">These are some generated analysis from AI. Select one or more generated analysis below and then click the button to save it!</span>
             </div>
             <div class="izi_view_analysis_explore">
@@ -19,7 +19,7 @@
         <!-- Analysis -->
         <div class="izi_dashboard_block_item">
             <div class="izi_dashboard_block_header flex-row">
-                <h4 style="visibility: hidden;" class="izi_dashboard_block_title flex-1" t-esc="widget.analysis_name"></h4>
+                <h4 class="izi_dashboard_block_title flex-1" t-esc="widget.analysis_name"></h4>
             </div>
             <div class="izi_dashboard_block_content"></div>
         </div>

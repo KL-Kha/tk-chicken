@@ -5,9 +5,9 @@
         t-att-data-write_date="write_date"
         t-att-data-theme_name="theme_name">
         <div class="izi_title" t-esc="name">Select Dashboard</div>
-        <div class="izi_subtitle">
+        <!-- <div class="izi_subtitle">
             <t t-esc="write_date"/>
-        </div>
+        </div> -->
         <div class="izi_edit_dashboard_item izi_select_item_icon" title="Edit Dashboard">
             <span class="material-icons" t-esc="'edit'"/>
         </div>

@@ -1,6 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "izi_data.access_izi_data_source_crud_group_user","IZI Data Source Access for Group User","izi_data.model_izi_data_source",izi_data.group_user_analysis,1,0,0,0
 "izi_data.access_izi_data_source_crud_group_manager","IZI Data Source Access for Group Manager: CRUD","izi_data.model_izi_data_source",izi_data.group_manager_analysis,1,1,1,1
+"izi_data.access_izi_data_source_item_crud_group_user","IZI Data Source Item Access for Group User","izi_data.model_izi_data_source_item",izi_data.group_user_analysis,1,0,0,0
+"izi_data.access_izi_data_source_item_crud_group_manager","IZI Data Source Item Access for Group Manager: CRUD","izi_data.model_izi_data_source_item",izi_data.group_manager_analysis,1,1,1,1
 "izi_data.access_izi_table_crud_group_user","IZI Table Access for Group User: CRUD","izi_data.model_izi_table",izi_data.group_user_analysis,1,0,0,0
 "izi_data.access_izi_table_crud_group_manager","IZI Table Access for Group Manager: CRUD","izi_data.model_izi_table",izi_data.group_manager_analysis,1,1,1,1
 "izi_data.access_izi_table_field_crud_group_user","IZI Table Field Access for Group User: CRUD","izi_data.model_izi_table_field",,1,1,1,1
@@ -24,3 +26,4 @@
 "izi_data.access_izi_kpi_period_crud_group_user","IZI KPI Period Access for Group User: CRUD","izi_data.model_izi_kpi_period",,1,1,1,1
 "izi_data.access_izi_analysis_category","IZI Analysis Category Read","izi_data.model_izi_analysis_category",,1,1,1,1
 "izi_data.access_izi_tools_crud_group_user","IZI Tools Access for Group User","izi_data.model_izi_tools",base.group_system,1,0,0,0
+"izi_data.access_izi_data_source_item","IZI Data Source Item","izi_data.model_izi_data_source_item",,1,1,1,1

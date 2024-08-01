@@ -10,12 +10,14 @@ class IZITableDBOdoo(models.Model):
 
     def get_table_fields_db_odoo(self, **kwargs):
         self.ensure_one()
+        izi_analysis_obj = self.env['izi.analysis']
         cursor = self.source_id.get_cursor_db_odoo()
 
         Field = self.env['izi.table.field']
 
         field_by_name = kwargs.get('field_by_name')
         table_query = kwargs.get('table_query')
+        table_query = izi_analysis_obj.check_special_variable(table_query)
         # fkey_by_table_column = self.source_id.get_foreignkey_field_db_odoo()
         fkey_by_table_column = {}
 

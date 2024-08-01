@@ -95,6 +95,7 @@
                 <script type="text/javascript" src="/izi_dashboard/static/src/js/izi_dashboard_renderer.js"></script>
                 <script type="text/javascript" src="/izi_dashboard/static/src/js/izi_dashboard_view.js"></script>
                 <script type="text/javascript" src="/izi_dashboard/static/src/js/izi_analysis_widget.js"></script>
+                <script type="text/javascript" src="/izi_dashboard/static/src/js/izi_slide.js"></script>
             </xpath>
         </template>
     </data>

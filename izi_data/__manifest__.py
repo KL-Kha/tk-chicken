@@ -16,7 +16,7 @@
     "website": "https://www.iziapp.id",
     "license": "OPL-1",
     "images": [
-        'static/description/banner.png'
+        'static/description/banner.jpg'
     ],
 
     "price": 0.00,

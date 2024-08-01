@@ -5,6 +5,7 @@
                 <t t-esc="calculation"/>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item izi_select_calculation" data-calculation="csum" t-att-data-metric="metric_id">Cumulative Sum</a>
                 <a class="dropdown-item izi_select_calculation" data-calculation="sum" t-att-data-metric="metric_id">Sum</a>
                 <a class="dropdown-item izi_select_calculation" data-calculation="avg" t-att-data-metric="metric_id">Avg</a>
                 <a class="dropdown-item izi_select_calculation" data-calculation="count" t-att-data-metric="metric_id">Count</a>
