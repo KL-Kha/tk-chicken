@@ -752,7 +752,7 @@ body:not(.o_touch_device) .o_field_selection:not(:hover):not(:focus-within) sele
 
 .ks_dashboard_header,
 [data-color-mode="ks-dn-dark"] .ks_dashboard_header {
-    background: var(--ks-dn-black-600) !important;
+    background: var(--ks-dn-gray-200) !important;
     border: 0 !important;
 }
 
