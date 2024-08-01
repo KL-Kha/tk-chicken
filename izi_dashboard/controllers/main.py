@@ -109,3 +109,49 @@ class DashboardWebsiteController(http.Controller):
             return self.make_error_response(500, 'Error', 'Analysis not found')
         result = analysis.get_analysis_data_dashboard(**kw.get('kwargs', {}))
         return self.make_valid_response(result)
+    
+
+    @http.route('/izi/dashboard/slide/<int:dashboard_id>', auth='user', csrf=False, website=True, save_session=False)
+    def show_slide(self, dashboard_id, **kw):
+        dashboard = request.env['izi.dashboard'].sudo().browse(dashboard_id)
+        slides = dashboard.slide_ids.sorted(key=lambda r: r.sequence)
+        vals = []
+        default_bg_attachment_url = ''
+        if dashboard.general_bg_file:
+            default_bg_attachment_url = '/web/image/izi.dashboard/%s/general_bg_file' % (dashboard.id)
+
+        for slide in slides:
+            if slide.bg_file:
+                bg_attachment_url = '/web/image/izi.dashboard.slide/%s/bg_file' % (slide.id)
+            else:
+                bg_attachment_url = default_bg_attachment_url
+
+            if slide.show_logo:
+                logo_url = '/web/image/res.company/%s/logo' % (request.env.company.id)
+            else:
+                logo_url = ''
+
+            vals.append({
+                'title': slide.slide_title,
+                'layout': slide.layout,
+                'chart_size': slide.chart_size/100,
+                'text_size': slide.text_size/100,
+                'text_content': slide.text_content,
+                'text_align': slide.text_align,
+                'font_size': slide.font_size,
+                'font_color': slide.font_color,
+                'bg_attachment_url': bg_attachment_url,
+                'analysis_id': slide.analysis_id.id,
+                'automatic_font_size': slide.automatic_font_size,
+                'automatic_font_color': slide.automatic_font_color,
+                'layout_order':slide.layout_order,
+                'logo_url':logo_url,
+            })
+        global_vals = {
+            'dashboard_id':dashboard.id,
+            'transition':dashboard.transition,
+            'theme':dashboard.theme or "white",
+            'is_repeat':dashboard.is_repeat,
+            'auto_slide':dashboard.auto_slide * 1000
+        }
+        return request.render('izi_dashboard.izi_dashboard_slide', {'data':vals, 'global_data':global_vals})

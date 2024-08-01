@@ -95,6 +95,15 @@
     padding: 1rem 0 !important
 }
 
+.modal-dialog.izi_modal_dialog_full .modal-content {
+    overflow: hidden !important;
+    /* height: 99% !important; */
+}
+
+.modal-dialog.izi_modal_dialog_full .modal-footer{
+    display: none !important;
+}
+
 .modal-dialog.izi_modal_dialog_no_scroll .modal-body {
     overflow: hidden !important;
 }

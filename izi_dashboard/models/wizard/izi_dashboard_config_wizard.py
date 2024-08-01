@@ -73,9 +73,20 @@ class IZIDashboardConfigWizard(models.TransientModel):
     _description = 'IZI Dashboard Config Wizard'
 
     dashboard_id = fields.Many2one('izi.dashboard', string="Dashboard", required=True, ondelete='cascade')
-    code = fields.Char('Code', required=False, default=CODE_TEMPLATE)
+    code = fields.Text('Code', required=False, default=CODE_TEMPLATE)
     code_file = fields.Binary('Code File', required=False)
     code_filename = fields.Char('Filename', required=False)
+
+    @api.onchange('code_filename')
+    def _onchange_code_file(self):
+        if self.code_file:
+            try:
+                file_content = base64.b64decode(self.code_file)
+                file_content_str = file_content.decode('utf-8')
+                json_content = json.loads(file_content_str)
+                self.code = json.dumps(json_content, indent=4)
+            except Exception as e:
+                raise UserError('Error reading JSON file: %s' % e)
 
     def process_wizard(self, data=False):
         res = {
@@ -85,10 +96,7 @@ class IZIDashboardConfigWizard(models.TransientModel):
         }
         try:
             if not data:
-                if self.code_file:
-                    data = json.loads(base64.decodestring(self.code_file).decode('utf-8'))
-                elif self.code:
-                    data = json.loads(self.code)
+                data = json.loads(self.code)
         except Exception as e:
             raise UserError(str(e))
         if data:
@@ -97,7 +105,7 @@ class IZIDashboardConfigWizard(models.TransientModel):
                 data = [data]
             # Create Analysis and Dashboard Block
             x = 0
-            y = 50
+            y = 0
             for dt in data:
                 try:
                     self.env.cr.commit()
@@ -112,7 +120,7 @@ class IZIDashboardConfigWizard(models.TransientModel):
                         model_id = table.model_id.id
                         table_model_id = table.id
                     elif dt['method'] == 'query':
-                        db_query = dt.get('query')
+                        db_query = dt.get('db_query')
 
                     # Source
                     source_name = dt.get('source')
@@ -142,18 +150,19 @@ class IZIDashboardConfigWizard(models.TransientModel):
                         'render_visual_script': dt.get('render_visual_script'),
                     }
                     if dt['method'] == 'model':
-                        analysis_vals['table_id'] = table.id
                         analysis_vals['model_id'] = model_id
                         analysis_vals['table_id'] = table_model_id
+                        analysis_vals['table_model_id'] = table_model_id
                     elif dt['method'] == 'query':
                         analysis_vals['db_query'] = db_query
                         if not analysis:
+                            analysis_vals['db_query'] = dt.get('db_query')
                             analysis = self.env['izi.analysis'].create(analysis_vals)
                         else:
                             analysis.write(analysis_vals)
                         analysis.build_query()
                         table = analysis.table_id
-                        analysis_vals = {}
+                        # analysis_vals = {}
                     elif dt['method'] == 'table_view':
                         table_name = dt.get('table_name')
                         table = self.env['izi.table'].search([('name', '=', table_name)], limit=1)
@@ -167,11 +176,43 @@ class IZIDashboardConfigWizard(models.TransientModel):
                                 table.get_table_fields()
                                 analysis_vals['db_query'] = dt.get('query')
                         analysis_vals['table_id'] = table.id
+                        analysis_vals['table_view_id'] = table.id
                         if not analysis:
                             analysis = self.env['izi.analysis'].create(analysis_vals)
                         else:
                             analysis.write(analysis_vals)
-                        analysis.build_query()
+                        # analysis.build_query()
+                    elif dt['method'] == 'table':
+                        table = self.env['izi.table'].search([('id','=',dt['table_id']),('name','=',dt['table_name'])])
+                        if not table:
+                            table_obj = self.env['izi.table']
+                            table = table_obj.create({
+                                'name': dt['table_name'],
+                                'source_id': 1,
+                                'stored_option':'stored',
+                                'store_interval':'today',
+                                'is_stored': True,
+                                'is_direct': False,
+                            })
+                            table.write({
+                                'main_code': dt['main_code']
+                            })
+                            if dt['field_info']:
+                                fields = dt['field_info']
+                                for field in fields:
+                                    table.write({
+                                        'field_ids': [(0, 0, field)]
+                                    })
+                            table.update_schema_store_table()
+
+                        analysis_vals['table_id'] = table.id
+
+                        if not analysis:
+                            analysis = self.env['izi.analysis'].create(analysis_vals)
+                        else:
+                            analysis.write(analysis_vals)
+                        # analysis.build_query()
+
 
                     # Metrics
                     metrics_values = []
@@ -181,7 +222,7 @@ class IZIDashboardConfigWizard(models.TransientModel):
                             continue
                         field = self.env['izi.table.field'].search([('field_name', '=', field_name), ('table_id', '=', table.id)], limit=1)
                         if not field:
-                            continue
+                            # continue
                             raise UserError(_('Field %s Not Found') % field_name)
                         metrics_values.append((0, 0, {
                             'calculation': metric.get('calculation'),
@@ -204,7 +245,7 @@ class IZIDashboardConfigWizard(models.TransientModel):
                             continue
                         field = self.env['izi.table.field'].search([('field_name', '=', field_name), ('table_id', '=', table.id)], limit=1)
                         if not field:
-                            continue
+                            # continue
                             raise UserError(_('Field %s Not Found') % field_name)
                         # Check If Field Is Date or Datetime
                         if field.field_type == 'date' or field.field_type == 'datetime':
@@ -240,6 +281,7 @@ class IZIDashboardConfigWizard(models.TransientModel):
                         }))
                     if sorts_values:
                         analysis_vals['sort_ids'] = sorts_values
+
                     if not analysis:
                         analysis = self.env['izi.analysis'].create(analysis_vals)
                     else:
@@ -247,22 +289,28 @@ class IZIDashboardConfigWizard(models.TransientModel):
                         analysis.dimension_ids.unlink()
                         analysis.sort_ids.unlink()
                         analysis.write(analysis_vals)
-                    
+
+                    if dt['method'] == 'table_view':
+                        analysis.table_view_id = table.id
+                    #check visual config :
+                    if dt.get('visual_config'):
+                        analysis.update_visual_config(dt.get('visual_config'))
+
                     # Check Dashboard Block
                     block = self.env['izi.dashboard.block'].search([('analysis_id', '=', analysis.id), ('dashboard_id', '=', self.dashboard_id.id)], limit=1)
                     if not block:
                         block_vals = {
                             'analysis_id': analysis.id,
                             'dashboard_id': self.dashboard_id.id,
-                            'gs_x': x,
-                            'gs_y': y,
+                            # 'gs_x': x,
+                            # 'gs_y': y,
                             'gs_w': dt.get('xywh')[2],
                             'gs_h': dt.get('xywh')[3],
                         }
-                        x += 6
-                        if x >= 12:
-                            x = 0
-                            y += 4
+                        # x += 6
+                        # if x >= 12:
+                        #     x = 0
+                        #     y += 4
                         self.env['izi.dashboard.block'].create(block_vals)
                     res['successes'].append({
                         'name': dt.get('name'),

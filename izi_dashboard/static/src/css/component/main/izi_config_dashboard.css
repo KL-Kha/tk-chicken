@@ -4,6 +4,13 @@
 }
 .izi_select_dashboard {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.izi_select_dashboard > div {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
 }
 .izi_config_dashboard_button_container .izi_dropdown {
     height: 36px;
@@ -251,6 +258,9 @@
     display: flex;
     height: 24px;
     line-height: 24px;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: -0.5px;
 }
 .izi_dashboard_option .izi_dashboard_option_header{
     flex: 1;
@@ -263,7 +273,7 @@
 }
 .izi_dashboard_option .izi_dashboard_option_category {
     margin: 0px;
-    display: none;
+    /* display: none; */
 }
 .izi_dashboard_option .izi_dashboard_option_category span {
     float: left;
@@ -289,7 +299,7 @@
     background: none;
     padding: 0px;
     margin: 0px;
-    margin-right: 12px;
+    margin-right: 8px;
     height: 24px;
     line-height: 24px;
     text-transform: none;

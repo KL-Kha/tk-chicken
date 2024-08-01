@@ -2,6 +2,7 @@
 # Copyright 2022 IZI PT Solusi Usaha Mudah
 from odoo import models, fields
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 
 class IZIAnalysisDBOdoo(models.Model):
@@ -78,17 +79,38 @@ class IZIAnalysisDBOdoo(models.Model):
                 query = field_query.get(kwargs.get('field_format'))
         return query
 
+    def check_date_string(self,value):
+        try:
+            datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+            return True
+        except ValueError:
+            return False
+        
     def get_filter_temp_query_db_odoo(self, **kwargs):
         self.ensure_one()
         filter_temp_result = False
         filter_field = kwargs.get('filter_value')[0]
         filter_type = kwargs.get('filter_value')[1]
         filter_list = kwargs.get('filter_value')[2]
+        field_by_name = kwargs.get('field_by_name')
+        res_lang_codes = kwargs.get('res_lang_codes')
 
         if filter_type == 'string_search':
             string_search_query = []
             for value in filter_list:
-                string_search_query.append("%s ilike '%s'" % (filter_field, '%' + value + '%'))
+                if self.check_date_string(value):
+                    string_search_query.append("%s::text ilike '%s'" % (filter_field, '%' + value + '%'))
+                else:
+                    field_type_origin = False
+                    if filter_field in field_by_name:
+                        field_type_origin = field_by_name.get(filter_field).field_type_origin
+                    if field_type_origin == 'jsonb':
+                        jsonb_filter_queries = []
+                        for res_lang_code in res_lang_codes:
+                            jsonb_filter_queries.append('%s->>\'%s\' %s $$%s$$' % (filter_field, res_lang_code, 'ilike', value))
+                        string_search_query.append('(%s)' % ' OR '.join(jsonb_filter_queries))
+                    else:
+                        string_search_query.append("%s ilike '%s'" % (filter_field, '%' + value + '%'))
             filter_temp_result = {
                 'query': string_search_query,
                 'join_operator': 'or'

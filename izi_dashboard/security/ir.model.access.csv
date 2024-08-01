@@ -20,3 +20,4 @@
 "izi_dashboard.access_izi_dashboard_config_wizard_crud_group_user","IZI Dashboard Config Wizard Access for Group User: CRUD","izi_dashboard.model_izi_dashboard_config_wizard",izi_dashboard.group_user_dashboard,1,1,1,1
 "izi_dashboard.access_izi_lab_api_key_wizard_crud_group_user","IZI Lab API Key Wizard Access for Group User: CRUD","izi_dashboard.model_izi_lab_api_key_wizard",izi_dashboard.group_user_dashboard,1,1,1,1
 "izi_dashboard.access_izi_dashboard_token","IZI Dashboard Token Access","izi_dashboard.model_izi_dashboard_token",izi_dashboard.group_user_dashboard,1,1,1,1
+"izi_dashboard.access_izi_dashboard_slide","IZI Dashboard S,ide","izi_dashboard.model_izi_dashboard_slide",izi_dashboard.group_user_dashboard,1,1,1,1

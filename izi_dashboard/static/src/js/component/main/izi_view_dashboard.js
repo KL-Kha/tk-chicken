@@ -4,15 +4,25 @@ import Widget from "@web/legacy/js/core/widget";
 import { jsonrpc } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import IZIViewDashboardBlock from "@izi_dashboard/js/component/main/izi_view_dashboard_block";
+import IZIViewVisual from "@izi_dashboard/js/component/main/izi_view_visual";
+import IZIAutocomplete from "@izi_dashboard/js/component/general/izi_autocomplete";
 var IZIViewDashboard = Widget.extend({
     template: 'IZIViewDashboard',
     events: {
         'click input': '_onClickInput',
         'click button': '_onClickButton',
         'click .izi_view_dashboard_ask_bg': '_onClickBgDashboardAsk',
+        'click .izi_view_analysis_dialog_bg': '_onClickBgDashboardAnalysisDialog',
         'click .izi_view_dashboard_ask_btn': '_onClickSubmitAsk',
         'keydown .izi_view_dashboard_ask_input': '_onKeydownInputAsk',
         'click .code_execution': '_onClickExecuteCode',
+        'click .izi_view_dashboard_ask_result_configuration': '_onClickAskResultConfiguration',
+        'click .izi_view_dashboard_ask_result_add_to_dashboard': '_onClickAskResultAddToDashboard',
+        'click .message_refresh': '_onClickMessageRefresh',
+        'click .quick_message': '_onClickQuickMessage',
+        'click .clear_message': '_onClickClearMessage',
+        'click .izi_view_dashboard_ask_header_table': '_onClickHeaderTable',
+        'click': '_globalClick',
     },
 
     /**
@@ -22,15 +32,30 @@ var IZIViewDashboard = Widget.extend({
         this._super.apply(this, arguments);
 
         this.parent = parent;
+        this.context = false;
+        if (parent && parent.context) {
+            this.context = parent.context;
+        }
         this.$grid;
         this.$editor;
         this.$editorContainer;
         this.selectedDashboard;
         this.$blocks = [];
-        this.ai_messages = [{
+        this.default_ai_messages = [{
             'role': 'assistant',
-            'content': `Hello! I am your Personal Data Consultant. Feel free to ask me anything related to data analysis, from monitoring business indicators to writing Python code for executing data science models. How can I assist you today?`,
+            'content': `Hello! I am your AI Data Consultant. Feel free to ask me anything about data analytics. I can help you explore your data and generate new analysis. How can I assist you today?`,
         }];
+        this.ai_messages = this.default_ai_messages.slice();
+        this.raw_messages = this.default_ai_messages.slice();
+        this.quick_messages = [];
+        this.default_quick_messages = [
+            'What analysis can you generate?',
+            'Drill down!',
+            'Elaborate the insights.',
+            'Great!',
+        ];
+        this.askAnalysisId;
+        this.$askVisual;
     },
 
     willStart: function () {
@@ -51,6 +76,184 @@ var IZIViewDashboard = Widget.extend({
 
         // Dashboard Ask
         self.$viewDashboardAsk = self.$('.izi_view_dashboard_ask');
+        self.$viewDashboardAskContainer = self.$('.izi_view_dashboard_ask_container');
+        self.$viewDashboardAskChart = self.$('.izi_view_dashboard_ask_result_chart');
+        self.$viewDashboardAskQuickMessages = self.$('.izi_view_dashboard_ask_quick_messages');
+        self.default_quick_messages.forEach(function(msg) {
+            self.quick_messages.push(msg);
+        });
+        self._renderQuickMessages();
+        self._generateTableOptions();
+    },
+    _generateTableOptions: function(){
+        var self = this
+        var filterElm = self.$el.find('#custom_table_selection')
+        var $dF = new IZIAutocomplete(self, {
+            elm: filterElm,
+            multiple: false,
+            placeholder: "Select Table",
+            minimumInput: false,
+            noAllOption: true,
+            params: {
+                getTable:true,
+                limit:10,
+            },
+            onChange: function (id, name, value) {
+                self._updateDashboardTable(id)
+            },
+        });
+    },
+    _updateDashboardTable: function(table_id) {
+        var self = this
+        jsonrpc('/web/dataset/call_kw/izi.dashboard/update_dashboard_table', {
+            model: 'izi.dashboard',
+            method: 'update_dashboard_table',
+            args: [self.selectedDashboard,table_id],
+            kwargs: {},
+        })
+    },
+    _onClickAskResultAddToDashboard: function(ev) {
+        var self = this;
+        if (self.selectedDashboard) {
+            jsonrpc('/web/dataset/call_kw/izi.dashboard/action_add_to_dashboard', {
+                model: 'izi.dashboard',
+                method: 'action_add_to_dashboard',
+                args: [self.selectedDashboard],
+                kwargs: {},
+            }).then(function (result) {
+                if (result.status == 200) {
+                    if (result.analysis_id) {
+                        self._getOwl().action.doAction({
+                            type: 'ir.actions.act_window',
+                            name: _t('Analysis'),
+                            target: 'new',
+                            res_id: result.analysis_id,
+                            res_model: 'izi.analysis',
+                            views: [[false, 'form']],
+                            context: {
+                            },
+                        }, {
+                            onClose: function () {
+                                self._loadDashboard();
+                            },
+                        });
+                    }
+                } else {
+                    if (result.status == 401) {
+                        new swal('Need Access', result.message, 'warning');
+                    } else
+                        new swal('Error', result.message || result.error, 'error');
+                }
+            });
+        }
+
+    },
+
+    _onClickAskResultConfiguration: function(ev) {
+        var self = this;
+        if (self.askAnalysisId) {
+            self._getOwl().action.doAction({
+                type: 'ir.actions.act_window',
+                name: _t('Analysis'),
+                target: 'new',
+                res_id: self.askAnalysisId,
+                res_model: 'izi.analysis',
+                views: [[false, 'izianalysis']],
+                context: {'analysis_id': self.askAnalysisId},
+            },{
+                onClose: function(){
+                    if (self.$askVisual)
+                        self.$askVisual._renderVisual();
+                }
+            });
+        }
+    },
+
+    _globalClick: function(ev) {
+        if (!$(ev.target).closest('.drilldown-fields').length) {
+            $('.drilldown-fields').remove();
+        }
+    },
+
+    _openAnalysisDialogById: function(analysisId) {
+        var self = this;
+        self.$viewDashboardAnalysisDialog.closest('.izi_dialog').show();
+        var args = {
+            'id': -1,
+            'analysis_id': analysisId,
+            'analysis_name': 'Analysis',
+            'animation': true,
+            'filters': [],
+            'refresh_interval': false,
+            'index': -1,
+            'mode': false,
+            'visual_type_name': '',
+            'rtl': false,
+        }
+        var $blockDialog = new IZIViewDashboardBlock(self, args);
+        $blockDialog.appendTo(self.$viewDashboardAnalysisDialog);
+    },
+
+    _openAnalysisById: function (analysisId) {
+        var self = this;
+        if (analysisId) {
+            self._getOwl().action.doAction({
+                type: 'ir.actions.act_window',
+                name: _t('Analysis'),
+                target: 'new',
+                res_id: self.askAnalysisId,
+                res_model: 'izi.analysis',
+                views: [[false, 'izianalysis']],
+                context: {'analysis_id': self.askAnalysisId},
+            },{
+                onClose: function(){
+                    if (self.$askVisual)
+                        self.$askVisual._renderVisual();
+                }
+            });
+        }
+    },
+
+    _onClickHeaderTable: function(ev) {
+        var self = this;
+        if (self.selectedDashboard) {
+            self._getOwl().action.doAction({
+                type: 'ir.actions.act_window',
+                name: _t('Dashboard'),
+                target: 'new',
+                res_id: self.selectedDashboard,
+                res_model: 'izi.dashboard',
+                views: [[false, 'form']],
+                context: {},
+            },{
+                onClose: function(){
+                    if (self.parent && self.parent.$configDashboard)
+                        self.parent.$configDashboard._initDashboard();
+                }
+            });
+        }
+    },
+
+    _generateAskChart: function(analysisId, analysisConfig) {
+        var self = this;
+        if (analysisId) {
+            self.askAnalysisId = analysisId;
+            self.analysisConfig = analysisConfig;
+            var args = {
+                'block_id': 'ask',
+                'analysis_id': analysisId,
+                'ask_chart': true,
+            }
+            // Deprecated, User Filters In Analysis
+            // if (analysisConfig && analysisConfig.filters) {
+            //     args.filters = {}
+            //     args.filters.action = analysisConfig.filters;
+            // }
+            var $visual = new IZIViewVisual(self, args);
+            self.$viewDashboardAskChart.empty();
+            $visual.appendTo($(self.$viewDashboardAskChart));
+            self.$askVisual = $visual;
+        }
     },
 
     _onClickExecuteCode: function(ev) {
@@ -68,19 +271,7 @@ var IZIViewDashboard = Widget.extend({
                 }).then(function (result) {
                     if (result.status == 200) {
                         if (result.id) {
-                            self._getOwl().action.doAction({
-                                type: 'ir.actions.act_window',
-                                name: _t('Analysis'),
-                                target: 'new',
-                                res_id: result.id,
-                                res_model: 'izi.analysis',
-                                views: [[false, 'izianalysis']],
-                                context: {'analysis_id': result.id},
-                            },{
-                                onClose: function(){
-                                    // self.$visual._renderVisual(self.args);
-                                }
-                            });
+                            self._generateAskChart(result.id);
                         }
                     } else {
                         if (result.status == 401) {
@@ -97,72 +288,161 @@ var IZIViewDashboard = Widget.extend({
                                 }
                             });
                         } else
-                            new swal('Error', result.message, 'error');
+                            new swal('Error', result.message || result.error, 'error');
                     }
                 });
             }
         }
     },
 
+    _onClickQuickMessage: function(ev) {
+        var self = this;
+        var message = $(ev.currentTarget).text();
+        if (message) {
+            self.$('.izi_view_dashboard_ask_input').val(message);
+            self.quick_messages = [];
+            self._renderQuickMessages();
+            self._onClickSubmitAsk();
+        }
+    },
+
+    _onClickClearMessage: function(ev) {
+        var self = this;
+        self.$viewDashboardAsk.empty();
+        self.$viewDashboardAskChart.empty();
+        self.ai_messages = self.default_ai_messages.slice();
+        self.raw_messages = self.default_ai_messages.slice();
+        self._renderAIMessages();
+        self.quick_messages = [];
+        self.default_quick_messages.forEach(function(msg) {
+            self.quick_messages.push(msg);
+        });
+        self._renderQuickMessages();
+    },
+
+    _renderQuickMessages: function() {
+        var self = this;
+        self.$viewDashboardAskQuickMessages.empty();
+        self.quick_messages.forEach(msg => {
+            self.$viewDashboardAskQuickMessages.append(`
+                <div class="quick_message">${msg}</div>
+            `);
+        });
+        self.$viewDashboardAskQuickMessages.append(`
+            <div class="clear_message">Clear All</div>
+        `);
+    },
+
     _renderAIMessages: function() {
         var self = this;
         self.$viewDashboardAsk.empty();
         var lastRole = false;
+        var message_index = 0;
         self.ai_messages.forEach(msg => {
             var role = msg.role;
-            var role_name = (role == 'assistant') ? 'Consultant' : 'You';
-            var style = (role == 'assistant') ? `background: url('/izi_dashboard/static/description/icon_avatar.png');background-size: contain;` : 'background: #875A7B';
-            var initial = (role == 'assistant') ? '' : 'U';
-            var message_content = msg.content;
-            if (lastRole != role) {
+            if (role == 'assistant' || role == 'user') {
+                var role_name = (role == 'assistant') ? 'Consultant' : 'You';
+                var style = (role == 'assistant') ? `background: url('/izi_dashboard/static/description/icon_avatar.png');background-size: contain;` : 'background: #875A7B';
+                var initial = (role == 'assistant') ? '' : 'U';
+                var message_content = msg.content;
+                if (lastRole != role) {
+                    if (role == 'user' || message_index == 0) {
+                        self.$viewDashboardAsk.append(`
+                            <div class="role_section">
+                                <div class="role_avatar" style="${style}">${initial}</div>
+                                <div class="role_name">${role_name}</div>
+                            </div>
+                        `);
+                    } else {
+                        self.$viewDashboardAsk.append(`
+                            <div class="role_section">
+                                <div class="role_avatar" style="${style}">${initial}</div>
+                                <div class="role_name">${role_name}</div>
+                                <div class="message_refresh" data-index="${message_index}">
+                                    <span class="material-icons">refresh</span>
+                                </div>
+                            </div>
+                        `);
+                    }
+                    lastRole = role;
+                }
                 self.$viewDashboardAsk.append(`
-                    <div class="role_section">
-                        <div class="role_avatar" style="${style}">${initial}</div>
-                        <div class="role_name">${role_name}</div>
-                    </div>
+                        <div class="message_section">
+                            <div class="message_content" style="white-space:pre-wrap;">${message_content}</div>
+                        </div>
                 `)
-                lastRole = role;
             }
-            self.$viewDashboardAsk.append(`
-                    <div class="message_section">
-                        <div class="message_content" style="white-space:pre-wrap;">${message_content}</div>
-                    </div>
-            `)
+            message_index += 1;
         });
         self.$viewDashboardAsk.animate({
             scrollTop: self.$viewDashboardAsk.get(0).scrollHeight
         }, 1000);
     },
 
+    _onClickMessageRefresh: function(ev) {
+        var self = this;
+        var messageIndex = $(ev.currentTarget).attr('data-index');
+        if (messageIndex && messageIndex > 0) {
+            self.ai_messages = self.ai_messages.slice(0, messageIndex);
+            self.raw_messages = self.raw_messages.slice(0, messageIndex);
+            self._renderAIMessages();
+            self._onClickSubmitAsk();
+        }
+    },
+
     _onClickSubmitAsk: function(ev) {
         var self = this;
         var message_content = self.$('.izi_view_dashboard_ask_input').val();
-        self.ai_messages.push({
-            'role': 'user',
-            'content': message_content,
-        })
-        self._renderAIMessages();
-        self.$('.izi_view_dashboard_ask_input').val('');
+        if (message_content) {
+            self.ai_messages.push({
+                'role': 'user',
+                'content': message_content,
+            })
+            self._renderAIMessages();
+            self.$('.izi_view_dashboard_ask_input').val('');
+            self.raw_messages.push({
+                'role': 'user',
+                'content': message_content,
+            })
+        }
 
         // Submit To AI
-        if (self.selectedDashboard && self.ai_messages) {
+        if (self.selectedDashboard && self.raw_messages) {
             let spinner = $(`<span class="spinner-border spinner-border-small" style="margin-top: 20px;"/>`);
             spinner.appendTo(self.$viewDashboardAsk);
-            jsonrpc('/web/dataset/call_kw/izi.dashboard/action_get_lab_script', {
+            jsonrpc('/web/dataset/call_kw/izi.dashboard/action_get_lab_ask', {
                 model: 'izi.dashboard',
                 method: 'action_get_lab_ask',
-                args: [self.selectedDashboard, self.ai_messages],
+                args: [self.selectedDashboard, self.raw_messages],
                 kwargs: {},
             }).then(function (result) {
                 self.$viewDashboardAsk.find('.spinner-border').remove();
                 if (result.status == 200) {
-                    if (result.new_message_content) {
-                        self.ai_messages.push({
-                            'role': 'assistant',
-                            'content': result.new_message_content,
-                        })
+                    if (result.new_messages) {
+                        result.new_messages.forEach(function(msg) {
+                            self.ai_messages.push({
+                                'role': msg.role,
+                                'content': msg.content,
+                            })
+                        });
+                        if (result.analysis_id) {
+                            self._generateAskChart(result.analysis_id, result.analysis_config);
+                            self.$viewDashboardAskContainer.find('.izi_view_dashboard_ask_result_title').show();
+                        }
                         self._renderAIMessages();
                     }
+                    if (result.raw_messages) {
+                        self.raw_messages = result.raw_messages;
+                    }
+                    if (result.quick_messages && result.quick_messages.length > 0) {
+                        self.quick_messages = result.quick_messages;
+                    } else {
+                        self.quick_messages = [];
+                        self.default_quick_messages.forEach(function(msg) {
+                            self.quick_messages.push(msg);
+                        });
+                    }
+                    self._renderQuickMessages();
                 } else {
                     if (result.status == 401) {
                         new swal('Need Access', result.message, 'warning');
@@ -177,6 +457,8 @@ var IZIViewDashboard = Widget.extend({
                             onClose: function(){
                             }
                         });
+                    } else if (result.status == 500) {
+                        new swal('Error', result.message, 'error');
                     } else
                         new swal('Error', result.message, 'error');
                 }
@@ -197,6 +479,11 @@ var IZIViewDashboard = Widget.extend({
         self.$viewDashboardAsk.closest('.izi_dialog').hide();
     },
 
+    _onClickBgDashboardAnalysisDialog: function(ev) {
+        var self = this;
+        self.$viewDashboardAnalysisDialog.closest('.izi_dialog').hide();
+    },
+
     _getViewVisualByAnalysisId: function(analysis_id) {
         var self = this;
         var view_visual = false;
@@ -205,6 +492,9 @@ var IZIViewDashboard = Widget.extend({
                 view_visual = block.$visual;
             }
         });
+        if (self.$askVisual && self.$askVisual.analysis_id == analysis_id) {
+            view_visual = self.$askVisual;
+        }
         return view_visual;
     },
 

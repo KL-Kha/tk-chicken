@@ -17,6 +17,7 @@ var IZIViewDashboardBlock = Widget.extend({
         'click .izi_action_edit_analysis': '_editAnalysis',
         'click .izi_action_open_list_view': '_openListView',
         'click .izi_action_delete_block': '_onClickDeleteBlock',
+        'click .izi_action_export_config': '_onClickExportConfig',
         'click .izi_action_duplicate_block': '_onClickDuplicateBlock',
         'click .izi_action_export_excel': '_onClickExportExcel',
         'click .izi_btn_speech_ai': '_onClickSpeechAI',
@@ -32,6 +33,10 @@ var IZIViewDashboardBlock = Widget.extend({
         this._super.apply(this, arguments);
 
         this.parent = parent;
+        this.context = false;
+        if (parent && parent.context) {
+            this.context = parent.context;
+        }
         this.id = args.id;
         this.analysis_name = args.analysis_name;
         this.analysis_id = args.analysis_id;
@@ -126,6 +131,19 @@ var IZIViewDashboardBlock = Widget.extend({
     /**
      * Private Method
      */
+    _resetArgs: function() {
+        var self = this;
+        self.args = {
+            'block_id': self.id,
+            'analysis_id': self.analysis_id,
+            'filters': self.filters,
+            'refresh_interval': self.refresh_interval,
+            'index': self.index,
+            'mode': self.mode,
+            'rtl': self.rtl,
+        }
+    },
+
     _onClickInput: function (ev) {
         var self = this;
     },
@@ -261,6 +279,17 @@ var IZIViewDashboardBlock = Widget.extend({
         }
     },
 
+    _onClickExportConfig: function (ev) {
+        var self = this;
+        jsonrpc('/web/dataset/call_kw/izi.analysis/export_config', {
+            model: 'izi.analysis',
+            method: 'export_config',
+            args: [[self.analysis_id]],
+            kwargs: {},
+        }).then(function (attachment_id) {
+            window.open('/web/content/' + attachment_id + '?download=true', '_blank');
+        });
+    },
     _onClickDeleteBlock: function (ev) {
         var self = this;
         var id = $(ev.currentTarget).data('id');
@@ -318,7 +347,8 @@ var IZIViewDashboardBlock = Widget.extend({
                 context: {'analysis_id': self.analysis_id},
             },{
                 onClose: function(){
-                    self.$visual._renderVisual(self.args)
+                    self._resetArgs();
+                    self.$visual._renderVisual(self.args);
                 }
             });
         }
@@ -337,6 +367,7 @@ var IZIViewDashboardBlock = Widget.extend({
                 context: { 'active_test': false },
             }, {
                 onClose: function () {
+                    self._resetArgs();
                     self.$visual._renderVisual(self.args)
                 },
             });
@@ -353,6 +384,8 @@ var IZIViewDashboardBlock = Widget.extend({
 
     _openListView: function() {
         var self = this;
+        var args = self.args
+        args['filters'] = self.$visual.filters
         if (self.analysis_id && self.mode != 'ai_analysis') {
             jsonrpc('/web/dataset/call_kw/izi.analysis/ui_get_view_parameters', {
                 model: 'izi.analysis',

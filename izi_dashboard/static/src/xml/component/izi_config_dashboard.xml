@@ -2,8 +2,8 @@
     <div t-name="IZIConfigDashboard" class="izi_config_dashboard row no-gutters">
         <div class="col-lg-3 izi_select_dashboard izi_p20" title="Click to select existing dashboard or create a new one">
             <div>
-                <span class="material-icons izi_float_icon" t-esc="'open_in_new'"/>
                 <div class="izi_title izi_block_left izi_title_dashboard">Select Dashboard</div>
+                <span class="material-icons izi_float_icon" t-esc="'open_in_new'"/>
                 <div style="display:none;" class="izi_title izi_block_left izi_edit_dashboard">
                     <input class="izi_input izi_edit_dashboard_input" placeholder="Dashboard Name"/>
                 </div>
@@ -11,9 +11,9 @@
                 <span style="display:none;" class="material-icons izi_block_left izi_save_dashboard_button izi_hover_highlight" t-esc="'done'"/>
                 <div style="clear:both;"/>
             </div>
-            <div class="izi_subtitle">
+            <!-- <div class="izi_subtitle">
                 Click to select existing dashboard or create a new one
-            </div>
+            </div> -->
         </div>
         <div class="col-lg-9 izi_config_dashboard_button_container izi_p20_p30"
          style="display: flex;align-items: center;justify-content: flex-end;" >
@@ -99,11 +99,12 @@
                 <div class="dropdown-menu izi_select_action" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item izi_add_analysis">Add Analysis</a>
                     <a class="dropdown-item izi_add_filter">Add Filter</a>
-                    <a class="dropdown-item izi_add_configuration">Add Configuration</a>
+                    <a class="dropdown-item izi_add_configuration">Import Configuration</a>
                     <a class="dropdown-item izi_edit_layout">Edit Layout</a>
                     <a class="dropdown-item izi_embed_dashboard">Embed Dashboard</a>
                     <a class="dropdown-item izi_share_dashboard">Share Dashboard</a>
                     <a class="dropdown-item izi_delete_dashboard">Delete Dashboard</a>
+                    <a class="dropdown-item izi_export_configuration">Export Configuration</a>
                 </div>
             </div>
 
@@ -112,9 +113,10 @@
                     <span class="material-icons izi_btn_icon_left" t-esc="'magic_button'"/>
                 </div>
                 <div class="dropdown-menu izi_select_action" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item izi_ai_generate beta">Generate With AI</a>
-                    <a class="dropdown-item izi_ai_explain beta">Explain With AI</a>
                     <a class="dropdown-item izi_ai_ask beta">Ask AI Consultant</a>
+                    <a class="dropdown-item izi_ai_explain beta">Explain With AI</a>
+                    <a class="dropdown-item izi_ai_slide beta">Present With AI</a>
+                    <a class="dropdown-item izi_ai_generate beta">Generate With AI</a>
                 </div>
             </div>
 

@@ -23,6 +23,7 @@ var IZIConfigDashboard = Widget.extend({
         'click .izi_delete_dashboard': '_onClickDeleteDashboard',
         'click .izi_add_analysis': '_onClickAddAnalysis',
         'click .izi_add_configuration': '_onClickAddConfig',
+        'click .izi_export_configuration': '_onClickExportConfiguration',
         'click .izi_add_filter': '_onClickAddFilter',
         // 'keyup #izi_dashboard_ai_search_input': '_onKeyUpAISearchInput',
         'click #izi_export_capture': '_onClickExportCapture',
@@ -31,6 +32,7 @@ var IZIConfigDashboard = Widget.extend({
         'click .izi_ai_generate': '_onClickAIGenerate',
         'click .izi_ai_explain': '_onClickAIExplain',
         'click .izi_ai_ask': '_onClickAIAsk',
+        'click .izi_ai_slide': '_onClickAISlide',
     },
 
     /**
@@ -110,6 +112,7 @@ var IZIConfigDashboard = Widget.extend({
         self.baseUrl = window.location.origin;
         self.tableId = false;
         self.tableFieldNames = '';
+        self.tableName = 'All';
     },
 
     /**
@@ -150,16 +153,17 @@ var IZIConfigDashboard = Widget.extend({
         jsonrpc('/web/dataset/call_kw/izi.dashboard/search_read', {
             model: 'izi.dashboard',
             method: 'search_read',
-            args: [domain, ['id', 'name', 'write_date', 'theme_name', 'date_format', 'start_date', 'end_date', 'izi_lab_url', 'izi_dashboard_access_token', 'base_url', 'table_id', 'table_field_names']],
+            args: [domain, ['id', 'name', 'write_date', 'theme_name', 'date_format', 'start_date', 'end_date', 'izi_lab_url', 'izi_dashboard_access_token', 'base_url', 'table_name']],
             kwargs: {},
         }).then(function (results) {
             if (results.length > 0) {
                 self._selectDashboard(results[0].id, results[0].name, results[0].write_date, results[0].theme_name, results[0].date_format, results[0].start_date, results[0].end_date);
                 self.iziLabURL = results[0].izi_lab_url;
-                if (results[0].table_id)
-                    self.tableId = results[0].table_id;
-                if (results[0].table_field_names)
-                    self.tableFieldNames = results[0].table_field_names;
+                if (self.$viewDashboard && self.$viewDashboard.$viewDashboardAskContainer) {
+                    var selectElm = self.$viewDashboard.$viewDashboardAskContainer.find('.izi_view_dashboard_ask_header_table .select2-choice')
+                    selectElm.removeClass('select2-default');
+                    selectElm.find('.select2-chosen').text(results[0].table_name || 'Undefined');
+                }
                 self.iziDashboardAcessToken = results[0].izi_dashboard_access_token;
                 self.baseUrl = results[0].base_url;
                 self._initDashboardAISearch();
@@ -289,6 +293,14 @@ var IZIConfigDashboard = Widget.extend({
                 };
             });
         });
+
+        // Reset Ask Chat
+        if (self.$viewDashboard && self.$viewDashboard.$viewDashboardAsk) {
+            self.$viewDashboard.$viewDashboardAsk.closest('.izi_view_dashboard_ask_container').hide();
+            self.$viewDashboard.$viewDashboardAsk.empty();
+            self.$viewDashboard.$viewDashboardAskChart.empty();
+            self.$viewDashboard.ai_messages = self.$viewDashboard.default_ai_messages.slice();
+        }
     },
 
     _initDashboardAISearch: function() {
@@ -327,7 +339,6 @@ var IZIConfigDashboard = Widget.extend({
                 textField: 'name',
             },
             onChange: function (values, name) {
-                console.log(values, name)
                 if (values.length > 0) {
                     var id = parseInt(values[0]);
                     var name = name;
@@ -350,7 +361,7 @@ var IZIConfigDashboard = Widget.extend({
                     category_html = `<span>${item['category']}</span>`
                 }
                 var premium_html = '';
-                if (item['premium']) {
+                if (false && item['premium']) {
                     premium_html = `<span class="izi_dashboard_option_premium">${item['premium']}</span>`
                 }
                 return `<div class="izi_dashboard_option">
@@ -385,6 +396,9 @@ var IZIConfigDashboard = Widget.extend({
             $('.spinner-container').removeClass('d-flex');
             if (res && res.status == 200) {
                 self._initDashboard();
+                if (res.success) {
+                    new swal('Success', res.message, 'success');
+                }
                 setTimeout(function () {
                     self.$viewDashboard.$grid.float(false);
                     self.$viewDashboard.$grid.compact();
@@ -474,9 +488,6 @@ var IZIConfigDashboard = Widget.extend({
 
     _onClickAIGenerate: function(ev) {
         var self = this;
-        if (!self.tableId) {
-            new swal('Warning', `Please select the Table in Dashboard > AI Settings to help the us generate more accurate and faster analysis`, 'warning');
-        }
         // Check if izi_dashboard_search_container is visible
         if (self.$('#izi_dashboard_search_container').is(':visible')) {
             self.$('#izi_dashboard_search_container').hide();
@@ -498,9 +509,15 @@ var IZIConfigDashboard = Widget.extend({
 
     _onClickAIAsk: function(ev) {
         var self = this;
-        self.$viewDashboard.$viewDashboardAsk.closest('.izi_dialog').show();
+        // new swal('Information', `This is a beta feature not included in the App Store version. Please contact us to access the full features of our AI.`, 'warning');
+        var $container = self.$viewDashboard.$viewDashboardAsk.closest('.izi_view_dashboard_ask_container');
         self.$viewDashboard.$viewDashboardAsk.empty();
-        self.$viewDashboard._renderAIMessages();
+        if ($container.is(":visible")) {
+            $container.hide();
+        } else {
+            $container.slideDown();
+            self.$viewDashboard._renderAIMessages();
+        }
     },
 
     _onClickAIExplain: function(ev) {
@@ -720,13 +737,25 @@ var IZIConfigDashboard = Widget.extend({
         self.selectedDashboardWriteDate = write_date;
         self.selectedDashboardThemeName = theme_name;
         self.$titleDashboard.text(name);
-        if (date_format) {
-            self.filterDateFormat.values = date_format;
-            var text = self.filterDateFormat.elm.find(`[data-date_format="${date_format}"]`).text()
-            self.filterDateFormat.elm.find('.izi_dashboard_filter_content .dropdown-toggle').text(text);
-        }
+        var text = self.filterDateFormat.elm.find(`[data-date_format="${!(date_format) ? '' : date_format}"]`).text()
+        self.filterDateFormat.elm.find('.izi_dashboard_filter_content .dropdown-toggle').text(text);
         if (date_format == 'custom' && (start_date || end_date)) {
+            self.filterDateFormat.values = date_format;
             self.filterDateRange.values = [start_date, end_date]
+            self.filterDateRange.elm.find('#izi_date_from').val(start_date)
+            self.filterDateRange.elm.find('#izi_date_to').val(end_date)
+            self.filterDateRange.elm.show();
+        } else if (date_format) {
+            self.filterDateFormat.values = date_format;
+            self.filterDateRange.elm.find('#izi_date_from').val('')
+            self.filterDateRange.elm.find('#izi_date_to').val('')
+            self.filterDateRange.elm.hide();
+        } else {
+            self.filterDateFormat.values = null;
+            self.filterDateRange.values = [null, null];
+            self.filterDateRange.elm.find('#izi_date_from').val('')
+            self.filterDateRange.elm.find('#izi_date_to').val('')
+            self.filterDateRange.elm.hide();
         }
         self.$selectDashboard.find('.izi_subtitle').text(moment(write_date).format('LLL'));
         if (self.$viewDashboard) {  
@@ -841,6 +870,54 @@ var IZIConfigDashboard = Widget.extend({
         }
     },
 
+    _onClickAISlide: function(ev) {
+        var self = this;
+        self._hideAIGenerate();
+        if (self.selectedDashboard) {
+            var self = this;
+            jsonrpc('/web/dataset/call_kw/izi.dashboard/action_check_key', {
+                model: 'izi.dashboard',
+                method: 'action_check_key',
+                args: [],
+                kwargs: {},
+            }).then(function (result) {
+                if (result.status == 200) {
+                    self._getOwl().action.doAction({
+                        type: 'ir.actions.act_window',
+                        name: _t('Dashboard'),
+                        target: 'new',
+                        res_id: self.selectedDashboard,
+                        res_model: 'izi.dashboard',
+                        views: [[false, 'form']],
+                        context: { 'active_test': false },
+                    },{
+                        onClose: function(){
+                            self._initDashboard();
+                        },
+                    });
+                } else {
+                    if (result.status == 401) {
+                        new swal('Need Access', result.message, 'warning');
+                        self._getOwl().action.doAction({
+                            type: 'ir.actions.act_window',
+                            name: _t('Need API Access'),
+                            target: 'new',
+                            res_model: 'izi.lab.api.key.wizard',
+                            views: [[false, 'form']],
+                            context: {},
+                        },{
+                            onClose: function(){
+                            }
+                        });
+                    } else if (result.status == 500) {
+                        new swal('Error', result.message, 'error');
+                    } else
+                        new swal('Error', result.message, 'error');
+                }
+            });
+        }
+    },
+
     _onClickAddAnalysis: function (ev) {
         var self = this;
         self._hideAIGenerate();
@@ -851,6 +928,21 @@ var IZIConfigDashboard = Widget.extend({
             var $select = new IZIAddAnalysis(self)
             $select.appendTo($('body'));
         }
+    },
+
+    _onClickExportConfiguration: function (ev) {
+        var self = this;
+        self._hideAIGenerate();
+        var dashboard_id = self.selectedDashboard
+        // debugger
+        jsonrpc('/web/dataset/call_kw/izi.dashboard/export_all_config', {
+            model: 'izi.dashboard',
+            method: 'export_all_config',
+            args: [dashboard_id],
+            kwargs: {},
+        }).then(function (attachment_id) {
+            window.open('/web/content/' + attachment_id + '?download=true', '_blank');
+        });
     },
 
     _onClickAddConfig: function (ev) {

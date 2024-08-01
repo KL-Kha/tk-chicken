@@ -5,9 +5,13 @@ import pytz
 from odoo import models, fields, api, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import ValidationError, UserError
+from itertools import accumulate
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from random import randint
+import pandas
+import json
+import re
 
 DEFAULT_DATA_SCRIPT = """
 response = {
@@ -43,11 +47,11 @@ class IZIAnalysis(models.Model):
     source_type = fields.Selection(string='Data Source Type', related='source_id.type')
     method = fields.Selection([
         ('model', 'Odoo Model'),
-        ('table_view', 'Table View'),
-        ('query', 'Direct Query'),
-        ('table', 'Mart Table'),
-        ('data_script', 'Direct Data Script'),
-        ('kpi', 'Key Performance Indicator'),
+        ('query', 'Query'),
+        ('table', 'Mart Table'), # The Output Of Mart Table Can Be Stored In dataframe Variable
+        ('table_view', 'Table View'), # Will Be Deprecated
+        # ('data_script', 'Direct Data Script'), # Will Be Deprecated, Moved To Table With Direct Attributes
+        # ('kpi', 'Key Performance Indicator'), # Deprecated
     ], default='model', string='Method', required=True)
     table_name = fields.Char('Table View Name')
     table_id = fields.Many2one('izi.table', string='Table', required=False, ondelete='cascade')
@@ -96,6 +100,7 @@ class IZIAnalysis(models.Model):
     premium = fields.Boolean('Premium', default=False)
     detail_config = fields.Boolean('All Configuration', default=False)
     
+    show_popup = fields.Boolean('Show Popup', default=False)
     # For Analysis Data Script
     server_action_id = fields.Many2one('ir.actions.server', string='Action Server')
     analysis_data_script = fields.Text('Analysis Data Script', related='server_action_id.code', readonly=False)
@@ -119,6 +124,8 @@ class IZIAnalysis(models.Model):
         self.table_id = False
         if self.method != 'kpi':
             self.kpi_id = False
+        if self.method == 'table_view':
+            self.method = 'query'
 
     @api.onchange('kpi_id')
     def onchange_kpi_id(self):
@@ -268,7 +275,7 @@ class IZIAnalysis(models.Model):
                     'db_query': self.db_query,
                 })
             table.get_table_fields()
-            self._set_default_metric()
+            # self._set_default_metric()
             self.table_id = table.id
             return {
                 'type': 'ir.actions.act_window',
@@ -286,9 +293,9 @@ class IZIAnalysis(models.Model):
     @api.model
     def create(self, vals):
         res = super(IZIAnalysis, self).create(vals)
-        for analysis in res:
-            if not analysis.metric_ids:
-                analysis._set_default_metric()
+        # for analysis in res:
+        #     if not analysis.metric_ids:
+        #         analysis._set_default_metric()
         return res
 
     def write(self, vals):
@@ -305,9 +312,9 @@ class IZIAnalysis(models.Model):
             if vals.get('name') and analysis.method in ('query', 'table_view') and analysis.table_id:
                 analysis.table_id.name = vals.get('name')
         res = super(IZIAnalysis, self).write(vals)
-        for analysis in self:
-            if not analysis.metric_ids:
-                analysis._set_default_metric()
+        # for analysis in self:
+        #     if not analysis.metric_ids:
+        #         analysis._set_default_metric()
         return res
 
     def copy(self, default=None):
@@ -342,23 +349,24 @@ class IZIAnalysis(models.Model):
                 })
                 analysis.server_action_id = new_action.id
             elif self.method == 'table' and self.table_id and self.table_id.is_stored:
-                tables = self.env['izi.table'].search([('name', 'like', self.table_id.name), ('is_stored', '=', True)])
-                new_identifier = str(len(tables) + 1)
-                new_code = ''
-                if self.table_id.cron_id and self.table_id.cron_id.ir_actions_server_id:
-                    new_code = self.table_id.cron_id.ir_actions_server_id.code or ''
-                    new_code = new_code.replace(self.table_id.store_table_name, '%s_%s' % (self.table_id.store_table_name, new_identifier))
-                new_table = self.table_id.copy({
-                    'name': '%s %s' % (self.table_id.name, new_identifier),
-                    'is_stored': True,
-                    'cron_code': new_code,
-                })
-                for field in self.table_id.field_ids:
-                    new_field = field.copy({
-                        'table_id': new_table.id,
+                if not self._context.get('action_copy_from_conversation', False):
+                    tables = self.env['izi.table'].search([('name', 'like', self.table_id.name), ('is_stored', '=', True)])
+                    new_identifier = str(len(tables) + 1)
+                    new_code = ''
+                    if self.table_id.cron_id and self.table_id.cron_id.ir_actions_server_id:
+                        new_code = self.table_id.cron_id.ir_actions_server_id.code or ''
+                        new_code = new_code.replace(self.table_id.store_table_name, '%s_%s' % (self.table_id.store_table_name, new_identifier))
+                    new_table = self.table_id.copy({
+                        'name': '%s %s' % (self.table_id.name, new_identifier),
+                        'is_stored': True,
+                        'cron_code': new_code,
                     })
-                new_table.update_schema_store_table()
-                analysis.table_id = new_table.id
+                    for field in self.table_id.field_ids:
+                        new_field = field.copy({
+                            'table_id': new_table.id,
+                        })
+                    new_table.update_schema_store_table()
+                    analysis.table_id = new_table.id
             
             # Metric & Dimensions
             new_metric_ids = []
@@ -504,7 +512,8 @@ class IZIAnalysis(models.Model):
 
         # Build Metric Query
         for metric in self.metric_ids:
-            metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+            # metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+            metric_alias = "%s" % (metric.field_id.name)
             if metric.name_alias:
                 metric_alias = metric.name_alias
             metric_queries.append('%s(%s) as "%s"' % (metric.calculation, metric.field_id.field_name, metric_alias))
@@ -587,16 +596,86 @@ class IZIAnalysis(models.Model):
                 self.kpi_id.action_calculate_value()
             return self.get_analysis_data_model(**kwargs)
         elif self.method in ('table_view', 'query', 'table'):
+            if self.table_id and self.table_id.is_direct:
+                return self.get_analysis_data_frame(**kwargs)
             return self.get_analysis_data_query(**kwargs)
         elif self.method in ('data_script'):
             return self.get_analysis_data_script(**kwargs)
     
+    def get_analysis_data_frame(self, **kwargs):
+        self.ensure_one()
+        self = self.sudo()
+        if self.table_id and self.table_id.cron_id and self.table_id.cron_id.code:
+            res = self.table_id.cron_id.with_context(izi_table=self).ir_actions_server_id.run()
+            # Automatic Get Fields From Data Frame
+            if res and type(res) == dict and 'dataframe' in res and isinstance(res.get('dataframe'), pandas.DataFrame):
+                df = res.get('dataframe')
+                df = df.fillna('')
+                # To Apply Filters
+                # df.query('Value1 > 20 and Value2 < 7')
+                
+                df_fields = []
+                df_dimensions = []
+                for dimension in self.dimension_ids:
+                    field_name = dimension.field_id.field_name
+                    df_dimensions.append(field_name)
+                    df_fields.append(field_name)
+                
+                df_metrics = []
+                df_metrics_dict = {}
+                for metric in self.metric_ids:
+                    field_name = metric.field_id.field_name
+                    df_metrics.append(field_name)
+                    df_fields.append(field_name)
+                    df_calculation = 'sum'
+                    if metric.calculation == 'avg':
+                        df_calculation = 'mean'
+                    elif metric.calculation == 'count':
+                        df_calculation = 'count'
+                    df_metrics_dict[field_name] = df_calculation
+                
+                df_sorts = []
+                df_sorts_asc = []
+                for sort in self.sort_ids:
+                    field_name = sort.field_id.field_name
+                    df_sorts.append(field_name)
+                    sort_asc = True
+                    if sort.sort == 'desc':
+                        sort_asc = False
+                    df_sorts_asc.append(sort_asc)
+                
+                # Grouping & Aggregation
+                if df_dimensions and df_metrics_dict:
+                    df = df.groupby(df_dimensions).agg(df_metrics_dict).reset_index()
+                else:
+                    df = df[df_fields]
+                df = df.sort_values(by=df_sorts, ascending=df_sorts_asc)
+                if self.limit:
+                    df = df.head(self.limit)
+                
+                return {
+                    'data': df.to_dict('records'),
+                    'metrics': df_metrics,
+                    'dimensions': df_dimensions,
+                    'fields': df_fields,
+                    'values': df.values.tolist(),
+                }
+        return {
+            'data': [],
+            'metrics': [],
+            'dimensions': [],
+            'fields': [],
+            'values': [],
+        }
+
+
     def get_analysis_data_script(self, **kwargs):
         self.ensure_one()
         if self.server_action_id:
             response = self.server_action_id.with_context(kwargs=kwargs).run()
             if response and isinstance(response, dict):
                 # Generate Fields
+                is_metric_by_field = {}
                 fields = []
                 if response.get('dimensions'):
                     for dimension in response.get('dimensions'):
@@ -606,9 +685,11 @@ class IZIAnalysis(models.Model):
                 if response.get('metrics'):
                     for metric in response.get('metrics'):
                         fields.append(metric)
+                        is_metric_by_field[metric] = True
                 else:
                     response['metrics'] = []
                 response['fields'] = fields
+                response['is_metric_by_field'] = is_metric_by_field
                 # Generate Values
                 values = []
                 if response.get('data'):
@@ -656,6 +737,7 @@ class IZIAnalysis(models.Model):
         field_names = []
         metric_field_names = []
         selection_dict_by_field_name = {}
+        field_type_by_alias = {}
 
         max_dimension = False
         if 'max_dimension' in kwargs:
@@ -665,19 +747,37 @@ class IZIAnalysis(models.Model):
         for field in self.table_id.field_ids:
             field_alias = field.name
             field_by_alias[field_alias] = field.field_name
+            field_type_by_alias[field_alias] = field.field_type
         # Dimension
         dimensions = self.dimension_ids
         
         # Check For Drill Down
         drilldown_level = 0
+        count_dimension = 0
+
+        drilldown_sort_field = False
         if kwargs.get('drilldown_level'):
             drilldown_level = kwargs.get('drilldown_level')
-            if drilldown_level > 0 and self.drilldown_dimension_ids:
-                if drilldown_level > len(self.drilldown_dimension_ids):
-                    dimensions = [self.drilldown_dimension_ids[-1]]
-                else:
-                    dimensions = [self.drilldown_dimension_ids[drilldown_level-1]]
-        count_dimension = 0
+            if kwargs.get('drilldown_field'):
+                drilldown_field = self.env['izi.table.field'].search([('field_name', '=', kwargs.get('drilldown_field')), ('table_id', '=', self.table_id.id)], limit=1)
+                drilldown_visual_type = self.env['izi.visual.type'].search([('name', '=', 'bar')])
+                if self.visual_type_id.name == 'bar_line':
+                    drilldown_visual_type = self.visual_type_id
+                drilldown_field_format = kwargs.get('drilldown_field_subtype', False)
+                drilldown_sort_field = drilldown_field
+                if drilldown_field.field_type in ['date', 'datetime']:
+                    if not drilldown_field_format:
+                        drilldown_field_format = 'day'
+                    drilldown_visual_type = self.env['izi.visual.type'].search([('name', '=', 'line')])
+                if drilldown_field:
+                    self.drilldown_dimension_ids.unlink()
+                    dimensions = self.env['izi.analysis.drilldown.dimension'].create({
+                        'analysis_id': self.id,
+                        'field_id': drilldown_field.id,
+                        'visual_type_id': drilldown_visual_type.id,
+                        'field_format': drilldown_field_format,
+                    })
+                
         for dimension in dimensions:
             # Date Format
             if dimension.field_id.field_type in ('date', 'datetime') and dimension.field_format:
@@ -705,28 +805,35 @@ class IZIAnalysis(models.Model):
        
         # Metric
         for metric in self.metric_ids:
-            metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+            # metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+            metric_alias = "%s" % (metric.field_id.name)
             field_name = "%s_of_%s" % (metric.calculation.lower(), metric.field_id.field_name)
             field_names.append(field_name)
             metric_field_names.append(field_name)
             # Field Alias
             if metric.name_alias:
                 metric_alias = metric.name_alias
-            metric_queries.append('%s:%s(%s)' % (field_name, metric.calculation.lower(), metric.field_id.field_name))
+            metric_calculation = metric.calculation.lower() if metric.calculation != 'csum' else 'sum'
+            metric_queries.append('%s:%s(%s)' % (field_name, metric_calculation, metric.field_id.field_name))
             res_metrics.append(metric_alias)
             res_fields.append(metric_alias)
             alias_by_field_name[field_name] = metric_alias
 
         # Sort
-        for sort in self.sort_ids:
-            sort_query = '%s %s' % (sort.field_id.field_name, sort.sort)
-            for metric in self.metric_ids:
-                if sort.field_id == metric.field_id:
-                    metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
-                    field_name = "%s_of_%s" % (metric.calculation.lower(), metric.field_id.field_name)
-                    sort_query = '%s %s' % (field_name, sort.sort)
-                    break
+        if drilldown_sort_field:
+            sort_query = '%s asc' % (drilldown_sort_field.field_name)
             sort_queries.append(sort_query)
+        else:
+            for sort in self.sort_ids:
+                sort_query = '%s %s' % (sort.field_id.field_name, sort.sort)
+                for metric in self.metric_ids:
+                    if sort.field_id == metric.field_id:
+                        # metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+                        metric_alias = "%s" % (metric.field_id.name)
+                        field_name = "%s_of_%s" % (metric.calculation.lower(), metric.field_id.field_name)
+                        sort_query = '%s %s' % (field_name, sort.sort)
+                        break
+                sort_queries.append(sort_query)
         sort_queries = (',').join(sort_queries)
 
         # Data
@@ -841,7 +948,11 @@ class IZIAnalysis(models.Model):
         if self._context.get('action_return_domain'):
             return domain
 
-        records = self.env[self.model_id.model].read_group(domain, metric_queries, dimension_queries, limit=self.limit, orderby=sort_queries, lazy=False)
+        drilldown_limit = False
+        if kwargs.get('drilldown_limit') and kwargs.get('drilldown_limit') > 0:
+            drilldown_limit = kwargs.get('drilldown_limit')
+
+        records = self.env[self.model_id.model].read_group(domain, metric_queries, dimension_queries, limit=(drilldown_limit or self.limit), orderby=sort_queries, lazy=False)
         res_data = []
         for record in records:
             dict_value = {}
@@ -871,6 +982,15 @@ class IZIAnalysis(models.Model):
                 dict_value[key] = value
             res_data.append(dict_value)
 
+        # Cumulative SUM
+        for metric in res_metrics:
+            calc = metric.lower().split(' ')[0]
+            if calc == 'csum':
+                totals = [item[metric] for item in res_data]
+                cumulative_sums = list(accumulate(totals))
+                for i, item in enumerate(res_data):
+                    item[metric] = cumulative_sums[i]
+
         # Values
         for record in res_data:
             res_value = []
@@ -885,6 +1005,7 @@ class IZIAnalysis(models.Model):
             'fields': res_fields,
             'values': res_values,
             'field_by_alias': field_by_alias,
+            'field_type_by_alias': field_type_by_alias,
         }
 
         if 'test_analysis' not in self._context:
@@ -944,6 +1065,53 @@ class IZIAnalysis(models.Model):
             return transform_data
         else:
             return data
+    
+    def check_special_variable(self, table_query):
+        # Replace Special Variable in Query
+        user_id = self.env.user.id
+        user_name = self.env.user.name
+        user_tz = self.env.user.tz
+        company_id = self.env.user.company_id.id
+        company_name = self.env.user.company_id.name
+        company_ids = []
+        if self._context and self._context.get('allowed_company_ids'):
+            allowed_companies = self.env['res.company'].browse(self._context.get('allowed_company_ids'))
+            if allowed_companies:
+                company_id = allowed_companies[0].id
+                company_name = allowed_companies[0].name
+                for company in allowed_companies:
+                    company_ids.append(str(company.id))
+
+        if '#user_id' in table_query:
+            table_query = table_query.replace('#user_id', str(user_id))
+        if '#company_id' in table_query:
+            table_query = table_query.replace('#company_id', str(company_id))
+        if '#company_ids' in table_query:
+            table_query = table_query.replace('#company_ids', str((',').join(company_ids)))
+        if '#user_name' in table_query:
+            table_query = table_query.replace('#user_name', str(user_name))
+        if '#company_name' in table_query:
+            table_query = table_query.replace('#company_name', str(company_name))
+        if '#user_tz' in table_query:
+            table_query = table_query.replace('#user_tz', str(user_tz))
+        if 'test_query' in self._context:
+            try:
+                matches = re.findall(r"limit \d+", table_query, re.IGNORECASE)
+                if matches:
+                    for match in matches:
+                        table_query = table_query.replace(match, 'limit 1')
+                match = re.search(r"limit \d+", table_query, re.IGNORECASE)
+                if match:
+                    table_query = table_query.replace(match.group(), 'limit 1')
+                else:
+                    table_query = table_query = '%s %s' % (table_query, 'limit 1')
+            except Exception:
+                pass
+            
+        if 'table_query' not in table_query:
+            table_query = '(%s) table_query' % (table_query)
+
+        return table_query
 
     def get_analysis_data_query(self, **kwargs):
         self.ensure_one()
@@ -967,6 +1135,7 @@ class IZIAnalysis(models.Model):
         dimension_query = ''
         dimension_queries = []
         field_by_alias = {}
+        field_by_name = {}
         metric_query = ''
         metric_queries = []
         sort_query = ''
@@ -976,11 +1145,19 @@ class IZIAnalysis(models.Model):
         filter_temp_result_list = []
         limit_query = ''
         dashboard_filter_queries = []
+        res_lang_codes = []
+        field_type_by_alias = {}
+
+        res_langs = self.env['res.lang'].with_context(active_test=False).search([('active', '=', True)], order='active desc')
+        for res_lang in res_langs:
+            res_lang_codes.append(res_lang.code)
 
         # Field
         for field in self.table_id.field_ids:
             field_alias = field.name
             field_by_alias[field_alias] = field.field_name
+            field_by_name[field.field_name] = field
+            field_type_by_alias[field_alias] = field.field_type
         
         max_dimension = False
         if 'max_dimension' in kwargs:
@@ -1000,14 +1177,31 @@ class IZIAnalysis(models.Model):
         
         # Check For Drill Down
         drilldown_level = 0
+        count_dimension = 0
+
         if kwargs.get('drilldown_level'):
             drilldown_level = kwargs.get('drilldown_level')
-            if drilldown_level > 0 and self.drilldown_dimension_ids:
-                if drilldown_level > len(self.drilldown_dimension_ids):
-                    dimensions = [self.drilldown_dimension_ids[-1]]
-                else:
-                    dimensions = [self.drilldown_dimension_ids[drilldown_level-1]]
-        count_dimension = 0
+            if kwargs.get('drilldown_field'):
+                drilldown_field = self.env['izi.table.field'].search([('field_name', '=', kwargs.get('drilldown_field')), ('table_id', '=', self.table_id.id)], limit=1)
+                drilldown_visual_type = self.env['izi.visual.type'].search([('name', '=', 'bar')])
+                if self.visual_type_id.name == 'bar_line':
+                    drilldown_visual_type = self.visual_type_id
+                drilldown_field_format = kwargs.get('drilldown_field_subtype', False)
+                drilldown_sort_field = False
+                if drilldown_field.field_type in ['date', 'datetime']:
+                    if not drilldown_field_format:
+                        drilldown_field_format = 'day'
+                    drilldown_visual_type = self.env['izi.visual.type'].search([('name', '=', 'line')])
+                    drilldown_sort_field = drilldown_field
+                if drilldown_field:
+                    self.drilldown_dimension_ids.unlink()
+                    dimensions = self.env['izi.analysis.drilldown.dimension'].create({
+                        'analysis_id': self.id,
+                        'field_id': drilldown_field.id,
+                        'visual_type_id': drilldown_visual_type.id,
+                        'field_format': drilldown_field_format,
+                    })
+
         for dimension in dimensions:
             dimension_alias = dimension.field_id.name
             if dimension.name_alias:
@@ -1028,10 +1222,14 @@ class IZIAnalysis(models.Model):
             if max_dimension:
                 if count_dimension >= max_dimension:
                     break
-
+        
+        if kwargs.get('custom_drilldown_field'):
+            metric_queries = ['%s as "%s"' % (kwargs.get('custom_drilldown_field'), kwargs.get('custom_drilldown_field_label'))]
+            dimension_queries = [kwargs.get('custom_drilldown_field')]
         # Build Metric Query
         for metric in self.metric_ids:
-            metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+            # metric_alias = "%s of %s" % (metric.calculation.title(), metric.field_id.name)
+            metric_alias = "%s" % (metric.field_id.name)
             if metric.name_alias:
                 metric_alias = metric.name_alias
             metric_queries.append('%s(%s) as "%s"' % (metric.calculation, metric.field_id.field_name, metric_alias))
@@ -1052,9 +1250,13 @@ class IZIAnalysis(models.Model):
             if fltr.close_bracket:
                 close_bracket = ')'
 
-            fltr_value = ' %s' % fltr.value.replace("'", '').replace('"', '')
-            if fltr.field_type == 'string':
-                fltr_value = ' \'%s\'' % fltr.value.replace("'", '').replace('"', '')
+            if fltr.operator_id.name not in ('in', 'not in'):
+                if fltr.field_type in ('numeric', 'number'):
+                    fltr_value = ' %s' % fltr.value.replace("'", '').replace('"', '').replace('$$', '')
+                else:
+                    fltr_value = ' $$%s$$' % fltr.value.replace("'", '').replace('"', '').replace('$$', '')
+            else:
+                fltr_value = ' %s' % fltr.value
 
             fltr_str = '%s %s%s %s %s%s' % (fltr.condition, open_bracket,
                                             fltr.field_id.field_name, fltr.operator_id.name, fltr_value, close_bracket)
@@ -1147,11 +1349,29 @@ class IZIAnalysis(models.Model):
                                 if dynamic_filter.get('operator') in ['like', 'ilike', 'not like', 'not ilike']:
                                     dashboard_filter_queries.append('(%s::TEXT %s $$%%%s%%$$)' % (dynamic_filter.get('field_name'), dynamic_filter.get('operator'), dynamic_filter.get('values')[0]))
                                 else:
-                                    dashboard_filter_queries.append('(%s::TEXT %s $$%s$$)' % (dynamic_filter.get('field_name'), dynamic_filter.get('operator'), dynamic_filter.get('values')[0]))
+                                    field_type_origin = False
+                                    if dynamic_filter.get('field_name') in field_by_name:
+                                        field_type_origin = field_by_name.get(dynamic_filter.get('field_name')).field_type_origin
+                                    if field_type_origin == 'jsonb':
+                                        jsonb_filter_queries = []
+                                        for res_lang_code in res_lang_codes:
+                                            jsonb_filter_queries.append('%s->>\'%s\' %s $$%s$$' % (dynamic_filter.get('field_name'), res_lang_code, dynamic_filter.get('operator'), dynamic_filter.get('values')[0]))
+                                        dashboard_filter_queries.append('(%s)' % ' OR '.join(jsonb_filter_queries))
+                                    else:
+                                        dashboard_filter_queries.append('(%s::TEXT %s $$%s$$)' % (dynamic_filter.get('field_name'), dynamic_filter.get('operator'), dynamic_filter.get('values')[0]))
                             else:
                                 dashboard_filter_queries.append('(%s %s %s)' % (dynamic_filter.get('field_name'), dynamic_filter.get('operator'), dynamic_filter.get('values')[0]))
                         else:
-                            dashboard_filter_queries.append('(%s in (%s))' % (dynamic_filter.get('field_name'), f_values_query_string))
+                            field_type_origin = False
+                            if dynamic_filter.get('field_name') in field_by_name:
+                                field_type_origin = field_by_name.get(dynamic_filter.get('field_name')).field_type_origin
+                            if field_type_origin == 'jsonb':
+                                jsonb_filter_queries = []
+                                for res_lang_code in res_lang_codes:
+                                    jsonb_filter_queries.append('(%s->>\'%s\' in (%s))' % (dynamic_filter.get('field_name'), res_lang_code, f_values_query_string))
+                                dashboard_filter_queries.append('(%s)' % ' OR '.join(jsonb_filter_queries))
+                            else:                                
+                                dashboard_filter_queries.append('(%s in (%s))' % (dynamic_filter.get('field_name'), f_values_query_string))
             # Process Action Filters
             # Action Filters Is Active When The Chart Is Clicked
             if kwargs.get('filters').get('action'):
@@ -1165,7 +1385,8 @@ class IZIAnalysis(models.Model):
                     if action_filter_field_name:
                         # Convert to UTC
                         action_domain = [[action_filter_field_name, action_filter_operator, action_filter_value]]
-                        action_domain = self.convert_domain_to_utc(action_domain)
+                        if action_filter_operator.lower() not in ('in', 'not in'):
+                            action_domain = self.convert_domain_to_utc(action_domain)
                         if action_domain:
                             action_filter_value = action_domain[0][2]
                         # Check If Value Number
@@ -1176,7 +1397,28 @@ class IZIAnalysis(models.Model):
                         if is_number:
                             dashboard_filter_queries.append('(%s %s %s)' % (action_filter_field_name, action_filter_operator, action_filter_value))
                         else:
-                            dashboard_filter_queries.append('(%s %s $$%s$$)' % (action_filter_field_name, action_filter_operator, action_filter_value))
+                            if action_filter_operator.lower() in ('in', 'not in'):
+                                if type(action_filter_value) in (list, tuple):
+                                    action_filter_value_str = []
+                                    for val in action_filter_value:
+                                        if type(val) in (int, float):
+                                            action_filter_value_str.append(str(val))
+                                        else:
+                                            action_filter_value_str.append('$$%s$$' % val)
+                                    action_filter_value_str = (',').join(action_filter_value_str)
+                                    action_filter_value_str = '(%s)' % action_filter_value_str
+                                    dashboard_filter_queries.append('(%s %s %s)' % (action_filter_field_name, action_filter_operator, action_filter_value_str))
+                            else:
+                                field_type_origin = False
+                                if action_filter_field_name in field_by_name:
+                                    field_type_origin = field_by_name.get(action_filter_field_name).field_type_origin
+                                if field_type_origin == 'jsonb':
+                                    jsonb_filter_queries = []
+                                    for res_lang_code in res_lang_codes:
+                                        jsonb_filter_queries.append('%s->>\'%s\' %s $$%s$$' % (action_filter_field_name, res_lang_code, action_filter_operator, action_filter_value))
+                                    dashboard_filter_queries.append('(%s)' % ' OR '.join(jsonb_filter_queries))
+                                else:
+                                    dashboard_filter_queries.append('(%s %s $$%s$$)' % (action_filter_field_name, action_filter_operator, action_filter_value))
         if dashboard_filter_queries:
             dashboard_filter_query = (' and ').join(dashboard_filter_queries)
             filter_query += ' and (%s)' % dashboard_filter_query
@@ -1186,7 +1428,7 @@ class IZIAnalysis(models.Model):
         func_get_filter_temp_query = getattr(self, 'get_filter_temp_query_%s' % self.source_id.type)
         if 'filter_temp_values' in kwargs:
             for filter_value in kwargs.get('filter_temp_values'):
-                result_query = func_get_filter_temp_query(**{'filter_value': filter_value})
+                result_query = func_get_filter_temp_query(**{'filter_value': filter_value, 'field_by_name': field_by_name, 'res_lang_codes': res_lang_codes})
                 filter_temp_result_list.append(result_query)
 
         for filter_temp_result in filter_temp_result_list:
@@ -1202,13 +1444,19 @@ class IZIAnalysis(models.Model):
 
         # Build Sort Query
         for sort in self.sort_ids:
-            if sort.field_format:
+            if kwargs.get('drilldown_level') and drilldown_sort_field:
+                if drilldown_field_format:
+                    field_sort = func_get_field_sort(
+                        **{'field_name': drilldown_sort_field.field_name, 'field_type': drilldown_sort_field.field_type,
+                        'field_format': drilldown_field_format, 'sort': 'asc'})
+                    sort_queries.append(field_sort)
+                else:
+                    sort_queries.append('%s %s' % (drilldown_sort_field.field_name, 'asc'))
+                break
+            elif kwargs.get('drilldown_level') and sort.dimension_id:
+                continue
+            elif sort.field_format:
                 field_format = sort.field_format
-                # Sort Field Format Must Follow Dimension Field Format In Drilldown Case
-                if kwargs.get('drilldown_level'):
-                    for dimension in dimensions:
-                        if sort.field_id == dimension.field_id and dimension.field_format:
-                            field_format = dimension.field_format
                 field_sort = func_get_field_sort(
                     **{'field_name': sort.field_id.field_name, 'field_type': sort.field_id.field_type,
                        'field_format': field_format, 'sort': sort.sort})
@@ -1236,20 +1484,7 @@ class IZIAnalysis(models.Model):
                 table_query = self.table_id.store_table_name
             else:
                 table_query = self.table_id.db_query.replace(';', '')
-                # Replace Special Variable in Query
-                user_id = self.env.user.id
-                user_name = self.env.user.name
-                company_id = self.env.user.company_id.id
-                company_name = self.env.user.company_id.name
-                if '#user_id' in table_query:
-                    table_query = table_query.replace('#user_id', str(user_id))
-                if '#company_id' in table_query:
-                    table_query = table_query.replace('#company_id', str(company_id))
-                if '#user_name' in table_query:
-                    table_query = table_query.replace('#user_name', str(user_name))
-                if '#company_name' in table_query:
-                    table_query = table_query.replace('#company_name', str(company_name))
-                table_query = '(%s) table_query' % (table_query)
+                table_query = self.check_special_variable(table_query)
         if filter_query:
             filter_query = 'WHERE %s' % (filter_query)
         if dimension_query:
@@ -1259,7 +1494,9 @@ class IZIAnalysis(models.Model):
         if self.limit:
             if self.limit > 0:
                 limit_query = 'LIMIT %s' % (self.limit)
-
+            if kwargs.get('drilldown_limit') and kwargs.get('drilldown_limit') > 0:
+                limit_query = 'LIMIT %s' % (kwargs.get('drilldown_limit'))
+        
         query = '''
             SELECT
                 %s
@@ -1315,6 +1552,7 @@ class IZIAnalysis(models.Model):
             'fields': res_fields,
             'values': res_values,
             'field_by_alias': field_by_alias,
+            'field_type_by_alias': field_type_by_alias,
         }
 
         if 'test_analysis' not in self._context:
@@ -1336,6 +1574,25 @@ class IZIAnalysis(models.Model):
                 }
             }
 
+    def get_records_by_query(self,metric_query, table_query, filter_query):
+        query = '''
+            SELECT
+                *
+            FROM
+                %s
+            %s;
+        ''' % (table_query, filter_query)
+
+        self.env.cr.execute(query)
+        if self.table_id.is_stored:
+            result['res_data'] = self.env.cr.dictfetchall()
+        else:
+            func_get_analysis_data = getattr(self, 'get_analysis_data_%s' % self.source_id.type)
+            result = func_get_analysis_data(**{
+                'query': query,
+            })
+        return result
+    
     def convert_domain_to_utc(self, domain):
         new_domain = []
         for dm in domain:
@@ -1525,6 +1782,7 @@ class IZIAnalysisMetric(models.Model):
         ('count', 'Count'),
         ('sum', 'Sum'),
         ('avg', 'Avg'),
+        ('csum', 'Cumulative Sum'),
     ], string='Calculation', required=True, default='sum')
     sort = fields.Selection([
         ('asc', 'Ascending'),

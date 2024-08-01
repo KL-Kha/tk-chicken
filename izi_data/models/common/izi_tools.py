@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import psycopg2
 import math
 import random
+import pandas
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class IZITools(models.TransientModel):
            'psycopg2': psycopg2,
            'math': math,
            'random': random,
+           'pandas': pandas,
         }
         if key not in lib:
             raise UserError('Library Not Found')

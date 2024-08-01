@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.tools.safe_eval import safe_eval
+import pandas
 
 DEFAULT_DB_QUERY = """
 # -- Query example
@@ -179,13 +180,19 @@ class IZITable(models.Model):
 
     # Table Flags
     # 1. Existing Tables From Data Sources: table_name IS SET, user_defined FALSE, store_table_name = table_name
-    # 2. User Defined Tables: table_name IS NOT SET, user_defined TRUE, is_stored TRUE, store_table_name IS SET
-    # 3. Query: table_name IS NOT SET, user_defined TRUE, is_stored FALSE, store_table_name IS NOT SET,
+    # 2. User Defined Tables / Mart Tables: table_name IS NOT SET, user_defined TRUE, is_stored TRUE, store_table_name IS SET
+    # 3. Direct Queries / Table Views: table_name IS NOT SET, user_defined TRUE, is_stored FALSE, store_table_name IS NOT SET,
     #    - Direct Query: is_query TRUE
     #    - Saved as Table View: is_query FALSE
+    # NEW Field, is_direct TRUE Means The Script Will Be Run Everytime The Analysis Called (Like Query But For Script). 
+    # The Scheduler Will Be Inactive Automatically. Stored Will Be Ignored. Direct Data Script Will Use This.
     name = fields.Char(string='Name', required=True)
     table_name = fields.Char('Table Name')
-    source_id = fields.Many2one('izi.data.source', string='Data Source', required=True, ondelete='cascade')
+    source_id = fields.Many2one('izi.data.source', string='Data Source', required=True, ondelete='cascade', default=lambda self: self._default_source())
+    stored_option = fields.Selection([
+        ('stored', 'Stored To Mart Table'),
+        ('direct', 'Directly Access Data Source'),
+    ], string='Method', required=False)
     model_id = fields.Many2one('ir.model', string='Model')
     field_ids = fields.One2many('izi.table.field', 'table_id', string='Fields')
     analysis_ids = fields.One2many(comodel_name='izi.analysis', inverse_name='table_id', string='Analysis')
@@ -193,6 +200,7 @@ class IZITable(models.Model):
     db_query = fields.Text('Database Query', default='') #, default=DEFAULT_DB_QUERY
     is_query = fields.Boolean(string='Query', default=False)
     is_stored = fields.Boolean(string='Stored', default=False)
+    is_direct = fields.Boolean(string='Direct', default=False)
     store_table_name = fields.Char(string='Store Table Name', compute='get_store_table_name')
 
     cron_id = fields.Many2one(comodel_name='ir.cron', string='Scheduler')
@@ -241,6 +249,28 @@ class IZITable(models.Model):
 
     user_defined = fields.Boolean(string="User Defined", compute='get_user_defined')
     attachment_ids = fields.One2many('ir.attachment', 'table_id', string='Attachments')
+    dummy_data_attachment_id = fields.Many2one('ir.attachment', string='Dummy Data File')
+
+    is_template = fields.Boolean('Is Template', default = False)
+    # Create Function Get Data From Dummy
+
+    @api.onchange('stored_option')
+    def onchange_stored_option(self):
+        self.ensure_one()
+        if self.stored_option == 'stored':
+            self.is_stored = True
+            self.is_direct = False
+        elif self.stored_option == 'direct':
+            self.is_stored = True
+            self.is_direct = True
+        return False
+
+    def _default_source(self):
+        source_id = False
+        source = self.env['izi.data.source'].search([('type', '=', 'db_odoo')], limit=1)
+        if source:
+            source_id = source.id
+        return source_id
 
     @api.constrains('name')
     def _constraint_name(self):
@@ -322,10 +352,10 @@ class IZITable(models.Model):
             analysis_id.unlink()
         return super(IZITable, self).unlink()
     
-    def create_store_table_from_view(self):
+    def create_mart_table_from_query(self):
         self.ensure_one()
         if self.user_defined and not self.is_stored and self.db_query:
-            store_name = 'Store %s' % self.name
+            store_name = 'Mart %s' % self.name
             store_table_name = 'izi_%s' % (re.sub('[^A-Za-z0-9]+', '_', store_name.lower()))
             field_ids = []
             for field in self.field_ids:
@@ -333,8 +363,8 @@ class IZITable(models.Model):
                     'name': field.name,
                     'field_name': field.field_name,
                     'field_type': field.field_type,
-                    'field_type_origin_selection': field.field_type_origin,
-                    'field_type_origin': field.field_type_origin,
+                    'field_type_origin_selection': field.field_type_origin_selection or 'varchar',
+                    'field_type_origin': field.field_type_origin or 'varchar',
                 }))
             izi_table = self.copy({
                 'name': store_name,
@@ -344,6 +374,7 @@ class IZITable(models.Model):
                     'db_query': self.db_query,
                 },
                 'field_ids': field_ids,
+                'stored_option': 'stored',
             })
             izi_table.update_schema_store_table()
             # Open Newly Created Store Table
@@ -359,6 +390,8 @@ class IZITable(models.Model):
     @api.onchange('is_stored')
     def onchange_is_stored(self):
         self.ensure_one()
+        if not self.is_stored:
+            self.is_direct = False
         return False
         # if self.is_stored and not self.python_code_ids:
         #     self.python_code_ids = self.DEFAULT_PYTHON_CODE_IDS
@@ -377,14 +410,30 @@ class IZITable(models.Model):
             data_sample = self.with_context(get_data_sample=True).run_python_code()
             if data_sample:
                 self.get_table_fields_from_dictionary(data_sample)
+
+    def get_table_fields_from_dataframe(self, dataframe):
+        list_of_dictionary = dataframe.to_dict('records')
+        limit = 100
+        cur = 0
+        for dictionary in list_of_dictionary:
+            if cur > limit:
+                break
+            try:
+                self.get_table_fields_from_dictionary(dictionary)
+                break
+            except Exception as e:
+                continue
     
     def get_table_fields_from_dictionary(self, dictionary):
         self.ensure_one()
         Field = self.env['izi.table.field']
         # Get existing fields based on table
         field_by_name = {}
+        deleted_field_records = []
         for field_record in Field.search([('table_id', '=', self.id)]):
             field_by_name[field_record.field_name] = field_record
+            if field_record.field_name not in dictionary:
+                deleted_field_records.append(field_record)
 
         if not dictionary or not isinstance(dictionary, dict):
             raise ValidationError('False Python Code Data. Must Be Dictionary!')
@@ -395,6 +444,9 @@ class IZITable(models.Model):
             field_type = Field.get_field_type_mapping(field_type_origin, self.source_id.type)
             foreign_table = None
             foreign_column = None
+
+            if dictionary[key] is None:
+                raise ValidationError('You Can Not Have None / Null Values On The Dictionary To Define The Table Fields!')
 
             # Check to create or update field
             if field_name not in field_by_name:
@@ -416,6 +468,11 @@ class IZITable(models.Model):
                     field.field_type_origin = field_type_origin
                     field.field_type = field_type
                 field_by_name.pop(field_name)
+        for field_record in deleted_field_records:
+            self.env['izi.analysis.dimension'].search([('field_id', '=', field_record.id)]).unlink()
+            self.env['izi.analysis.metric'].search([('field_id', '=', field_record.id)]).unlink()
+            self.env['izi.analysis.sort'].search([('field_id', '=', field_record.id)]).unlink()
+            field_record.unlink()
 
     def get_table_fields(self):
         self.ensure_one()
@@ -475,6 +532,7 @@ class IZITable(models.Model):
 
     def get_table_datas(self):
         self.ensure_one()
+        izi_analysis_obj = self.env['izi.analysis']
 
         res_fields = []
 
@@ -494,33 +552,7 @@ class IZITable(models.Model):
                 table_query = self.store_table_name
             else:
                 table_query = self.db_query.replace(';', '')
-                # Replace Special Variable in Query
-                user_id = self.env.user.id
-                user_name = self.env.user.name
-                company_id = self.env.user.company_id.id
-                company_name = self.env.user.company_id.name
-                if '#user_id' in table_query:
-                    table_query = table_query.replace('#user_id', str(user_id))
-                if '#company_id' in table_query:
-                    table_query = table_query.replace('#company_id', str(company_id))
-                if '#user_name' in table_query:
-                    table_query = table_query.replace('#user_name', str(user_name))
-                if '#company_name' in table_query:
-                    table_query = table_query.replace('#company_name', str(company_name))
-                if 'test_query' in self._context:
-                    try:
-                        matches = re.findall(r"limit \d+", table_query, re.IGNORECASE)
-                        if matches:
-                            for match in matches:
-                                table_query = table_query.replace(match, 'limit 1')
-                        match = re.search(r"limit \d+", table_query, re.IGNORECASE)
-                        if match:
-                            table_query = table_query.replace(match.group(), 'limit 1')
-                        else:
-                            table_query = table_query = '%s %s' % (table_query, 'limit 1')
-                    except Exception:
-                        pass
-                table_query = '(%s) table_query' % (table_query)
+                table_query = izi_analysis_obj.check_special_variable(table_query)
 
         # Build Query
         limit_query = ''
@@ -722,7 +754,12 @@ class IZITable(models.Model):
 
     def method_direct_trigger(self):
         if self.cron_id:
-            self.cron_id.with_context(izi_table=self).method_direct_trigger()
+            # res = self.cron_id.with_context(izi_table=self).method_direct_trigger()
+            res = self.cron_id.with_context(izi_table=self).ir_actions_server_id.run()
+            # Automatic Get Fields From Data Frame
+            if res and type(res) == 'dict' and 'dataframe' in res and isinstance(res.get('dataframe'), pandas.DataFrame):
+                dataframe = res.get('dataframe')
+                self.get_table_fields_from_dataframe(dataframe)
 
     def run_python_code(self):
         self.ensure_one()
@@ -782,6 +819,53 @@ class IZITable(models.Model):
             else:
                 izi_table.user_defined = True
 
+    def get_data_from_dummy(self):
+        # Dummy Data Must Have The Same Fields With Table Fields
+        # Or If Table Fields Is Empty, Then Define Table Fields From Dummy Data Structure
+        pass
+
+    def get_data_from_source(self):
+        return {
+            'name': _('Get Data From Source'),
+            'res_model': 'izi.data.source.item',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'context': {
+                'table_id': self.id,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+    
+    def get_table_fields_data(self,fields,model_data):
+        vals = []
+        sample = {}
+        for field in fields:
+            if field.ttype in ['integer','monetary','float']:
+                sample[field.name] = 1
+            elif field.ttype in ['char','reference','selection','text','many2one']:
+                sample[field.name] = "Test"
+            elif field.ttype in ['boolean']:
+                sample[field.name] = True
+            elif field.ttype in ['datetime']:
+                sample[field.name] = '2023-12-21 06:38:29'
+            elif field.ttype in ['date']:
+                sample[field.name] = '2023-12-21'
+
+        for model in model_data:
+            res = {}
+            for field in fields:
+                if hasattr(model, field.name) and field.ttype not in ['one2many','many2many','json']:
+                    data = getattr(model,field.name)
+                    if isinstance(data, models.BaseModel):  # Check if it's a recordset
+                        if data:
+                            res[field.name] = data.name
+                    else:
+                        if data:
+                            res[field.name] = data
+                            
+            vals.append(res)
+        return vals, sample
 
 class IZITableField(models.Model):
     _name = 'izi.table.field'
@@ -825,6 +909,7 @@ class IZITableField(models.Model):
                                           inverse_name='field_id', string='Analysis Metric')
     analysis_dimension_ids = fields.One2many(comodel_name='izi.analysis.dimension',
                                              inverse_name='field_id', string='Analysis Dimension')
+    description = fields.Text('Description')
 
     _sql_constraints = [
         ('name_source_unique', 'unique(field_name, table_id)', 'Table Field Name Already Exist.')

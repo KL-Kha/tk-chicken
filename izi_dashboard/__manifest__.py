@@ -10,7 +10,7 @@
         You can explore data with AI too!
     """,
     "category": "Reporting",
-    "version": "17.0.4.0.20",
+    "version": "17.0.4.0.27",
     "development_status": "Production",  # Options: Alpha|Beta|Production/Stable|Mature
     "auto_install": False,
     "installable": True,
@@ -23,7 +23,7 @@
         'static/description/banner.gif'
     ],
 
-    "price": 285,
+    "price": 298,
     "currency": "USD",
 
     "depends": [
@@ -88,6 +88,7 @@
 
         # template
         'views/template/izi_dashboard.xml',
+        'views/template/izi_dashboard_slide.xml',
     ],
     "demo": [
         # 'demo/demo.xml',
@@ -120,6 +121,7 @@
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/core/dialog.js',
             'web/static/src/legacy/xml/dialog.xml',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',
@@ -163,6 +165,7 @@
             'izi_dashboard/static/lib/jquery.ui/jquery-ui.css',
             'izi_dashboard/static/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
             'izi_dashboard/static/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css',
+            'izi_dashboard/static/lib/google/icon.css',
 
             'izi_dashboard/static/src/css/font.css',
             'izi_dashboard/static/src/css/component/general/izi_bootstrap.min.css',
@@ -246,6 +249,7 @@
             'izi_dashboard/static/src/js/izi_dashboard_controller.js',
             'izi_dashboard/static/src/js/izi_dashboard_view.js',
             'izi_dashboard/static/src/js/izi_analysis_widget.js',
+            'izi_dashboard/static/src/js/izi_slide.js',
         ]
     }
 }

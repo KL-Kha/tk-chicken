@@ -18,6 +18,7 @@ var IZIViewVisual = Widget.extend({
     template: 'IZIViewVisual',
     events: {
         'click .izi_reset_drilldown': '_onClickResetDrilldown',
+        'click .izi_drillup': '_onClickDrillup',
     },
 
     /**
@@ -27,6 +28,10 @@ var IZIViewVisual = Widget.extend({
         this._super.apply(this, arguments);
         this.interval;
         this.parent = parent;
+        this.context = false;
+        if (parent && parent.context) {
+            this.context = parent.context;
+        }
         this.grid;
         this.index = 0;
         this.mode;
@@ -42,6 +47,13 @@ var IZIViewVisual = Widget.extend({
         this.field_by_alias = {};
         this.model_field_names = [];
         this.analysis_data;
+        this.ask_chart;
+        this.temp_analysis_data;
+        this.drilldown_wait;
+        this.drilldown_history = [];
+        this.last_drilldown_args;
+        this.dynamicFilters = [];
+        this.field_type_by_alias = {}
         if (args) {
             this.block_id = args.block_id;
             this.analysis_id = args.analysis_id;
@@ -52,6 +64,7 @@ var IZIViewVisual = Widget.extend({
             this.visual_type_name = args.visual_type_name;
             this.rtl = args.rtl;
             this.analysis_data = args.analysis_data;
+            this.ask_chart = args.ask_chart;
         }
         am4core.options.autoDispose = false;
     },
@@ -88,6 +101,7 @@ var IZIViewVisual = Widget.extend({
                 }
             }, self.refresh_interval * 1000);
         }
+        self.drilldown_wait = false;
     },
 
     /**
@@ -101,12 +115,18 @@ var IZIViewVisual = Widget.extend({
     _renderVisual: function (args, callback) {
         var self = this;
         self._deleteVisual();
+        if(args && args['filter_temp_values']){
+            self.dynamicFilters = args['filter_temp_values']
+        }else{
+            self.dynamicFilters = []
+        }
         am4core.options.autoDispose = false;
         if (self.analysis_id) {
             self._getDataAnalysis(args, function (result) {
                 setTimeout(function() {
                     if (self.parent && self.parent.$title)
                         self.parent.$title.html(self.analysis_name);
+                    self.temp_analysis_data = result.data;
                     self._makeChart(result);
                     if (callback) {
                         callback();
@@ -134,7 +154,19 @@ var IZIViewVisual = Widget.extend({
         });
         return new_table_data;
     },
-
+    _getSlideViewVisualByAnalysisId: function(analysis_id){
+        var self = this
+        var selected_visual = self
+        if(self.slide_visuals.length>0){
+            
+            self.slide_visuals.forEach(vis => {
+                if(vis.analysis_id == analysis_id){
+                    selected_visual = vis
+                }
+            })
+        }
+        return selected_visual
+    },
     _getViewVisualByAnalysisId: function(analysis_id) {
         var self = this;
         if (self.parent && self.parent._getViewVisualByAnalysisId)
@@ -142,52 +174,255 @@ var IZIViewVisual = Widget.extend({
         return false;
     },
 
+    _onClickDrillup: function (ev) {
+        var self = this
+        self.drilldown_level = self.drilldown_level - 1;
+        var title = self.drilldown_title
+        var last_drilldown_title = title.lastIndexOf('/');
+        var new_title = title.substring(0, last_drilldown_title);
+        self.drilldown_title = new_title
+        var history = self.drilldown_history
+        var key = history.length - 2
+        var args = {}
+        if (self.drilldown_history.length>1){
+            if (self.filters)
+                self.filters = history[key].drilldown_filters
+            args = {
+                'mode': history[key].drilldown_mode,
+                'filters': history[key].drilldown_filters,
+                'drilldown_level': history[key].drilldown_level,
+                'drilldown_field': history[key].drilldown_field,
+                'drilldown_field_subtype': history[key].drilldown_field_subtype
+            };
+            // self.filters = history[key].drilldown_filters
+            if (self.dynamicFilters){
+                args['filter_temp_values'] = self.dynamicFilters
+            }
+            history.pop()
+            self._getDataAnalysis(args, function (result) {
+                if (self.parent && self.parent.$title)
+                self.parent.$title.html(self.analysis_name + self.drilldown_title);
+                self.temp_analysis_data = result.data;
+                self._makeChart(result,true)
+                // Trigger Insights On Config Analysis
+                if (self.parent && self.parent.parent && self.parent.parent.$configAnalysis && self.parent.parent.$configAnalysis.onInsight) {
+                    self.parent.parent.$configAnalysis._generateInsights();
+                }
+            })
+
+        }else{
+            self._onClickResetDrilldown()
+        }
+
+    },
     _onClickResetDrilldown: function (ev) {
         var self = this;
+        self.drilldown_history = []
         self.drilldown_level = 0;
         self.drilldown_title = '';
         if (self.filters)
             self.filters.action = [];
-        self._renderVisual();
+        var args = {}
+        if (self.filters) {
+            args.filters = self.filters;
+            args.mode = self.mode;
+        }
+        if (self.dynamicFilters){
+            args['filter_temp_values'] = self.dynamicFilters
+        }
+        self._getDataAnalysis(args, function (result) {
+            if (self.parent && self.parent.$title)
+            self.parent.$title.html(self.analysis_name);
+            self.temp_analysis_data = result.data;
+            if(self.is_slide){
+                self._makeChartSlide(result)
+            }else{
+                self._makeChart(result,true)
+            }
+            // Trigger Insights On Config Analysis
+            if (self.parent && self.parent.parent && self.parent.parent.$configAnalysis && self.parent.parent.$configAnalysis.onInsight) {
+                self.parent.parent.$configAnalysis._generateInsights();
+            }
+        })
         self.$el.find('.izi_reset_drilldown').hide();
+        self.$el.find('.izi_drillup').hide();
     },
 
     _onHitChart: function (ev, visual, val) {
         var analysis_id = false;
         var self = false;
+        var is_slide = visual.is_slide
         if (ev.target && ev.target.htmlContainer) {
-            analysis_id = parseInt($(ev.target.htmlContainer).closest('.izi_view_visual').data('analysis_id'));
+            if(is_slide){
+                analysis_id = parseInt($(ev.target.htmlContainer).closest('.visual-chart').data('analysis_id'));
+            }else{
+                analysis_id = parseInt($(ev.target.htmlContainer).closest('.izi_view_visual').data('analysis_id'));
+            }
             if (analysis_id && visual) {
                 // Visual From On Hit Listener Is Wrong
                 // So We Get The Right One By Searching With Analysis Id
-                visual = visual._getViewVisualByAnalysisId(analysis_id);
+                if(is_slide){
+                    visual = visual._getSlideViewVisualByAnalysisId(analysis_id)
+                }else{
+                    visual = visual._getViewVisualByAnalysisId(analysis_id)
+                }
                 self = visual;
-                // console.log('Hit Chart!', analysis_id, self.dimension_alias, val);
-                if (self && self.dimension_alias && val) {
-                    self.drilldown_level += 1;
-                    if (!self.filters)
-                        self.filters = {};
-                    if (!self.filters.action) {
-                        self.filters.action = [];
+                if (self && self.dimension_alias && val && !self.drilldown_wait) {
+                    self.drilldown_wait = true;
+                    const existing_drilldown_fields = document.querySelector('.drilldown_background');
+                    if (existing_drilldown_fields) {
+                        existing_drilldown_fields.remove();
                     }
-                    if (self.dimension_alias in self.field_by_alias) {
-                        var field_name = self.field_by_alias[self.dimension_alias];
-                        var additional_action_filters = self._formatDomains(field_name, '=', val[self.dimension_alias]);
-                        additional_action_filters.forEach(additional_action_filter => {
-                            self.filters.action.push({
-                                'field_name': additional_action_filter[0],
-                                'operator': additional_action_filter[1],
-                                'value': additional_action_filter[2],
+                    const drilldown_fields = document.createElement('div');
+                    const drilldown_background = document.createElement('div');
+                    drilldown_background.className="drilldown_background"
+                    drilldown_background.appendChild(drilldown_fields)
+                    
+                    const top_position = ev.point.y
+                    const left_position = ev.point.x
+
+                    const drilldown_header = `
+                        <div class="drilldown-fields-header" style="border-bottom: 1px solid #eee;width: 100%;height: 30px;display: flex;align-items: center;justify-content: space-between;">
+                            <div class="ps-2 fw-bolder" style="font-size: 12px;">
+                                Select Field
+                            </div>
+                            <div class="">
+                                <span id="close_drilldown_menu" class="btn btn-outline-secondary text-muted" style="border: 0;">
+                                    <span class="material-icons" style="font-size: 14px;display: flex;">close</span>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    drilldown_fields.innerHTML = drilldown_header;
+                    
+                    drilldown_fields.style.top = `${top_position}px`;
+                    drilldown_fields.style.left = `${left_position}px`;
+                    
+                    drilldown_fields.className = 'drilldown-fields';
+                    
+                    const close_btn = drilldown_fields.querySelector("#close_drilldown_menu");
+                    close_btn.addEventListener('click', () => {
+                        drilldown_background.remove();
+                    });
+                    drilldown_background.addEventListener('click', () => {
+                        drilldown_background.remove();
+                    });
+                    const drilldown_fields_menus = document.createElement('div');
+                    drilldown_fields_menus.className = 'drilldown-fields-menus';
+                    drilldown_fields.appendChild(drilldown_fields_menus);
+
+                    jsonrpc('/web/dataset/call_kw/izi.analysis/ui_get_available_fields', {
+                        model: 'izi.analysis',
+                        method: 'ui_get_available_fields',
+                        args: [[analysis_id], {}],
+                        kwargs: {},
+                    }).then(function (data) {
+                        var show_popup = data[0]
+                        var res = data[1]
+                        res.forEach(item => {
+                            const menu_item = document.createElement('div');
+                            menu_item.className = 'drilldown-fields-item';
+                            menu_item.textContent = item.name;
+                            menu_item.setAttribute('field-id', item.id);
+                            menu_item.addEventListener('click', () => {
+                                if (self.drilldown_level == 0){
+                                    if (!self.filters){
+                                        self.filters = {};
+                                    }
+                                    self.filters.action = [];
+                                }
+                                self.drilldown_level += 1;
+
+                                // if (!self.filters)
+                                //     self.filters = {};
+                                if (!self.filters.action) {
+                                    self.filters.action = [];
+                                }
+                                var field_by_alias = []
+                                if (self.field_by_alias) {
+                                    field_by_alias = self.field_by_alias
+                                }
+                                var field_type_by_alias = []
+                                if (self.field_type_by_alias) {
+                                    field_type_by_alias = self.field_type_by_alias
+                                }
+                                if (self.dimension_alias in field_by_alias && self.dimension_alias in field_type_by_alias) {
+                                    var field_name = self.field_by_alias[self.dimension_alias];
+                                    var field_type = self.field_type_by_alias[self.dimension_alias];
+                                    var additional_action_filters = [[field_name, '=', val[self.dimension_alias]]];
+                                    if (['date', 'datetime'].includes(field_type)) {
+                                        additional_action_filters = self._formatDomains(field_name, '=', val[self.dimension_alias]);
+                                    }
+                                    additional_action_filters.forEach(additional_action_filter => {
+                                        self.filters.action.push({
+                                            'field_name': additional_action_filter[0],
+                                            'operator': additional_action_filter[1],
+                                            'value': additional_action_filter[2],
+                                        });
+                                    });
+                                }
+                                var args = {
+                                    'mode': self.mode,
+                                    'filters': self.filters || {},
+                                    'drilldown_level': self.drilldown_level,
+                                    'drilldown_field': false,
+                                };
+                                if (self.dynamicFilters){
+                                    args['filter_temp_values'] = self.dynamicFilters
+                                }
+                                self.drilldown_title += ' / ' + val[self.dimension_alias];
+                                args.drilldown_field = item.field_name
+                                args.drilldown_field_subtype = item.field_subtype
+                                const curr_filter = JSON.parse(JSON.stringify(self.filters));
+                                var drilldown_history = {
+                                    'drilldown_mode': self.mode,
+                                    'drilldown_title': self.drilldown_title,
+                                    'drilldown_filters': curr_filter,
+                                    'drilldown_level': self.drilldown_level,
+                                    'drilldown_field': item.field_name,
+                                    'drilldown_field_subtype': item.field_subtype
+                                }
+                                self.drilldown_history.push(drilldown_history)
+                                self.last_drilldown_args = args
+                                self._getDataAnalysis(args, function (result) {
+                                    if (self.parent && self.parent.$title)
+                                    self.parent.$title.html(self.analysis_name + self.drilldown_title);
+                                    self.temp_analysis_data = result.data;
+                                    if(is_slide){
+                                        self._makeChartSlide(result);
+                                        self.$el.parent().find('.izi_reset_drilldown').show();
+                                        self.$el.parent().find('.izi_drillup').show();
+                                    }else{
+                                        self._makeChart(result);
+                                        self.$el.find('.izi_reset_drilldown').show();
+                                        self.$el.find('.izi_drillup').show();
+                                    }
+                                    if(show_popup==true){
+                                        self._customWizardPopup(result)
+                                    }
+
+                                    // Trigger Insights On Config Analysis
+                                    if (self.parent && self.parent.parent && self.parent.parent.$configAnalysis && self.parent.parent.$configAnalysis.onInsight) {
+                                        self.parent.parent.$configAnalysis._generateInsights();
+                                    }
+                                });
+                                drilldown_background.remove();
                             });
+                            drilldown_fields_menus.appendChild(menu_item);
                         });
-                    }
-                    var args = {
-                        'mode': self.mode,
-                        'filters': self.filters || {},
-                        'drilldown_level': self.drilldown_level,
-                    };
-                    // console.log('Args Filters', args);
-                    self.drilldown_title += ' / ' + val[self.dimension_alias];
+                        
+                        document.body.appendChild(drilldown_background);
+
+                        const rect = drilldown_fields.getBoundingClientRect();
+                        const viewportHeight = window.innerHeight;
+                        if (rect.bottom > viewportHeight) {
+                            const newTopPosition = top_position - (rect.bottom - viewportHeight) - 10;
+                            drilldown_fields.style.top = `${newTopPosition}px`;
+                        }else{
+                        }
+                        self.drilldown_wait = false;
+                    })
+                } else if (false) {
                     // Open Action
                     if (self.action_model && self.drilldown_level > self.max_drilldown_level) {
                         jsonrpc('/web/dataset/call_kw/izi.analysis/ui_get_view_parameters', {
@@ -217,16 +452,6 @@ var IZIViewVisual = Widget.extend({
                             }
                         })
                     }
-                    // Drill Down
-                    else if (self.drilldown_level <= self.max_drilldown_level) {
-                        // Make Chart
-                        self._getDataAnalysis(args, function (result) {
-                            if (self.parent && self.parent.$title)
-                                self.parent.$title.html(self.analysis_name + self.drilldown_title);
-                            self._makeChart(result);
-                            self.$el.find('.izi_reset_drilldown').show();
-                        });
-                    }
                 }
             }
         }
@@ -242,7 +467,6 @@ var IZIViewVisual = Widget.extend({
                 args: [self.analysis_id, domain],
                 kwargs: {},
             }).then(function (result) {
-                // console.log('Domain', result);
                 if (callback) {
                     callback(result);
                 }
@@ -250,77 +474,78 @@ var IZIViewVisual = Widget.extend({
         }
     },
 
-    _formatDomains: function(field_name, operator, value) {
+    _formatDomains: function (field_name, operator, value) {
         var self = this;
-        // Check Date
+
+        // store original locale
+        var originalLocale = moment.locale();
+
+        // set locale to english
+        moment.locale('en');
+
+        var start_date = null;
+        var end_date = null;
+
         if (moment(value, 'DD MMM YYYY', true).isValid()) {
-            var start_date = moment(value, 'DD MMM YYYY', true).format('YYYY-MM-DD');
-            var end_date = moment(value, 'DD MMM YYYY', true).add(1, 'd').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
-        } else if  (moment(value, 'DD MMMM YYYY', true).isValid()) {
-            var start_date = moment(value, 'DD MMMM YYYY', true).format('YYYY-MM-DD');
-            var end_date = moment(value, 'DD MMMM YYYY', true).add(1, 'M').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
-        } else if  (moment(value, 'MMM YYYY', true).isValid()) {
-            var start_date = moment(value, 'MMM YYYY', true).format('YYYY-MM-DD');
-            var end_date = moment(value, 'MMM YYYY', true).add(1, 'M').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
-        } else if  (moment(value, 'MMMM YYYY', true).isValid()) {
-            var start_date = moment(value, 'MMMM YYYY', true).format('YYYY-MM-DD');
-            var end_date = moment(value, 'MMMM YYYY', true).add(1, 'M').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
+            start_date = moment(value, 'DD MMM YYYY', true).format('YYYY-MM-DD');
+            end_date = moment(value, 'DD MMM YYYY', true).add(1, 'd').format('YYYY-MM-DD');
+        } else if (moment(value, 'DD MMMM YYYY', true).isValid()) {
+            start_date = moment(value, 'DD MMMM YYYY', true).format('YYYY-MM-DD');
+            end_date = moment(value, 'DD MMMM YYYY', true).add(1, 'M').format('YYYY-MM-DD');
+        } else if (moment(value, 'MMM YYYY', true).isValid()) {
+            start_date = moment(value, 'MMM YYYY', true).format('YYYY-MM-DD');
+            end_date = moment(value, 'MMM YYYY', true).add(1, 'M').format('YYYY-MM-DD');
+        } else if (moment(value, 'MMMM YYYY', true).isValid()) {
+            start_date = moment(value, 'MMMM YYYY', true).format('YYYY-MM-DD');
+            end_date = moment(value, 'MMMM YYYY', true).add(1, 'M').format('YYYY-MM-DD');
         } else if (moment(value, 'YYYY', true).isValid()) {
-            var start_date = moment(value, 'YYYY', true).format('YYYY-MM-DD');
-            var end_date = moment(value, 'YYYY', true).add(1, 'Y').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
+            start_date = moment(value, 'YYYY', true).format('YYYY-MM-DD');
+            end_date = moment(value, 'YYYY', true).add(1, 'Y').format('YYYY-MM-DD');
         } else if (isQuarter(value)) {
             // In Case Of Quarter Format: Q1 2023
             var values = value.split(' ');
             var quarter = values[0].split('Q')[1];
             var year = values[1];
-            var start_date = moment().quarter(quarter).year(year).startOf('quarter').format('YYYY-MM-DD');
-            var end_date = moment().quarter(quarter).year(year).endOf('quarter').add(1, 'd').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
+            start_date = moment().quarter(quarter).year(year).startOf('quarter').format('YYYY-MM-DD');
+            end_date = moment().quarter(quarter).year(year).endOf('quarter').add(1, 'd').format('YYYY-MM-DD');
         } else if (isWeek(value)) {
             // In Case Of Week Format: W21 2023
             var values = value.split(' ');
             var week = values[0].split('W')[1];
             var year = values[1];
             // Moment Starts Week From Sunday
-            var start_date = moment().week(week).year(year).startOf('week').add(1, 'd').format('YYYY-MM-DD');
-            var end_date = moment().week(week).year(year).endOf('week').add(2, 'd').format('YYYY-MM-DD');
-            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
+            start_date = moment().week(week).year(year).startOf('week').add(1, 'd').format('YYYY-MM-DD');
+            end_date = moment().week(week).year(year).endOf('week').add(2, 'd').format('YYYY-MM-DD');
         }
-        return [[field_name, operator || '=', value]];
-    },
 
-    _makeChart: function (result) {
+        // set back original locale
+        moment.locale(originalLocale);
+
+        if (start_date != null && end_date != null) {
+            return [[field_name, '>=', start_date], [field_name, '<', end_date]];
+        } else {
+            return [[field_name, operator || '=', value]];
+        }
+    },
+    _makeChartSlide: function(result,show_drill_button = false) {
         var self = this;
         var chart;
         var visual;
-
-        // Not Elegant
-        self.$el.parent().removeClass('izi_view_background');
-        self.$el.removeClass('izi_view_scrcard_container scorecard scorecard-sm');
-        self.$el.parents(".izi_dashboard_block_item").removeClass("izi_dashboard_block_item_v_background");
+        var el = self.$el
 
         var visual_type = result.visual_type;
         var data = result.data;
         var table_data = result.values;
         var columns = result.fields;
 
-        var idElm = `visual_${self.analysis_id}`;
-        if (self.block_id) {
-            idElm = `block_${self.block_id}_${idElm}`;
-        }
-        self.$el.attr('style', '');
-        self.$el.attr('id', idElm);
-        self.$el.attr('data-analysis_id', self.analysis_id);
+        var idElm = `visual_`+self.analysis_id;
+        el.attr('id', idElm);
+        el.attr('data-analysis_id', self.analysis_id);
         if ($(`#${idElm}`).length == 0) return false;
         // If Error
         if (result.is_error) {
             visual = new amChartsComponent({
-                title: self.analysis_name,
+                title: "Error",
                 idElm: idElm,
             });
             chart = visual.showError(idElm, result.error || 'Unknown error, check the log');
@@ -330,7 +555,7 @@ var IZIViewVisual = Widget.extend({
         // If Not Error
         self.dimension_alias = result.dimensions[0];
         visual = new amChartsComponent({
-            title: self.analysis_name,
+            title: "Visual",
             idElm: idElm,
             data: data,
             dimension: result.dimensions[0],
@@ -367,7 +592,6 @@ var IZIViewVisual = Widget.extend({
         });
         if (visual_type == 'custom') {
             if (result.use_render_visual_script && result.render_visual_script) {
-                // console.log('Render Visual Script', result.use_render_visual_script, result.render_visual_script);
                 try {
                     eval(result.render_visual_script);
                 } catch (error) {
@@ -487,6 +711,217 @@ var IZIViewVisual = Widget.extend({
             }
             visual.makeScorecardProgress();
         }
+        var style=''
+        if(show_drill_button){
+            style='style="display:block;"'
+        }
+        // Drill Up
+        self.$el.find('.izi_reset_drilldown').remove();
+        self.$el.append(`
+        <button class="btn btn-sm btn-primary izi_reset_drilldown" `+ style +`>
+        <i class="fa fa-chevron-up"></i>
+        </button>
+        `);
+
+        // One step drill up
+        self.$el.find('.izi_drillup').remove();
+        self.$el.append(`
+            <button class="btn btn-sm btn-primary izi_drillup" `+ style +`>
+                <i class="fa fa-arrow-left"></i>
+            </button>
+        `);
+    },
+    _makeChart: function (result,show_drill_button = false) {
+        var self = this;
+        var chart;
+        var visual;
+
+        // Not Elegant
+        self.$el.parent().removeClass('izi_view_background');
+        self.$el.removeClass('izi_view_scrcard_container scorecard scorecard-sm');
+        self.$el.parents(".izi_dashboard_block_item").removeClass("izi_dashboard_block_item_v_background");
+
+        var visual_type = result.visual_type;
+        var data = result.data;
+        var table_data = result.values;
+        var columns = result.fields;
+
+        var idElm = `visual_${self.analysis_id}`;
+        if (self.block_id) {
+            idElm = `block_${self.block_id}_${idElm}`;
+        }
+        self.$el.attr('style', '');
+        self.$el.attr('id', idElm);
+        self.$el.attr('data-analysis_id', self.analysis_id);
+        if ($(`#${idElm}`).length == 0) return false;
+        // If Error
+        if (result.is_error) {
+            visual = new amChartsComponent({
+                title: self.analysis_name,
+                idElm: idElm,
+            });
+            chart = visual.showError(idElm, result.error || 'Unknown error, check the log');
+            return chart;
+        }
+
+        // If Not Error
+        self.dimension_alias = result.dimensions[0];
+        visual = new amChartsComponent({
+            title: self.analysis_name,
+            idElm: idElm,
+            data: data,
+            dimension: result.dimensions[0],
+            metric: result.metrics,
+            visual: self,
+            callback: self._onHitChart,
+            
+            prefix_by_field: result.prefix_by_field,
+            suffix_by_field: result.suffix_by_field,
+            decimal_places_by_field: result.decimal_places_by_field,
+            is_metric_by_field: result.is_metric_by_field,
+            locale_code_by_field: result.locale_code_by_field,
+
+            scorecardStyle: result.visual_config_values.scorecardStyle,
+            scorecardIcon: result.visual_config_values.scorecardIcon,
+            backgroundColor: result.visual_config_values.backgroundColor,
+            borderColor: result.visual_config_values.borderColor,
+            fontColor: result.visual_config_values.fontColor,
+            scorecardIconColor: result.visual_config_values.scorecardIconColor,
+            legendPosition: result.visual_config_values.legendPosition,
+            legendHeatmap: result.visual_config_values.legendHeatmap,
+            area: result.visual_config_values.area,
+            stacked: result.visual_config_values.stacked,
+            innerRadius: result.visual_config_values.innerRadius,
+            circleType: result.visual_config_values.circleType,
+            labelSeries: result.visual_config_values.labelSeries,
+            rotateLabel: result.visual_config_values.rotateLabel,
+            scrollBar: result.visual_config_values.scrollBar,
+            currency_code: result.visual_config_values.currency_code,
+            particle: result.visual_config_values.particle,
+            trends: result.visual_config_values.trends,
+            trendLine: result.visual_config_values.trendLine,
+            mapView: result.visual_config_values.mapView,
+        });
+        if (visual_type == 'custom') {
+            if (result.use_render_visual_script && result.render_visual_script) {
+                try {
+                    eval(result.render_visual_script);
+                } catch (error) {
+                    new swal('Render Visual Script: JS Error', error.message, 'error')
+                }
+            }
+        }
+        else if (visual_type == 'iframe') {
+            if (result.visual_config_values.iframeHTMLTag || result.visual_config_values.iframeURL) {
+                try {
+                    if (result.visual_config_values.iframeHTMLTag) {
+                        $(`#${idElm}`).append(result.visual_config_values.iframeHTMLTag);
+                    } else if (result.visual_config_values.iframeURL) {
+                        $(`#${idElm}`).append(`<iframe src="${result.visual_config_values.iframeURL}" style="width:100%;height:100%;border:none;"></iframe>`);
+                    }
+                } catch (error) {
+                    new swal('Render Iframe: JS Error', error.message, 'error')
+                }
+            }
+        }
+        else if (visual_type == 'table') {
+            columns = self.formatTableColumns(result);
+            if (!self.grid) {
+                self.grid = new gridjs.Grid({
+                    columns: columns,
+                    data: table_data,
+                    sort: true,
+                    pagination: true,
+                    resizable: true,
+                    // search: true,
+                    className: {
+                        table: `gridjs-table-${idElm}`,
+                    }
+                }).render($(`#${idElm}`).get(0));
+                self.renderSumTableRow(result, table_data, `gridjs-table-${idElm}`);
+            } else {
+                self.grid.updateConfig({
+                    columns: columns,
+                    data: table_data,
+                }).forceRender();
+                self.renderSumTableRow(result, table_data, `gridjs-table-${idElm}`);
+            }
+        }
+        else if (visual_type == 'pie') {
+            chart = visual.makePieChart();
+        }
+        else if (visual_type == 'radar') {
+            chart = visual.makeRadarChart();
+        }
+        else if (visual_type == 'flower') {
+            chart = visual.makeFlowerChart();
+        }
+        else if (visual_type == 'radialBar') {
+            chart = visual.makeRadialBarChart();
+        }
+        else if (visual_type == 'bar') {
+            chart = visual.makeBarChart();
+        }
+        else if (visual_type == 'row') {
+            chart = visual.makeRowChart();
+        }
+        else if (visual_type == 'bullet_bar') {
+            chart = visual.makeBulletBarChart();
+        }
+        else if (visual_type == 'bullet_row') {
+            chart = visual.makeBulletRow();
+        }
+        else if (visual_type == 'row_line') {
+            chart = visual.makeRowLine();
+        }
+        else if (visual_type == 'bar_line') {
+            chart = visual.makeBarLineChart();
+        }
+        else if (visual_type == 'line') {
+            chart = visual.makeLineChart();
+        }
+        else if (visual_type == 'scatter') {
+            chart = visual.makeScatterChart();
+        }
+        else if (visual_type == 'heatmap_geo') {
+            chart = visual.makeHeatmapGeo();
+        }
+        else if (visual_type == 'scrcard_basic') {
+
+            if ((self.el.id).indexOf('block') === -1) { // layout ketika di preview chart
+                self.$el.parents(".izi_dashboard_block_item").addClass("izi_dashboard_block_item_v_background");
+                self.$el.parent().addClass('izi_view_background');
+                self.$el.addClass('izi_view_scrcard_container');
+            }else{ // layout ketika di block Dashboard 
+                self.$el.parents(".izi_dashboard_block_item").find(".izi_dashboard_block_title").text("");
+                self.$el.parents(".izi_dashboard_block_item").find(".izi_dashboard_block_header").addClass("izi_dashboard_block_btn_config");                    
+            }
+            visual.makeScorecardBasic();
+        }
+        else if (visual_type == 'scrcard_trend') {
+
+            if ((self.el.id).indexOf('block') === -1) { // layout ketika di preview chart
+                self.$el.parents(".izi_dashboard_block_item").addClass("izi_dashboard_block_item_v_background");
+                self.$el.parent().addClass('izi_view_background');
+                self.$el.addClass('izi_view_scrcard_container');
+            }else{ // layout ketika di block Dashboard 
+                self.$el.parents(".izi_dashboard_block_item").find(".izi_dashboard_block_title").text("");
+                self.$el.parents(".izi_dashboard_block_item").find(".izi_dashboard_block_header").addClass("izi_dashboard_block_btn_config");                    
+            }
+            visual.makeScorecardTrend();
+        }
+        else if (visual_type == 'scrcard_progress') {
+
+            if ((self.el.id).indexOf('block') === -1) { // layout ketika di preview chart
+                self.$el.parents(".izi_dashboard_block_item").addClass("izi_dashboard_block_item_v_background");
+                self.$el.parent().addClass('izi_view_background');
+                self.$el.addClass('izi_view_scrcard_container');
+            }else{ // layout ketika di block Dashboard 
+                self.$el.parents(".izi_dashboard_block_item").find(".izi_dashboard_block_title").text("");
+                self.$el.parents(".izi_dashboard_block_item").find(".izi_dashboard_block_header").addClass("izi_dashboard_block_btn_config");                    
+            }
+            visual.makeScorecardProgress();
+        }
         // Get AI Analysis
         if (self.mode == 'ai_analysis')
             self._getLabAnalysisText(visual.data)
@@ -494,13 +929,29 @@ var IZIViewVisual = Widget.extend({
         if (chart && typeof chart === 'object' && self.rtl) {
             chart.rtl = true;
         }
+        var style=''
+        if(show_drill_button){
+            style='style="display:block;"'
+        }
         // Drill Up
         self.$el.find('.izi_reset_drilldown').remove();
         self.$el.append(`
-            <button class="btn btn-sm btn-primary izi_reset_drilldown">
-                <i class="fa fa-chevron-up"></i>
+        <button class="btn btn-sm btn-primary izi_reset_drilldown" `+ style +`>
+        <i class="fa fa-chevron-up"></i>
+        </button>
+        `);
+
+        // One step drill up
+        self.$el.find('.izi_drillup').remove();
+        self.$el.append(`
+            <button class="btn btn-sm btn-primary izi_drillup" `+ style +`>
+                <i class="fa fa-arrow-left"></i>
             </button>
-        `)
+        `);
+        // If Chart From Ask AI
+        if (self.ask_chart && chart && chart.legend) {
+            chart.legend.scrollable = false;
+        }
     },
     _getLabAnalysisText: function (ai_analysis_data) {
         var self = this;
@@ -508,9 +959,9 @@ var IZIViewVisual = Widget.extend({
             if (self.parent.$description) {
                 self.parent.$description.append(`<span class="spinner-border spinner-border-small"/>`);
             }
-            jsonrpc('/web/dataset/call_kw/izi.analysis/action_get_lab_analysis_text', {
+            jsonrpc('/web/dataset/call_kw/izi.analysis/action_get_lab_description', {
                 model: 'izi.analysis',
-                method: 'action_get_lab_analysis_text',
+                method: 'action_get_lab_description',
                 args: [self.analysis_id, ai_analysis_data, self.block_id],
                 kwargs: {},
             }).then(function (result) {
@@ -559,6 +1010,7 @@ var IZIViewVisual = Widget.extend({
         self.analysis_name = result.analysis_name;
         self.field_by_alias = result.field_by_alias;
         self.model_field_names = result.model_field_names;
+        self.field_type_by_alias = result.field_type_by_alias;
     },
 
     _getFilters: function () {
@@ -568,14 +1020,22 @@ var IZIViewVisual = Widget.extend({
 
     _getDataAnalysis: function (kwargs, callback) {
         var self = this;
+        if(kwargs && kwargs['filter_temp_values']){
+            self.dynamicFilters = kwargs['filter_temp_values']
+        }else{
+            self.dynamicFilters = []
+        }
         if (self.analysis_id) {
+            if (self.context) {
+                kwargs.context = self.context;
+            };
             jsonrpc('/web/dataset/call_kw/izi.analysis/try_get_analysis_data_dashboard', {
                 model: 'izi.analysis',
                 method: 'try_get_analysis_data_dashboard',
                 args: [self.analysis_id],
                 kwargs: kwargs || {},
+                context: self.context,
             }).then(function (result) {
-                // console.log('Success Get Data Analysis', result);
                 self._setAnalysisVariables(result);
                 callback(result);
             })
@@ -695,6 +1155,59 @@ var IZIViewVisual = Widget.extend({
             })
         }
         return columns;
+    },
+
+    _openAnalysisById: function (analysisId) {
+        var self = this;
+        if (analysisId) {
+            self._getOwl().action.doAction({
+                type: 'ir.actions.act_window',
+                name: _t('Analysis'),
+                target: 'new',
+                res_id: analysisId,
+                res_model: 'izi.analysis',
+                views: [[false, 'izianalysis']],
+                context: {
+                    'analysis_id': analysisId,
+                },
+            },{
+                onClose: function(){
+
+                }
+            });
+        }
+    },
+
+    _openAnalysisByName: function (analysisName) {
+        var self = this;
+        if (analysisName) {
+            jsonrpc('/web/dataset/call_kw/izi.analysis/search_read', {
+                model: 'izi.analysis',
+                method: 'search_read',
+                args: [[['name', '=', analysisName]], ['id', 'name']],
+                kwargs: {},
+            }).then(function (results) {
+                if (results) {
+                    var result = results[0];
+                    var analysisId = result.id;
+                    self._getOwl().action.doAction({
+                        type: 'ir.actions.act_window',
+                        name: _t('Analysis'),
+                        target: 'new',
+                        res_id: analysisId,
+                        res_model: 'izi.analysis',
+                        views: [[false, 'izianalysis']],
+                        context: {
+                            'analysis_id': analysisId,
+                        },
+                    },{
+                        onClose: function(){
+        
+                        }
+                    });
+                }
+            });
+        }
     },
 
     _onClickInput: function (ev) {

@@ -39,6 +39,7 @@
                                 <field name="table_id" placeholder="Choose the data table" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', True), ('model_id', '=', False)]" invisible="method != 'table'" options="{'no_create': False, 'no_quick_create': True, 'no_create_edit': False}"/>
                                 <field name="field_ids" invisible="1"/>
                                 <field name="detail_config" widget="boolean_toggle"/>
+                                <field name="show_popup" widget="boolean_toggle" invisible="1"/>
                             </group>
                             <group name="right-side" invisible="1">
                             </group>
@@ -135,7 +136,7 @@
                                 </field>
                             </page>
 
-                            <page string="Drill Down">
+                            <page string="Drill Down" invisible="1">
                                 <p>Configure drill down action when the user click the chart.</p>
                                 <div>
                                     <field name="drilldown_dimension_ids">
@@ -289,7 +290,7 @@
                                 </field>
                             </page>
 
-                            <page string="Drill Down">
+                            <page string="Drill Down" invisible="1">
                                 <p>Configure drill down action when the user click the chart.</p>
                                 <div>
                                     <field name="drilldown_dimension_ids">

@@ -19,7 +19,7 @@
       <field name="name">scorecardIcon</field>
       <field name="title">Scorecard Icon</field>
       <field name="config_type">input_string</field>
-      <field name="default_config_value">done</field>
+      <field name="default_config_value">content_copy</field>
       <field name="visual_type_ids" eval="[(6, 0, [
         ref('izi_dashboard.izi_visual_type_scrcard_basic'),
       ])]"></field>
@@ -28,7 +28,7 @@
       <field name="name">backgroundColor</field>
       <field name="title">Background Color</field>
       <field name="config_type">input_string</field>
-      <field name="default_config_value">#FFFFFFFF</field>
+      <field name="default_config_value">#2B9EFFFF</field>
       <field name="visual_type_ids" eval="[(6, 0, [
         ref('izi_dashboard.izi_visual_type_scrcard_basic'),
       ])]"></field>
@@ -37,7 +37,7 @@
       <field name="name">fontColor</field>
       <field name="title">Font Color</field>
       <field name="config_type">input_string</field>
-      <field name="default_config_value">#000000FF</field>
+      <field name="default_config_value">#FFFFFFFF</field>
       <field name="visual_type_ids" eval="[(6, 0, [
         ref('izi_dashboard.izi_visual_type_scrcard_basic'),
       ])]"></field>
@@ -55,7 +55,7 @@
       <field name="name">scorecardIconColor</field>
       <field name="title">Scorecard Icon Color</field>
       <field name="config_type">input_string</field>
-      <field name="default_config_value">#000000FF</field>
+      <field name="default_config_value">#FFFFFFFF</field>
       <field name="visual_type_ids" eval="[(6, 0, [
         ref('izi_dashboard.izi_visual_type_scrcard_basic'),
       ])]"></field>
@@ -159,7 +159,7 @@
       <field name="name">stacked</field>
       <field name="title">Stacked</field>
       <field name="config_type">toggle</field>
-      <field name="default_config_value">true</field>
+      <field name="default_config_value">false</field>
       <field name="visual_type_ids" eval="[(6, 0, [
         ref('izi_dashboard.izi_visual_type_bar'), 
         ref('izi_dashboard.izi_visual_type_row'), 

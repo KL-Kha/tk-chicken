@@ -10,6 +10,7 @@
                     <a class="dropdown-item izi_action_export_excel" t-att-data-id="widget.id">Export Excel</a>
                     <a class="dropdown-item izi_action_duplicate_block" t-att-data-id="widget.id">Duplicate Analysis</a>
                     <a class="dropdown-item izi_action_delete_block" t-att-data-id="widget.id">Remove Analysis</a>
+                    <a class="dropdown-item izi_action_export_config" t-att-data-id="widget.id">Export Configuration</a>
                 </div>
             </div>
         </div>

@@ -105,7 +105,7 @@ h2#swal2-title {
 .izi_replace_footer button.btn {
     border-radius: 4px;
     padding: 6px 12px;
-    font-size: 12px;
+    /* font-size: 12px; */
 }
 /* Material Icon Picker */
 .material-icon-picker {
@@ -235,7 +235,7 @@ div.material-icon-picker input[type="text"] {
     /* display: block; */
     position: absolute;
     transform: translate3d(-60%, 0px, 0px);
-    top: 0px;
-    left: 0px;
+    top: 10px;
+    left: -20px;
     will-change: transform;
 }

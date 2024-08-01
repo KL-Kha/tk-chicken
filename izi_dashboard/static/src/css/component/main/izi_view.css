@@ -83,7 +83,22 @@
 .izi_view_visual .izi_reset_drilldown:hover {
     opacity: 1;
 }
-
+.izi_view_visual .izi_drillup {
+    display: none;
+    z-index: 10;
+    background: #F4F4F4;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 40px;
+    position: absolute;
+    top: 0px;
+    left: 45%;
+    margin-left: -20px;
+    opacity: 0.5;
+}
+.izi_view_visual .izi_drillup:hover {
+    opacity: 1;
+}
 .izi_view_visual .gridjs-container {
     font-size: 13px;
     margin: 20px;
@@ -229,34 +244,54 @@
 }
 
 /* Explore Dashboard */
-.izi_view_dashboard_ask_header {
+.izi_view_dashboard_ask_discuss {
+    margin: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    width: 50%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.izi_dialog .izi_view_dashboard_ask_header {
     position: fixed;
     top: 20px;
     right: 80px;
     left: 80px;
-    height: 80px;
-    background: #E9ECEF;
-    z-index: 1000;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
 }
-
-.izi_view_dashboard_ask {
+.izi_dialog .izi_view_dashboard_ask {
     position: fixed;
     top: 100px;
     right: 80px;
     left: 80px;
     bottom: 120px;
-    padding: 10px;
+}
+.izi_dialog  .izi_view_dashboard_ask_footer {
+    position: fixed;
+    bottom: 20px;
+    right: 80px;
+    left: 80px;
+}
+.izi_view_dashboard_ask_header {
+    height: auto;
+    background: #E9ECEF;
+    /* z-index: 1000; */
+}
+
+.izi_view_dashboard_ask {
+    height: 380px;
     background: white;
-    z-index: 1000;
+    /* z-index: 1000; */
     overflow: scroll;
-    font-size: 14px;
-    padding: 40px 40px;
+    font-size: 13px;
+    padding: 20px;
     padding-top: 20px;
+    padding-bottom: 40px;
+}
+.izi_view_dashboard_ask .role_section:first-of-type {
+    margin-top: 0px;
 }
 .izi_view_dashboard_ask .role_section {
-    margin-top: 24px;
+    position: relative;
+    margin-top: 16px;
     font-weight: bold;
     font-size: 14px;
     height: 32px;
@@ -278,13 +313,21 @@
 .izi_view_dashboard_ask .message_section .code_content {
     font-family: JetBrainsMono;
     font-size: 12px;
-    background: #EEE;
-    padding: 20px;
+    background: #F4F4F4;
+    padding: 12px;
+    border-radius: 6px;
+    height: 0px;
+    overflow: hidden;
+    color: transparent;
 }
+.izi_view_dashboard_ask .message_section .code_content:hover {
+    height: auto;
+    color: inherit;
+} 
 .izi_view_dashboard_ask .message_section .code_content .code_execution {
     display: block;
     float: right;
-    margin-top: -24px;
+    margin-top: -30px;
     height: 16px;
     width: 16px;
     line-height: 16px;
@@ -306,40 +349,12 @@
 }
 
 .izi_view_dashboard_ask_footer {
-    position: fixed;
-    bottom: 20px;
-    right: 80px;
-    left: 80px;
-    height: 120px;
+    position: relative;
+    height: 100px;
     background: #E9ECEF;
-    z-index: 1000;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-.izi_view_dashboard_ask .izi_view_dashboard_ask_container {    
-    float: left;
-    width: 24%;
-    height: 300px;
-    background: transparent;
-    background-color: white;
-    margin: 0.5%;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding: 10px;
-    border: 1px solid white;
-    box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-}
-
-.izi_view_dashboard_ask .izi_view_dashboard_ask_container:hover,
-.izi_view_dashboard_ask .izi_view_dashboard_ask_container.active {    
-    border: 1px solid #06c;
-}
-
-
-.izi_view_dashboard_ask .izi_view_dashboard_ask_container.active {
-    border: 4px solid #06c;
+    background: white;
+    padding: 10px 20px;
+    /* z-index: 1000; */
 }
 
 .izi_view_dashboard_ask_bg {
@@ -359,22 +374,64 @@
 }
 
 .izi_view_dashboard_ask_header {
-    padding: 15px;
-    font-size: 20px;
+    padding: 20px;
+    padding-bottom: 16px;
+    font-size: 16px;
     background: white;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid #EEE;
+}
+
+.izi_view_dashboard_ask_header .material-icons{
+    display: block;
+    float: left;
+    margin-right: 2%;
+    width: 4%;
+    height: 50px;
+}
+.izi_view_dashboard_ask_header .izi_view_dashboard_ask_header_title{
+    display: block;
+    float: left;
+    width: 94%;
+}
+.izi_view_dashboard_ask_header .izi_view_dashboard_ask_header_table{
+    display: flex;
+    align-items: center;
+    float: left;
+    padding: 2px 12px;
+    font-size: 12px;
+    border-radius: 100px;
+    background-color: #F4F4F4;
+    margin-top: 4px;
+    font-weight: 300;
+    cursor: pointer;
+}
+.izi_view_dashboard_ask_header .izi_view_dashboard_ask_header_table .izi_dashboard_table_selection a{
+    border: 0;
+    background: none;
+    padding-left: 1em;
+    height: 20px;
+    line-height: 1.6;
+    margin-top: 0px;
+    padding-left: 8px;
+    padding-right: 20px;
+}
+.izi_view_dashboard_ask_header .izi_view_dashboard_ask_header_table .izi_dashboard_table_selection a .select2-chosen{
     font-weight: bold;
-    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 0px;
+}
+
+.izi_view_dashboard_ask_header .izi_view_dashboard_ask_header_table .izi_dashboard_table_selection .izi_select2.select2-container .select2-choice .select2-arrow {
+    margin-top: -3px;
 }
 
 .izi_view_dashboard_ask_header .subtitle{
     font-weight: 300;
     font-size: 14px;
     display: block;
-}
-
-.izi_view_dashboard_ask_footer {
-    background: white;
-    padding: 10px 20px;
 }
 
 .izi_view_dashboard_ask_content {
@@ -404,21 +461,187 @@
 }
 
 .izi_view_dashboard_ask_input {
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid #DDD;
-    height: 90px;
-    resize: none;
+    height: 70px;
+    resize: none !important;
     padding: 10px;
+    padding-right: 60px;
 }
 
 .izi_view_dashboard_ask_btn {
     position: absolute;
-    top: 20px;
-    right: 30px;
+    top: 25px;
+    right: 35px;
     padding: 10px;
     background: #F4F4F4;
     border-radius: 10px;
     cursor: pointer;
+    height: 38px;
+    width: 38px;
+}
+
+/* Ask Result */
+.izi_view_dashboard_ask_container {
+    width: 100%;
+    display: flex;
+}
+.izi_view_dashboard_ask_result {
+    margin: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    background: white;
+    width: 50%;
+    border-radius: 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.izi_view_dashboard_ask_result_title {
+    height: 10%;
+    position: relative;
+    text-align: right;
+    padding-top: 30px;
+    padding-right: 30px;
+}
+.izi_view_dashboard_ask_result_chart.izi_dashboard_block_content {
+    height: 90%;
+    padding: 20px;
+    padding-top: 0px;
+}
+.izi_view_dashboard_ask_result_explanation {
+}
+.izi_view_dashboard_ask_result_configuration,
+.izi_view_dashboard_ask_result_add_to_dashboard {
+    float: right;
+    margin-left: 8px;
+    display: flex;
+    padding: 2px 12px;
+    font-size: 12px;
+    border-radius: 100px;
+    font-weight: 300;
+    cursor: pointer;
+    background-color: #FFFFFF;
+    border: 2px solid #06c;
+    color: #06c;
+}
+.izi_view_dashboard_ask_result_configuration .material-icons.izi_btn_icon,
+.izi_view_dashboard_ask_result_add_to_dashboard .material-icons.izi_btn_icon{
+    font-size: 12px;
+    margin-right: 4px;
+    line-height: 18px;
+}
+.izi_view_dashboard_ask_result_configuration:hover,
+.izi_view_dashboard_ask_result_add_to_dashboard:hover {
+    background: #06c;
+    color: white;
+}
+.izi_view_dashboard_ask_container .message_refresh {
+    position: absolute;
+    display: block;
+    right: 20px;
+    top: 0px;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    color: #EEE;
+}
+.izi_view_dashboard_ask_container .message_refresh:hover {
+    color: #000;
+}
+.izi_view_dashboard_ask_container .message_refresh .material-icons{
+    font-size: 20px;
+}
+.izi_view_dashboard_ask_container .izi_view_dashboard_ask_quick_messages {
+    position: absolute;
+    bottom: 90px;
+    overflow: auto;
+    background: white;
+    height: 30px;
+    width: 100%;
+    padding-top: 8px;
+    box-sizing: content-box;
+}
+.izi_view_dashboard_ask_container .izi_view_dashboard_ask_quick_messages:hover {
+    height: auto;
+    min-height: 30px;
+}
+.izi_view_dashboard_ask_container .quick_message {
+    float: left;
+    font-size: 12px;
+    padding: 2px 12px;
+    background: #F4F4F4;
+    border-radius: 100px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: 200;
+    cursor: pointer;
+}
+.izi_view_dashboard_ask_container .quick_message:hover {
+    background-color: #06c;
+    color: white;
+}
+.izi_view_dashboard_ask_container .clear_message {
+    float: left;
+    font-size: 12px;
+    padding: 2px 12px;
+    background: #F4F4F4;
+    border-radius: 100px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: 200;
+    cursor: pointer;
+}
+.izi_view_dashboard_ask_container .clear_message:hover {
+    background-color: #ff0055;
+    color: white;
+}
+
+
+/* View Analysis Dialog */
+.izi_view_analysis_dialog_bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: black;
+    opacity: 0.55;
+    z-index: 9;
+}
+.izi_view_analysis_dialog_main {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    left: 40px;
+    bottom: 40px;
+    padding: 0px;
+    background: white;
+    z-index: 1000;
+    overflow: scroll;
+    font-size: 14px;
+    border-radius: 8px;
+}
+.izi_view_analysis_dialog_main
+.izi_dashboard_block_header 
+.izi_dashboard_block_title{
+    margin: 0px;
+    /* font-family: 'Roboto'; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, "Odoo Unicode Support Noto", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 15px;
+}
+.izi_view_analysis_dialog_main
+.izi_dashboard_block_header 
+.izi_dashboard_block_title.dropdown-toggle::after {
+    vertical-align: 0.2em;
+    margin-left: 0.6em;
+    font-size: 14px;
+}
+.izi_view_analysis_dialog_main
+.izi_dashboard_block_content {
+    padding: 10px;
+}
+.izi_view_analysis_dialog_main
+.izi_analysis_filter_temp_container {
+    display: none;
 }
 
 /* Script Editor */
